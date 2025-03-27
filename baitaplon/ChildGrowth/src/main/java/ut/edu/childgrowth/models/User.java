@@ -6,7 +6,7 @@ import ut.edu.childgrowth.models.User;
 @Entity
 @Table (name = "users")
 public class User {
-    @Id
+    @Id //Khoachinh
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -19,6 +19,9 @@ public class User {
     @Column(nullable = false)
     private String fullName;
 
+    @Column(nullable = false, length = 10)
+    private String numPhone;
+
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -28,11 +31,12 @@ public class User {
     public User() {
     }
 
-    public User(String email, String password, String fullName, Role role, boolean active) {
+    public User(String email, String password, String fullName, Role role, String numPhone) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
         this.role = role;
+        this.numPhone = numPhone;
     }
 
     // Getters and setters
@@ -76,6 +80,20 @@ public class User {
         this.role = role;
     }
 
+    public String getUsername() {
+        return username;
+    }
 
+    public String getNumPhone() {
+        return numPhone;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setNumPhone(String numPhone) {
+        this.numPhone = numPhone;
+    }
 }
 
