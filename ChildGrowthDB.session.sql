@@ -1,0 +1,1 @@
+drop TABLE children WITH data;

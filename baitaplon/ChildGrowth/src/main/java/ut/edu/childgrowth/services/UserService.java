@@ -14,14 +14,14 @@ public class UserService {
     private UserRepository userRepository;
 
     // Đăng ký người dùng
-    public User registerUser(User user) {
+    public void registerUser(User user) {
+        // Kiểm tra thông tin user
         if (userRepository.existsByUsername(user.getUsername())) {
-            throw new RuntimeException("Username đã tồn tại!");
+            throw new RuntimeException("Username đã tồn tại");
         }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email đã tồn tại!");
-        }
-        return userRepository.save(user);
+
+        // Lưu user vào database
+        userRepository.save(user);
     }
 
     // Tìm người dùng theo username

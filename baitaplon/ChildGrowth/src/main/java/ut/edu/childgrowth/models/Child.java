@@ -1,84 +1,60 @@
 package ut.edu.childgrowth.models;
+
 import jakarta.persistence.*;
 import java.time.LocalDate;
-
-import java.sql.Struct;
-import java.util.*;
-import ut.edu.childgrowth.models.Child;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table (name = "childs")
+@Table(name = "children")
 public class Child {
-    @Id //Khoachinh
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private LocalDate birthday;
-
     @Column(nullable = false, unique = true)
-    private String fullName;
-
-    private enum Gender {
-        MALE, FEMALE, OTHER
-    }
-    @Column(nullable = false)
-    private Gender gender;
+    private String fullName; // Họ và tên của trẻ
 
     @Column(nullable = false)
-    private LocalDate thoiDiem;
+    private LocalDate birthday; // Ngày sinh
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private double canNang;
+    private Gender gender; // Giới tính của trẻ
 
-    @Column(nullable = false)
-    private double chieuCao;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user; // Liên kết với User (người dùng, có thể là phụ huynh)
 
-    @Column(nullable = false)
-    private double bmi;
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GrowthRecord> growthRecords = new ArrayList<>(); // Lịch sử phát triển của trẻ
 
+    // Constructor mặc định
     public Child() {
     }
 
-    public Child(String fullName, LocalDate birthday, Gender gender, LocalDate thoiDiem, double chieuCao, double bmi ) {
+    // Constructor với thông tin cơ bản
+    public Child(String fullName, LocalDate birthday, Gender gender, User user) {
         this.fullName = fullName;
         this.birthday = birthday;
         this.gender = gender;
-        this.thoiDiem = thoiDiem;
-        this.chieuCao = chieuCao;
-        this.bmi = bmi;
+        this.user = user;
     }
 
-    // Getters and setters
-
-    public LocalDate getBirthday() {
-        return birthday;
+    public Child(String fullName, LocalDate birthday, Gender gender) {
+        this.fullName = fullName;
+        this.birthday = birthday;
+        this.gender = gender;
     }
 
-    public String getFullName() {
-        return fullName;
+    // Phương thức thêm bản ghi phát triển
+    public void addGrowthRecord(LocalDate thoiDiem, double canNang, double chieuCao) {
+        GrowthRecord record = new GrowthRecord(this, thoiDiem, canNang, chieuCao);
+        this.growthRecords.add(record);
     }
 
-    public Gender getGender() {
-        return gender;
-    }
-
-    public LocalDate getThoiDiem() {
-        return thoiDiem;
-    }
-
-    public double getCanNang() {
-        return canNang;
-    }
-
-    public double getChieuCao() {
-        return chieuCao;
-    }
-
-    public double getBmi() {
-        return bmi;
-    }
-
+    // Getters và Setters
     public Long getId() {
         return id;
     }
@@ -87,32 +63,48 @@ public class Child {
         this.id = id;
     }
 
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
+    public String getFullName() {
+        return fullName;
     }
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
     public void setGender(Gender gender) {
         this.gender = gender;
     }
 
-    public void setThoiDiem(LocalDate thoiDiem) {
-        this.thoiDiem = thoiDiem;
+    public User getUser() {
+        return user;
     }
 
-    public void setCanNang(double canNang) {
-        this.canNang = canNang;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public void setChieuCao(double chieuCao) {
-        this.chieuCao = chieuCao;
+    public List<GrowthRecord> getGrowthRecords() {
+        return growthRecords;
     }
 
-    public void setBmi(double bmi) {
-        this.bmi = bmi;
+    public void setGrowthRecords(List<GrowthRecord> growthRecords) {
+        this.growthRecords = growthRecords;
+    }
+
+    // Enum cho giới tính
+    public enum Gender {
+        MALE, FEMALE, OTHER
     }
 }
-

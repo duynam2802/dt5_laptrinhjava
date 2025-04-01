@@ -1,6 +1,6 @@
 package ut.edu.childgrowth.models;
 
-public enum Role {
+public enum UserRole {
     ADMIN,
     USER,
     DOCTOR

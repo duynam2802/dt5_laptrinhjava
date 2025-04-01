@@ -1,14 +1,15 @@
 package ut.edu.childgrowth.models;
+
 import jakarta.persistence.*;
-import java.util.*;
-import ut.edu.childgrowth.models.User;
+import java.util.List;
 
 @Entity
-@Table (name = "users")
+@Table(name = "users")
 public class User {
-    @Id //Khoachinh
+
+    @Id // Khoá chính
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long user_id;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -26,12 +27,15 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private UserRole role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Child> children; // Quan hệ với Child, một User có thể quản lý nhiều Children
 
     public User() {
     }
 
-    public User(String email, String password, String fullName, Role role, String numPhone) {
+    public User(String email, String password, String fullName, UserRole role, String numPhone) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
@@ -39,13 +43,13 @@ public class User {
         this.numPhone = numPhone;
     }
 
-    // Getters and setters
-    public Long getId() {
-        return id;
+    // Getters và setters
+    public Long getUser_id() {
+        return user_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUser_id(Long id) {
+        this.user_id = id;
     }
 
     public String getEmail() {
@@ -72,11 +76,11 @@ public class User {
         this.fullName = fullName;
     }
 
-    public Role getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 
@@ -95,5 +99,13 @@ public class User {
     public void setNumPhone(String numPhone) {
         this.numPhone = numPhone;
     }
-}
 
+    // Getter và setter cho danh sách trẻ em
+    public List<Child> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Child> children) {
+        this.children = children;
+    }
+}

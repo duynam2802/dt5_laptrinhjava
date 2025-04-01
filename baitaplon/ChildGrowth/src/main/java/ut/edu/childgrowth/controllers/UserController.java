@@ -1,9 +1,9 @@
 package ut.edu.childgrowth.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ut.edu.childgrowth.models.User;
 import ut.edu.childgrowth.services.UserService;
-import ut.edu.childgrowth.controllers.PasswordChangeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,10 +15,22 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // Đăng ký người dùng
+//    // Đăng ký người dùng
+//    @PostMapping("/register")
+//    public User register(@RequestBody User user) {
+//        return userService.registerUser(user);
+//    }
+
+    // Đăng ký User mà không thêm Child
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return userService.registerUser(user);
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
+        try {
+            // Đăng ký user
+            userService.registerUser(user);
+            return ResponseEntity.ok("User registered successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Registration failed: " + e.getMessage());
+        }
     }
 
     // Lấy thông tin người dùng
@@ -30,7 +42,7 @@ public class UserController {
     // Cập nhật thông tin người dùng
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        user.setId(id);
+        user.setUser_id(id);
         return userService.updateUser(id, user);
     }
 
