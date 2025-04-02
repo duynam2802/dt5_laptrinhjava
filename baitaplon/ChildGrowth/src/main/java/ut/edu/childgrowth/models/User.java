@@ -35,7 +35,8 @@ public class User {
     public User() {
     }
 
-    public User(String email, String password, String fullName, UserRole role, String numPhone) {
+    public User(String username, String email, String password, String fullName, UserRole role, String numPhone) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.fullName = fullName;
@@ -99,6 +100,8 @@ public class User {
     public void setNumPhone(String numPhone) {
         this.numPhone = numPhone;
     }
+
+
 
     // Getter và setter cho danh sách trẻ em
     public List<Child> getChildren() {

@@ -1,1 +1,1 @@
-drop TABLE children WITH data;
+drop TABLE growth_records;

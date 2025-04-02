@@ -1,4 +1,4 @@
-package ut.edu.childgrowth.services;
+package ut.edu.childgrowth.dtos;
 
 public class PasswordChangeRequest {
     private String oldPassword;
