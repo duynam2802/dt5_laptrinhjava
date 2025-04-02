@@ -3,6 +3,8 @@ package ut.edu.childgrowth.models;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+//CHỈ SỐ TĂNG TRƯỞNG
+
 @Entity
 @Table(name = "growth_records")
 public class GrowthRecord {
@@ -38,6 +40,10 @@ public class GrowthRecord {
         this.canNang = canNang;
         this.chieuCao = chieuCao;
         this.bmi = calculateBmi(canNang, chieuCao);  // Tính toán BMI khi tạo bản ghi
+    }
+
+    public GrowthRecord() {
+
     }
 
 

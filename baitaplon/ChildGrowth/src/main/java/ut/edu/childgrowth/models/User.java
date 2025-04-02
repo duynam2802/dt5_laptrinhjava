@@ -3,6 +3,8 @@ package ut.edu.childgrowth.models;
 import jakarta.persistence.*;
 import java.util.List;
 
+//THÀNH VIÊN
+
 @Entity
 @Table(name = "users")
 public class User {
