@@ -1,5 +1,6 @@
 package ut.edu.childgrowth.controllers.rest;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,13 @@ public class UsersController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody UserRegisterRequest request) {
-        UserResponse response = userService.registerUser(request);
-        return ResponseEntity.ok(response);
+//    public ResponseEntity<UserResponse> register(@RequestBody UserRegisterRequest request) {
+//        UserResponse response = userService.registerUser(request);
+//        return ResponseEntity.ok(response);
+//    }
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRegisterRequest userRegisterRequest) {
+        String result = String.valueOf(userService.registerUser(userRegisterRequest));
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/login")

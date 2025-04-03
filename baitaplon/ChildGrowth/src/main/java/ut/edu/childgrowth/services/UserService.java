@@ -11,6 +11,7 @@ import ut.edu.childgrowth.dtos.UserRegisterRequest;
 import ut.edu.childgrowth.dtos.UserResponse;
 import ut.edu.childgrowth.dtos.PasswordChangeRequest;
 import ut.edu.childgrowth.models.User;
+import ut.edu.childgrowth.models.UserRole;
 import ut.edu.childgrowth.repositories.UserRepository;
 import ut.edu.childgrowth.jwt.JwtUtil;
 
@@ -27,6 +28,24 @@ public class UserService implements UserDetailsService {
     private JwtUtil jwtUtil;
 
     // Đăng ký người dùng
+//    public UserResponse registerUser(UserRegisterRequest request) {
+//        if (userRepository.existsByUsername(request.getUsername())) {
+//            throw new RuntimeException("Username đã tồn tại");
+//        }
+//        if (userRepository.existsByEmail(request.getEmail())) {
+//            throw new RuntimeException("Email đã tồn tại");
+//        }
+//
+//        User user = new User();
+//        user.setUsername(request.getUsername());
+//        user.setPassword(request.getPassword()); // Lưu mật khẩu dạng plaintext
+//        user.setEmail(request.getEmail());
+//        user.setFullName(request.getFullname());
+//        user.setNumPhone(request.getNumPhone());
+//
+//        user = userRepository.save(user);
+//        return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail());
+//    }
     public UserResponse registerUser(UserRegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username đã tồn tại");
@@ -37,10 +56,11 @@ public class UserService implements UserDetailsService {
 
         User user = new User();
         user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword()); // Lưu mật khẩu dạng plaintext
+        user.setPassword(request.getPassword());
         user.setEmail(request.getEmail());
         user.setFullName(request.getFullname());
         user.setNumPhone(request.getNumPhone());
+        user.setRole(UserRole.USER); // Gán vai trò mặc định là USER
 
         user = userRepository.save(user);
         return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail());

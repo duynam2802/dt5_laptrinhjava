@@ -1,20 +1,35 @@
 package ut.edu.childgrowth.dtos;
 
-public class UserRegisterRequest {
-    public String getFullname;
-    private String username;
-    private String password;
-    private String email; // Có thể thêm các trường khác nếu cần
-    private String getNumPhone;
+import jakarta.validation.constraints.NotNull;
 
+public class UserRegisterRequest {
+
+    @NotNull(message = "Username không được để trống")
+    private String username;
+
+    @NotNull(message = "Password không được để trống")
+    private String password;
+
+    @NotNull(message = "Email không được để trống")
+    private String email;
+
+    @NotNull(message = "Full name không được để trống")
+    private String fullname;
+
+    private String numPhone; // Không bắt buộc, nên không cần @NotNull
+
+    // Constructor mặc định
     public UserRegisterRequest() {}
 
-    public UserRegisterRequest(String username, String password, String email) {
+    // Constructor với các trường bắt buộc
+    public UserRegisterRequest(String username, String password, String email, String fullname) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.fullname = fullname;
     }
 
+    // Getter và Setter
     public String getUsername() {
         return username;
     }
@@ -25,14 +40,6 @@ public class UserRegisterRequest {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getGetFullname() {
-        return getFullname;
-    }
-
-    public String getGetNumPhone() {
-        return getNumPhone;
     }
 
     public void setPassword(String password) {
@@ -48,10 +55,18 @@ public class UserRegisterRequest {
     }
 
     public String getFullname() {
-        return getFullname;
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public String getNumPhone() {
-        return getNumPhone;
+        return numPhone;
+    }
+
+    public void setNumPhone(String numPhone) {
+        this.numPhone = numPhone;
     }
 }
