@@ -4,6 +4,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ut.edu.childgrowth.dtos.AuthRequest;
@@ -25,6 +28,9 @@ public class UsersController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @PostMapping("/register")
 //    public ResponseEntity<UserResponse> register(@RequestBody UserRegisterRequest request) {
 //        UserResponse response = userService.registerUser(request);
@@ -36,9 +42,17 @@ public class UsersController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
-        AuthResponse response = userService.loginUser(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> login(@RequestBody ut.edu.vn.dms.dtos.LoginRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+            );
+            UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
+            String token = jwtUtil.generateToken(userDetails.getUsername());
+            return ResponseEntity.ok(new AuthResponse(token));
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sai thông tin đăng nhập");
+        }
     }
 
     @GetMapping("/{username}")
