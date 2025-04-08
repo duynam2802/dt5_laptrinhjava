@@ -1,1 +1,1 @@
-drop TABLE growth_records;
+CREATE DATABASE childgrowthdb;

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/ChildGrowth/ChildGrowth.iml" filepath="$PROJECT_DIR$/ChildGrowth/ChildGrowth.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/baitaplon.iml" filepath="$PROJECT_DIR$/.idea/baitaplon.iml" />
     </modules>
   </component>

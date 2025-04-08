@@ -12,7 +12,6 @@ import ut.edu.childgrowth.dtos.UserRegisterRequest;
 import ut.edu.childgrowth.dtos.UserResponse;
 import ut.edu.childgrowth.dtos.PasswordChangeRequest;
 import ut.edu.childgrowth.models.User;
-import ut.edu.childgrowth.models.UserRole;
 import ut.edu.childgrowth.repositories.UserRepository;
 import ut.edu.childgrowth.jwt.JwtUtil;
 
@@ -30,26 +29,23 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    public UserResponse registerUser(UserRegisterRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username đã tồn tại");
-        }
-        if (request.getEmail() != null && userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email đã tồn tại");
-        }
-
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword())); // Mã hóa mật khẩu bằng BCrypt
-        user.setEmail(request.getEmail());
-        user.setFullName(request.getFullname());
-        user.setNumPhone(request.getNumPhone());
-        user.setRole(UserRole.USER); // Gán mặc định role là USER
-
-        user = userRepository.save(user);
-        return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail());
+    
+public String registerUser(UserRegisterRequest userRegisterRequest) {
+    if (userRepository.existsByUsername(userRegisterRequest.getUsername())) {
+        return "Username đã tồn tại!";
     }
+
+    User user = new User();
+    user.setUsername(userRegisterRequest.getUsername());
+    user.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
+    user.setRole(userRegisterRequest.getRole());
+    user.setEmail(userRegisterRequest.getEmail());
+    user.setFullName(userRegisterRequest.getFullname());
+    user.setNumphone(userRegisterRequest.getNumPhone());
+
+    userRepository.save(user);
+    return "Tạo tài khoản thành công!";
+}
 
     public AuthResponse loginUser(AuthRequest request) {
         Optional<User> userOptional = userRepository.findByUsername(request.getUsername());
@@ -62,7 +58,7 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Mật khẩu không chính xác");
         }
 
-        String token = jwtUtil.generateToken(user.getUsername()); // Tạo JWT token
+        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name()); // Tạo JWT token
         return new AuthResponse(token);
     }
 
@@ -107,7 +103,7 @@ public class UserService implements UserDetailsService {
 
         User user = existingUserOptional.get();
         user.setFullName(updatedUser.getFullName());
-        user.setNumPhone(updatedUser.getNumPhone());
+        user.setNumphone(updatedUser.getNumphone());
         user.setEmail(updatedUser.getEmail());
         user.setRole(updatedUser.getRole());
 

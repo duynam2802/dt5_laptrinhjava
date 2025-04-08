@@ -1,4 +1,4 @@
-package ut.edu.vn.dms.dtos;
+package ut.edu.childgrowth.dtos;
 
 public class LoginRequest {
     private String username;
