@@ -1,2 +1,2 @@
-Child Vaccine Schedule Tracking System
-Phần mềm quản lý và theo dõi lịch tiêm chủng của trẻ em
+Child Growth Tracking System
+Phần mềm theo dõi sự tăng trưởng của trẻ em
