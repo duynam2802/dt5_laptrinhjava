@@ -9,8 +9,8 @@ public class UserRegisterRequest {
     private String username;
     @Getter
     private String password;
-    @Getter
-    private String role;
+//    @Getter
+//    private String role;
     private String email;
     @Getter
     private String numPhone;
@@ -20,4 +20,6 @@ public class UserRegisterRequest {
 //    public String getFullname() {
 //        return fullName;
 //    }
+
+
 }

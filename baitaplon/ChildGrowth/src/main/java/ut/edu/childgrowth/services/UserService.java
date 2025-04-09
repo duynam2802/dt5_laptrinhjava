@@ -38,7 +38,7 @@ public String registerUser(UserRegisterRequest userRegisterRequest) {
     User user = new User();
     user.setUsername(userRegisterRequest.getUsername());
     user.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
-    user.setRole(userRegisterRequest.getRole());
+    user.setRole("USER");
     user.setEmail(userRegisterRequest.getEmail());
     user.setFullName(userRegisterRequest.getFullname());
     user.setNumphone(userRegisterRequest.getNumPhone());

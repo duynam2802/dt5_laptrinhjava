@@ -18,7 +18,7 @@ import ut.edu.childgrowth.services.UserService;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/users")
+//@RequestMapping("/users")
 public class UsersController {
 
     @Autowired
