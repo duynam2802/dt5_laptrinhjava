@@ -1,57 +1,25 @@
 package ut.edu.childgrowth.dtos;
 
+import lombok.Data;
+import lombok.Getter;
+
+@Data
 public class UserRegisterRequest {
-    public String getFullname;
+    @Getter
     private String username;
+    @Getter
     private String password;
-    private String email; // Có thể thêm các trường khác nếu cần
-    private String getNumPhone;
+//    @Getter
+//    private String role;
+    private String email;
+    @Getter
+    private String numPhone;
+    @Getter
+    private String fullname;
 
-    public UserRegisterRequest() {}
+//    public String getFullname() {
+//        return fullName;
+//    }
 
-    public UserRegisterRequest(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-    }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getGetFullname() {
-        return getFullname;
-    }
-
-    public String getGetNumPhone() {
-        return getNumPhone;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFullname() {
-        return getFullname;
-    }
-
-    public String getNumPhone() {
-        return getNumPhone;
-    }
 }

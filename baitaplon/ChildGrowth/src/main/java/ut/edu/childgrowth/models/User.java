@@ -1,6 +1,9 @@
 package ut.edu.childgrowth.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
 //THÀNH VIÊN
@@ -13,17 +16,23 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long user_id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "username", nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Setter
+    @Column(name = "fullname", nullable = false)
     private String fullName;
 
-    @Column(nullable = false, length = 10)
-    private String numPhone;
+    @Setter
+    @Getter
+    @Column(name = "numphone",nullable = false, length = 10)
+    private String numphone;
+//    public void setNumPhone(){
+//
+//    }
 
     private String email;
 
@@ -43,7 +52,7 @@ public class User {
         this.password = password;
         this.fullName = fullName;
         this.role = role;
-        this.numPhone = numPhone;
+        this.numphone = numPhone;
     }
 
     // Getters và setters
@@ -75,10 +84,6 @@ public class User {
         return fullName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
     public UserRole getRole() {
         return role;
     }
@@ -86,21 +91,24 @@ public class User {
     public void setRole(UserRole role) {
         this.role = role;
     }
+    public void setRole(String role) {
+        this.role = UserRole.valueOf(role);
+    }
 
     public String getUsername() {
         return username;
     }
 
-    public String getNumPhone() {
-        return numPhone;
+    public String getNumphone() {
+        return numphone;
     }
 
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public void setNumPhone(String numPhone) {
-        this.numPhone = numPhone;
+    public void setNumphone(String numPhone) {
+        this.numphone = numPhone;
     }
 
 
@@ -113,4 +121,7 @@ public class User {
     public void setChildren(List<Child> children) {
         this.children = children;
     }
+
+
+
 }

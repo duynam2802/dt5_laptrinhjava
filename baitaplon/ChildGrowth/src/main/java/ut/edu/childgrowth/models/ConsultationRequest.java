@@ -86,12 +86,5 @@ public class ConsultationRequest {
     public void setResponse(String response) {
         this.response = response;
     }
-    //các logic in ra màn hình
-//    public void createRequest(Map<String, String> data) {
-//        System.out.println("Các yêu cầu tạo dữ liệu: " + data);
-//    }
-//
-//    public void shareGrowthData() {
-//        System.out.println("Dữ liệu về sự tăng trưởng đã gửi đến bác sĩ có ID: " + doctorId);
-//    }
+
 }

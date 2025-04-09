@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ut.edu.childgrowth.dtos.AuthRequest;
 import ut.edu.childgrowth.dtos.AuthResponse;
@@ -26,27 +27,26 @@ public class UserService implements UserDetailsService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // Đăng ký người dùng
-    public UserResponse registerUser(UserRegisterRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username đã tồn tại");
-        }
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email đã tồn tại");
-        }
-
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword()); // Lưu mật khẩu dạng plaintext
-        user.setEmail(request.getEmail());
-        user.setFullName(request.getFullname());
-        user.setNumPhone(request.getNumPhone());
-
-        user = userRepository.save(user);
-        return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail());
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+public String registerUser(UserRegisterRequest userRegisterRequest) {
+    if (userRepository.existsByUsername(userRegisterRequest.getUsername())) {
+        return "Username đã tồn tại!";
     }
 
-    // Đăng nhập người dùng
+    User user = new User();
+    user.setUsername(userRegisterRequest.getUsername());
+    user.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
+    user.setRole("USER");
+    user.setEmail(userRegisterRequest.getEmail());
+    user.setFullName(userRegisterRequest.getFullname());
+    user.setNumphone(userRegisterRequest.getNumPhone());
+
+    userRepository.save(user);
+    return "Tạo tài khoản thành công!";
+}
+
     public AuthResponse loginUser(AuthRequest request) {
         Optional<User> userOptional = userRepository.findByUsername(request.getUsername());
         if (userOptional.isEmpty()) {
@@ -54,37 +54,49 @@ public class UserService implements UserDetailsService {
         }
 
         User user = userOptional.get();
-        if (!request.getPassword().equals(user.getPassword())) { // So sánh mật khẩu dạng plaintext
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) { // So sánh mật khẩu
             throw new RuntimeException("Mật khẩu không chính xác");
         }
 
-        String token = jwtUtil.generateToken(user.getUsername());
+        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name()); // Tạo JWT token
         return new AuthResponse(token);
     }
 
-    // Tìm người dùng theo username
+    public String changePassword(Long id, PasswordChangeRequest request) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            return "Người dùng không tồn tại";
+        }User user = userOptional.get();
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) { // So sánh mật khẩu cũ
+            return "Mật khẩu cũ không chính xác";
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword())); // Mã hóa mật khẩu mới
+        userRepository.save(user);
+        return "Mật khẩu đã được thay đổi thành công";
+    }
+
+    // Các phương thức khác giữ nguyên
     public UserResponse getUserByUsername(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
             throw new RuntimeException("Người dùng không tồn tại");
         }
-
         User user = userOptional.get();
-        return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail());
+        return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail(), user.getFullName());
     }
 
-    // Tìm người dùng theo email
     public UserResponse getUserByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
             throw new RuntimeException("Người dùng không tồn tại");
         }
-
         User user = userOptional.get();
-        return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail());
+        return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail(), user.getFullName());
+
     }
 
-    // Cập nhật thông tin người dùng
+    // Cập nhật thông tin user
     public UserResponse updateUser(Long id, User updatedUser) {
         Optional<User> existingUserOptional = userRepository.findById(id);
         if (existingUserOptional.isEmpty()) {
@@ -92,42 +104,49 @@ public class UserService implements UserDetailsService {
         }
 
         User user = existingUserOptional.get();
-        user.setFullName(updatedUser.getFullName());
-        user.setNumPhone(updatedUser.getNumPhone());
-        user.setEmail(updatedUser.getEmail());
-        user.setRole(updatedUser.getRole());
 
-        if (!user.getEmail().equals(updatedUser.getEmail()) && userRepository.existsByEmail(updatedUser.getEmail())) {
-            throw new RuntimeException("Email đã tồn tại!");
+        // Cập nhật nếu có fullName
+        if (updatedUser.getFullName() != null) {
+            user.setFullName(updatedUser.getFullName());
         }
 
+        // Cập nhật nếu có số điện thoại
+        if (updatedUser.getNumphone() != null) {
+            user.setNumphone(updatedUser.getNumphone());
+        }
+
+        // Cập nhật nếu có email và email đó chưa được dùng
+        if (updatedUser.getEmail() != null && !updatedUser.getEmail().equals(user.getEmail())) {
+            if (userRepository.existsByEmail(updatedUser.getEmail())) {
+                throw new RuntimeException("Email đã tồn tại!");
+            }
+            user.setEmail(updatedUser.getEmail());
+        }
+
+        //  cập nhật role nếu cần
+        // if (updatedUser.getRole() != null) {
+        //     user.setRole(updatedUser.getRole());
+        // }
+
         user = userRepository.save(user);
-        return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail());
+
+        return new UserResponse(
+                user.getUser_id(),
+                user.getUsername(),
+                user.getFullName(),
+                user.getNumphone(),
+                user.getEmail(),
+                "Đã thay đổi thành công"
+        );
     }
 
-    // Xóa người dùng
+
+
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw new RuntimeException("Người dùng không tồn tại!");
         }
         userRepository.deleteById(id);
-    }
-
-    // Thay đổi mật khẩu
-    public String changePassword(Long id, PasswordChangeRequest request) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isEmpty()) {
-            return "Người dùng không tồn tại";
-        }
-
-        User user = userOptional.get();
-        if (!request.getOldPassword().equals(user.getPassword())) { // So sánh mật khẩu dạng plaintext
-            return "Mật khẩu cũ không chính xác";
-        }
-
-        user.setPassword(request.getNewPassword()); // Lưu mật khẩu mới dạng plaintext
-        userRepository.save(user);
-        return "Mật khẩu đã được thay đổi thành công";
     }
 
     @Override
@@ -143,5 +162,10 @@ public class UserService implements UserDetailsService {
                 user.getPassword(),
                 new ArrayList<>()
         );
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với id: " + id));
     }
 }

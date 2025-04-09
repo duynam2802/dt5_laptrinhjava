@@ -1,21 +1,24 @@
 package ut.edu.childgrowth.controllers.rest;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import ut.edu.childgrowth.dtos.AuthRequest;
-import ut.edu.childgrowth.dtos.AuthResponse;
-import ut.edu.childgrowth.dtos.UserRegisterRequest;
-import ut.edu.childgrowth.dtos.UserResponse;
-import ut.edu.childgrowth.dtos.PasswordChangeRequest;
+import ut.edu.childgrowth.dtos.*;
 import ut.edu.childgrowth.models.User;
 import ut.edu.childgrowth.jwt.JwtUtil;
 import ut.edu.childgrowth.services.UserService;
 
+import java.util.stream.Collectors;
+
 @RestController
-@RequestMapping("/api/users")
+//@RequestMapping("/users")
 public class UsersController {
 
     @Autowired
@@ -24,16 +27,31 @@ public class UsersController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody UserRegisterRequest request) {
-        UserResponse response = userService.registerUser(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRegisterRequest userRegisterRequest) {
+        String result = String.valueOf(userService.registerUser(userRegisterRequest));
+        return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
-        AuthResponse response = userService.loginUser(request);
-        return ResponseEntity.ok(response);
+    @PostMapping(value= "/login",produces = "application/json" )
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+            );
+            UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
+            //Extract the role from UserDetails
+            String role = userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.joining(","));
+            String token = jwtUtil.generateToken(userDetails.getUsername(), role);
+            return ResponseEntity.ok(new AuthResponse(token));
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sai thông tin đăng nhập");
+        }
     }
 
     @GetMapping("/{username}")
@@ -60,7 +78,9 @@ public class UsersController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
+
+    // Cập nhật thông tin User
+    @PutMapping("/upgrade/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Long id,
                                                    @RequestBody User user,
                                                    @RequestHeader("Authorization") String authHeader) {
@@ -70,15 +90,27 @@ public class UsersController {
         }
 
         String token = authHeader.substring(7);
-        String username = jwtUtil.extractUsername(token);
-        UserDetails userDetails = userService.loadUserByUsername(username);
+        String usernameFromToken = jwtUtil.extractUsername(token);
+        UserDetails userDetails = userService.loadUserByUsername(usernameFromToken);
         if (!jwtUtil.validateToken(token, userDetails)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Lấy user đang được cập nhật
+        User targetUser = userService.findById(id);
+        if (targetUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        // Kiểm tra user đang login có phải là chủ tài khoản không
+        if (!targetUser.getUsername().equals(usernameFromToken)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
 
         UserResponse response = userService.updateUser(id, user);
         return ResponseEntity.ok(response);
     }
+
 
     @PutMapping("/{id}/change-password")
     public ResponseEntity<?> changePassword(@PathVariable Long id,

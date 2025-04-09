@@ -9,7 +9,7 @@ import ut.edu.childgrowth.dtos.UserResponse;
 import ut.edu.childgrowth.services.UserService;
 
 @Controller
-@RequestMapping("/api/user")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -37,13 +37,22 @@ public class UserController {
 
     // Xử lý đăng ký từ form
     @PostMapping("/register")
-    public String registerFromForm(@ModelAttribute("user") UserRegisterRequest request, Model model) {
+    public String processRegister(@ModelAttribute("user") UserRegisterRequest userDTO,
+                                  @RequestParam("repeatPassword") String repeatPassword,
+                                  Model model) {
+
+        if (!userDTO.getPassword().equals(repeatPassword)) {
+            model.addAttribute("error", "Mật khẩu không khớp!");
+            return "register";
+        }
+
         try {
-            userService.registerUser(request);
-            return "redirect:/user/login"; // Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
-        } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            return "register"; // Quay lại form nếu có lỗi
+            userService.registerUser(userDTO);  // GỌI LƯU
+            return "redirect:/login.html";
+        } catch (Exception e) {
+            model.addAttribute("error", "Lỗi khi tạo tài khoản: " + e.getMessage());
+            return "register";
         }
     }
+
 }
