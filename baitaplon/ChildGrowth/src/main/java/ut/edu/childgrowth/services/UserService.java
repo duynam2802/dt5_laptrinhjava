@@ -83,7 +83,7 @@ public String registerUser(UserRegisterRequest userRegisterRequest) {
             throw new RuntimeException("Người dùng không tồn tại");
         }
         User user = userOptional.get();
-        return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail());
+        return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail(), user.getFullName());
     }
 
     public UserResponse getUserByEmail(String email) {
@@ -92,9 +92,11 @@ public String registerUser(UserRegisterRequest userRegisterRequest) {
             throw new RuntimeException("Người dùng không tồn tại");
         }
         User user = userOptional.get();
-        return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail());
+        return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail(), user.getFullName());
+
     }
 
+    // Cập nhật thông tin user
     public UserResponse updateUser(Long id, User updatedUser) {
         Optional<User> existingUserOptional = userRepository.findById(id);
         if (existingUserOptional.isEmpty()) {
@@ -102,18 +104,43 @@ public String registerUser(UserRegisterRequest userRegisterRequest) {
         }
 
         User user = existingUserOptional.get();
-        user.setFullName(updatedUser.getFullName());
-        user.setNumphone(updatedUser.getNumphone());
-        user.setEmail(updatedUser.getEmail());
-        user.setRole(updatedUser.getRole());
 
-        if (!user.getEmail().equals(updatedUser.getEmail()) && userRepository.existsByEmail(updatedUser.getEmail())) {
-            throw new RuntimeException("Email đã tồn tại!");
+        // Cập nhật nếu có fullName
+        if (updatedUser.getFullName() != null) {
+            user.setFullName(updatedUser.getFullName());
         }
 
+        // Cập nhật nếu có số điện thoại
+        if (updatedUser.getNumphone() != null) {
+            user.setNumphone(updatedUser.getNumphone());
+        }
+
+        // Cập nhật nếu có email và email đó chưa được dùng
+        if (updatedUser.getEmail() != null && !updatedUser.getEmail().equals(user.getEmail())) {
+            if (userRepository.existsByEmail(updatedUser.getEmail())) {
+                throw new RuntimeException("Email đã tồn tại!");
+            }
+            user.setEmail(updatedUser.getEmail());
+        }
+
+        //  cập nhật role nếu cần
+        // if (updatedUser.getRole() != null) {
+        //     user.setRole(updatedUser.getRole());
+        // }
+
         user = userRepository.save(user);
-        return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail());
+
+        return new UserResponse(
+                user.getUser_id(),
+                user.getUsername(),
+                user.getFullName(),
+                user.getNumphone(),
+                user.getEmail(),
+                "Đã thay đổi thành công"
+        );
     }
+
+
 
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
@@ -135,5 +162,10 @@ public String registerUser(UserRegisterRequest userRegisterRequest) {
                 user.getPassword(),
                 new ArrayList<>()
         );
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với id: " + id));
     }
 }

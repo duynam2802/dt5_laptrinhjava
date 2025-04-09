@@ -9,7 +9,7 @@ import ut.edu.childgrowth.dtos.UserResponse;
 import ut.edu.childgrowth.services.UserService;
 
 @Controller
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired

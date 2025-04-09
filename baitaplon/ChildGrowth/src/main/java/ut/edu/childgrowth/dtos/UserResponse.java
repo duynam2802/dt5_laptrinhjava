@@ -1,16 +1,70 @@
 package ut.edu.childgrowth.dtos;
 
+import java.util.Map;
+
 public class UserResponse {
     private Long id;
     private String username;
+    private String fullName;
+    private String numphone;
     private String email;
+    private String message;
 
     public UserResponse() {}
 
-    public UserResponse(Long id, String username, String email) {
+//    public UserResponse(Long id, String username, String email) {
+//        this.id = id;
+//        this.username = username;
+//        this.email = email;
+//    }
+
+    public UserResponse(Long id, String username, String email, String numphone, String fullName) {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.numphone = numphone;
+        this.username = fullName;
+    }
+
+    public UserResponse(Long id, String username, String email, String fullName) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+//        this.numphone = numphone;
+        this.username = fullName;
+    }
+
+    public UserResponse(Long id, String username, String fullName, String numphone, String email, String message) {
+        this.id = id;
+        this.username = username;
+        this.fullName = fullName;
+        this.numphone = numphone;
+        this.email = email;
+        this.message = message;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getNumphone() {
+        return numphone;
+    }
+
+    public void setNumphone(String numphone) {
+        this.numphone = numphone;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Long getId() {
@@ -36,6 +90,7 @@ public class UserResponse {
     public void setEmail(String email) {
         this.email = email;
     }
+
 
 
 }
