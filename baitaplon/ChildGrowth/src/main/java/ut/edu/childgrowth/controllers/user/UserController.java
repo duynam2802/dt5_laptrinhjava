@@ -48,7 +48,7 @@ public class UserController {
 
         try {
             userService.registerUser(userDTO);  // GỌI LƯU
-            return "redirect:/login.html";
+            return "redirect:/login";
         } catch (Exception e) {
             model.addAttribute("error", "Lỗi khi tạo tài khoản: " + e.getMessage());
             return "register";
