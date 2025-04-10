@@ -34,6 +34,9 @@
                                 </div>
 
                                 <!-- Login form -->
+                                 
+                                
+
                                 <form class="user" method="post" th:action="@{/login}">
                                     <div class="form-group">
 <!--                                        <input type="text" class="form-control form-control-user"-->
@@ -60,6 +63,10 @@
                                     <button type="submit" class="btn btn-primary btn-user btn-block">
                                         Đăng Nhập
                                     </button>
+                                    <!-- Thông báo lỗi -->
+                                <div th:if="${error}" class="text-center" style="color : rgb(206, 11, 11)" role="alert">
+                                    <i style="font-size: 12.5px;" th:text="${error}"></i>
+                                </div>
 
                                     <hr>
                                     <a href="#" class="btn btn-google btn-user btn-block">

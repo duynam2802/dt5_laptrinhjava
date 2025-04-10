@@ -38,6 +38,8 @@ public class AuthController {
         }
     }
 
+    
+
     @GetMapping("/index")
     public String showIndex() {
         return "index";
