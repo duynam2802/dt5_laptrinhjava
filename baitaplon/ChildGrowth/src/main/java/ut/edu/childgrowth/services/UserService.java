@@ -96,7 +96,7 @@ public String registerUser(UserRegisterRequest userRegisterRequest) {
 
     }
 
-    // Cập nhật thông tin user
+     //Cập nhật thông tin user
     public UserResponse updateUser(Long id, User updatedUser) {
         Optional<User> existingUserOptional = userRepository.findById(id);
         if (existingUserOptional.isEmpty()) {
@@ -142,6 +142,7 @@ public String registerUser(UserRegisterRequest userRegisterRequest) {
 
 
 
+
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw new RuntimeException("Người dùng không tồn tại!");
@@ -168,4 +169,10 @@ public String registerUser(UserRegisterRequest userRegisterRequest) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với id: " + id));
     }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với username: " + username));
+    }
+
 }

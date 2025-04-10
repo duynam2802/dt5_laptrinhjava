@@ -80,7 +80,7 @@ public class UsersController {
 
 
     // Cập nhật thông tin User
-    @PutMapping("/upgrade/{id}")
+    @PutMapping("/update_user/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Long id,
                                                    @RequestBody User user,
                                                    @RequestHeader("Authorization") String authHeader) {

@@ -1,5 +1,6 @@
 package ut.edu.childgrowth.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,13 +25,16 @@ public class AuthController {
     public String handleLogin(
             @RequestParam String username,
             @RequestParam String password,
+            HttpSession session,         // ✅ thêm vào để lưu session
             Model model) {
 
         AuthRequest authRequest = new AuthRequest(username, password);
         try {
             AuthResponse authResponse = userService.loginUser(authRequest);
-            // Có thể lưu token vào session nếu muốn sử dụng về sau
-            model.addAttribute("token", authResponse.getToken());
+
+            // ✅ Lưu token vào session để dùng lại
+            session.setAttribute("token", authResponse.getToken());
+
             return "redirect:/index";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
@@ -38,10 +42,17 @@ public class AuthController {
         }
     }
 
-    
-
     @GetMapping("/index")
-    public String showIndex() {
+    public String showIndex(HttpSession session, Model model) {
+        // ✅ Nếu muốn hiển thị token ra giao diện
+        String token = (String) session.getAttribute("token");
+        model.addAttribute("token", token);
         return "index";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); // ✅ Xóa token & session khi logout
+        return "redirect:/login";
     }
 }

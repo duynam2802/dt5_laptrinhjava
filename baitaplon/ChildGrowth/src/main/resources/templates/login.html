@@ -9,17 +9,10 @@
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700,900" rel="stylesheet">
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background: linear-gradient(135deg, #eb749e, #bdc0cf);
-            height: 100vh;
-            margin: 0;
-        }
-    </style>
 </head>
 
-<body>
+<body class="bg-gradient-primary">
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-xl-10 col-lg-12 col-md-9">
@@ -34,22 +27,18 @@
                                 </div>
 
                                 <!-- Login form -->
-                                 
-                                
-
                                 <form class="user" method="post" th:action="@{/login}">
                                     <div class="form-group">
-<!--                                        <input type="text" class="form-control form-control-user"-->
-<!--                                               th:name="${_csrf.parameterName}"-->
-<!--                                               th:value="${_csrf.token}" hidden />-->
+                                        <label for="username" class="text-gray-900">Tên đăng nhập hoặc email</label>
                                         <input type="text" class="form-control form-control-user"
-                                               name="username"
+                                               id="username" name="username"
                                                placeholder="Tên đăng nhập hoặc email" required>
                                     </div>
 
                                     <div class="form-group">
+                                        <label for="password" class="text-gray-900">Mật khẩu</label>
                                         <input type="password" class="form-control form-control-user"
-                                               name="password"
+                                               id="password" name="password"
                                                placeholder="Mật khẩu" required>
                                     </div>
 
@@ -63,10 +52,11 @@
                                     <button type="submit" class="btn btn-primary btn-user btn-block">
                                         Đăng Nhập
                                     </button>
+
                                     <!-- Thông báo lỗi -->
-                                <div th:if="${error}" class="text-center" style="color : rgb(206, 11, 11)" role="alert">
-                                    <i style="font-size: 12.5px;" th:text="${error}"></i>
-                                </div>
+                                    <div th:if="${error}" class="text-center mt-3" style="color: rgb(206, 11, 11)" role="alert">
+                                        <i style="font-size: 12.5px;" th:text="${error}"></i>
+                                    </div>
 
                                     <hr>
                                     <a href="#" class="btn btn-google btn-user btn-block">
