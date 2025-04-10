@@ -56,7 +56,7 @@ public class UsersController {
 
     @GetMapping("/{username}")
     public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username,
-                                                          @RequestHeader("Authorization") String authHeader) {
+                                                          @RequestHeader(value = "Authorization", required = false) String authHeader) {
         // Kiểm tra token
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
