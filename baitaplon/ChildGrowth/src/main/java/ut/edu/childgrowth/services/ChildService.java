@@ -35,8 +35,8 @@ public class ChildService {
     @Autowired
     UserService userService;
 
-    @Autowired
-    ChildService childService;
+//    @Autowired
+//    ChildService childService;
 
 
 
