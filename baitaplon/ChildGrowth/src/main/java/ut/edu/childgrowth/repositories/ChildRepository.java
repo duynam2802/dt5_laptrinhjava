@@ -14,4 +14,6 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
     boolean existsByFullNameAndUser(String fullName, User user); // New method
 
     List<Child> findByUser(User user);
+
+    Optional<Child> findByUserAndFullName(User user, String fullName);
 }

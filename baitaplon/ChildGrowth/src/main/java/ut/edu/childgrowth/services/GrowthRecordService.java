@@ -2,14 +2,22 @@ package ut.edu.childgrowth.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ut.edu.childgrowth.models.Child;
 import ut.edu.childgrowth.models.GrowthRecord;
 import ut.edu.childgrowth.repositories.GrowthRecordRepository;
+
+import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
 @Service
 public class GrowthRecordService {
 
     @Autowired
     private GrowthRecordRepository growthRecordRepository;
+
+    @Autowired
+    ChildService childService;
+
 
     public GrowthRecord saveGrowthRecord(GrowthRecord growthRecord) {
         return growthRecordRepository.save(growthRecord);
@@ -18,4 +26,25 @@ public class GrowthRecordService {
     public void save(GrowthRecord newRecord) {
         growthRecordRepository.save(newRecord);
     }
+
+    public String updateGrowth(Long childId, double weight, double height, LocalDate date) {
+        if (weight <= 0 || weight > 300) {
+            throw new IllegalArgumentException("Cân nặng không hợp lệ.");
+        }
+        if (height <= 10 || height > 250) {
+            throw new IllegalArgumentException("Chiều cao không hợp lệ.");
+        }
+
+        Child child = childService.findById(childId);
+        if (child == null) {
+            throw new NoSuchElementException("Không tìm thấy trẻ.");
+        }
+
+        LocalDate thoiDiem = (date != null) ? date : LocalDate.now();
+        GrowthRecord record = new GrowthRecord(child, thoiDiem, weight, height);
+        growthRecordRepository.save(record);
+
+        return "Đã cập nhật thông tin thành công";
+    }
+
 }

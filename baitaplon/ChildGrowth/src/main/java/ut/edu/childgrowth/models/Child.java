@@ -18,12 +18,18 @@ public class Child {
     @Column(nullable = false)
     private String fullName; // Họ và tên của trẻ
 
+    @Column
+    private String nickname; // Biệt danh của trẻ
+
     @Column(nullable = false)
     private LocalDate birthday; // Ngày sinh
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender; // Giới tính của trẻ
+
+    @Column(columnDefinition = "TEXT")
+    private String medicalHistory; // Tiền sử bệnh
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -95,6 +101,22 @@ public class Child {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getMedicalHistory() {
+        return medicalHistory;
+    }
+
+    public void setMedicalHistory(String medicalHistory) {
+        this.medicalHistory = medicalHistory;
     }
 
     public List<GrowthRecord> getGrowthRecords() {

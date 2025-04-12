@@ -1,5 +1,6 @@
 package ut.edu.childgrowth.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,9 +31,6 @@ public class User {
     @Getter
     @Column(name = "numphone",nullable = false, length = 10)
     private String numphone;
-//    public void setNumPhone(){
-//
-//    }
 
     private String email;
 
@@ -41,6 +39,7 @@ public class User {
     private UserRole role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Child> children; // Quan hệ với Child, một User có thể quản lý nhiều Children
 
     public User() {
@@ -121,7 +120,6 @@ public class User {
     public void setChildren(List<Child> children) {
         this.children = children;
     }
-
 
 
 }

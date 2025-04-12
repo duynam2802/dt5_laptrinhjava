@@ -3,16 +3,19 @@ package ut.edu.childgrowth.services;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ut.edu.childgrowth.dtos.UserResponse;
+import ut.edu.childgrowth.jwt.JwtUtil;
 import ut.edu.childgrowth.models.Child;
 import ut.edu.childgrowth.models.GrowthRecord;
 //import ut.edu.childgrowth.;
 import ut.edu.childgrowth.models.User;
 import ut.edu.childgrowth.repositories.ChildRepository;
 import ut.edu.childgrowth.repositories.GrowthRecordRepository;
+import ut.edu.childgrowth.repositories.UserRepository;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.time.Period;
+import java.util.*;
 
 @Service
 public class ChildService {
@@ -23,48 +26,85 @@ public class ChildService {
     @Autowired
     private GrowthRecordRepository growthRecordRepository;
 
-    // Các phương thức khác...
+    @Autowired
+    JwtUtil jwtUtil;
 
-    public boolean updateGrowthMetrics(Long childId, double canNang, double chieuCao, double bmi, LocalDate thoiDiem) {
-        // Lấy trẻ theo ID
-        Child child = childRepository.findById(childId).orElse(null);
+    @Autowired
+    UserRepository userRepository;
 
-        if (child == null) {
-            return false;
-        }
+    @Autowired
+    UserService userService;
 
-        // Tìm bản ghi phát triển mới nhất của trẻ
-        Optional<GrowthRecord> optionalRecord = growthRecordRepository.findTopByChildOrderByThoiDiemDesc(child);
+    @Autowired
+    ChildService childService;
 
-        GrowthRecord growthRecord;
-        if (optionalRecord.isPresent()) {
-            // Nếu có bản ghi phát triển mới nhất, cập nhật thông tin
-            growthRecord = optionalRecord.get();
-            growthRecord.setCanNang(canNang);
-            growthRecord.setChieuCao(chieuCao);
-            growthRecord.setBmi(bmi);
-            growthRecord.setThoiDiem(thoiDiem);
-        } else {
-            // Nếu không có bản ghi phát triển nào, tạo mới
-            growthRecord = new GrowthRecord(child, thoiDiem, canNang, chieuCao, bmi);
-        }
 
-        // Lưu lại bản ghi phát triển
-        growthRecordRepository.save(growthRecord);
-        return true;
-    }
 
     // Phương thức đăng ký trẻ mới
-    public Child registerChild(@Valid Child child) {
-        // Kiểm tra nếu đã tồn tại trẻ cùng tên và cùng user
-        boolean exists = childRepository.existsByFullNameAndUser(child.getFullName(), child.getUser());
-        if (exists) {
-            throw new IllegalArgumentException("Trẻ đã tồn tại với tên này cho người dùng này.");
+    public Child registerChild(String authHeader, Child child) {
+        String token = authHeader.substring(7);  // Cắt "Bearer " khỏi token
+        String username = jwtUtil.extractUsername(token);  // Lấy username từ token
+
+        // Tìm User entity từ DB
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (!optionalUser.isPresent()) {
+            throw new IllegalArgumentException("Người dùng không tồn tại.");
         }
 
+        User user = optionalUser.get();
+
+        // Kiểm tra nếu trẻ đã tồn tại với user_id và full_name
+        Optional<Child> existingChild = childRepository.findByUserAndFullName(user, child.getFullName());
+        if (existingChild.isPresent()) {
+            throw new IllegalArgumentException("Trẻ đã tồn tại.");
+        }
+
+        // Gán user vào child
+        child.setUser(user);
+
+        // Lưu Child vào DB và trả về
         return childRepository.save(child);
     }
 
+    // Lấy thông tin trẻ
+    public Map<String, Object> getChildrenResponse(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Thiếu token hoặc token không hợp lệ.");
+        }
+
+        String token = authHeader.substring(7);
+        String username = jwtUtil.extractUsername(token);
+
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            throw new IllegalArgumentException("Không tìm thấy người dùng.");
+        }
+
+        List<Child> children = getChildrenByUser(user);
+
+        List<Map<String, Object>> danhSachCon = children.stream().map(child -> {
+            Map<String, Object> data = new HashMap<>();
+            data.put("id", child.getChild_id());
+            data.put("hoTen", child.getFullName());
+            data.put("tuoi", Period.between(child.getBirthday(), LocalDate.now()).getYears());
+            data.put("BietDanh", child.getNickname());
+
+            Map<String, Object> chiTiet = new HashMap<>();
+            chiTiet.put("child_id", child.getChild_id());
+            chiTiet.put("fullName", child.getFullName());
+            chiTiet.put("birthday", child.getBirthday());
+            chiTiet.put("gender", child.getGender());
+
+            data.put("chiTiet", chiTiet);
+            return data;
+        }).toList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("soLuongCon", children.size());
+        response.put("danhSachCon", danhSachCon);
+
+        return response;
+    }
 
 
     // Phương thức lấy thông tin trẻ theo ID
@@ -80,6 +120,12 @@ public class ChildService {
         // Trả về đối tượng Child nếu tìm thấy
         return child.get();
     }
+
+    // Cập nhật chỉ số --> GrowthService
+
+
+
+
 
     public Child getChildByFullName(String fullName) {
         Optional <Child> child = childRepository.findByFullNameContaining(fullName);

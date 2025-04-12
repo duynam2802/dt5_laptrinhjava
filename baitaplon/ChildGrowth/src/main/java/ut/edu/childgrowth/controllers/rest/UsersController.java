@@ -78,7 +78,7 @@ public class UsersController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/update_user/{id}")
+    @PutMapping("/update_/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Long id,
                                                    @RequestBody User user,
                                                    @RequestHeader("Authorization") String authHeader) {
@@ -124,43 +124,43 @@ public class UsersController {
     }
 
     // New endpoint to add a child
-    @PostMapping("/{user_id}/children/add")
-    public ResponseEntity<?> addChild(
-            @PathVariable Long user_id,
-            @Valid @RequestBody Child child,
-            @RequestHeader("Authorization") String authHeader) {
-
-        // Validate token
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid token");
-        }
-
-        String token = authHeader.substring(7);
-        String usernameFromToken = jwtUtil.extractUsername(token);
-
-        // Load user details and validate token
-        UserDetails userDetails = userService.loadUserByUsername(usernameFromToken);
-        if (!jwtUtil.validateToken(token, userDetails)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-
-        // Verify the user_id matches the authenticated user
-        User user = userService.findById(user_id);
-        if (!user.getUsername().equals(usernameFromToken)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to add a child for this user");
-        }
-
-        try {
-            // Set the user for the child
-            child.setUser(user);
-
-            // Register the child using ChildService
-            Child registeredChild = childService.registerChild(child);
-            return ResponseEntity.ok(registeredChild);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding child");
-        }
-    }
+//    @PostMapping("/{user_id}/children/add")
+//    public ResponseEntity<?> addChild(
+//            @PathVariable Long user_id,
+//            @Valid @RequestBody Child child,
+//            @RequestHeader("Authorization") String authHeader) {
+//
+//        // Validate token
+//        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid token");
+//        }
+//
+//        String token = authHeader.substring(7);
+//        String usernameFromToken = jwtUtil.extractUsername(token);
+//
+//        // Load user details and validate token
+//        UserDetails userDetails = userService.loadUserByUsername(usernameFromToken);
+//        if (!jwtUtil.validateToken(token, userDetails)) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+//        }
+//
+//        // Verify the user_id matches the authenticated user
+//        User user = userService.findById(user_id);
+//        if (!user.getUsername().equals(usernameFromToken)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to add a child for this user");
+//        }
+//
+//        try {
+//            // Set the user for the child
+//            child.setUser(user);
+//
+//            // Register the child using ChildService
+//            Child registeredChild = childService.registerChild(child);
+//            return ResponseEntity.ok(registeredChild);
+//        } catch (IllegalArgumentException e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding child");
+//        }
+//    }
 }
