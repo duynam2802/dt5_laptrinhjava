@@ -50,10 +50,12 @@ public class GrowthRecord {
     // Phương thức tính BMI
     private double calculateBmi(double canNang, double chieuCao) {
         if (chieuCao > 0) {
-            return canNang / (chieuCao * chieuCao);
+            double chieuCaoMet = chieuCao / 100.0;  // Chuyển chiều cao từ cm sang mét
+            return canNang / (chieuCaoMet * chieuCaoMet);  // Áp dụng công thức BMI
         }
         return 0;  // Trả về 0 nếu chiều cao không hợp lệ
     }
+
 
     // Getters và Setters
     public Long getId() {

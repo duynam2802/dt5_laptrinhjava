@@ -2,6 +2,7 @@ package ut.edu.childgrowth.models;
 
 import jakarta.persistence.*;
 import java.util.Map;
+import java.util.Set;
 
 //BIỂU ĐỒ TĂNG TRƯỞNG
 
@@ -53,16 +54,56 @@ public class GrowthChart {
     public void setDataPoints(Map<String, Double> dataPoints) {
         this.dataPoints = dataPoints;
     }
-    //Các logic
-//    public String generateChart(String type) {
-//        if (dataPoints == null || !dataPoints.containsKey(type)) {
-//            return "Không có dữ liệu cho " + type;
-//        }
-//        return "Biểu đồ được tạo cho " + type + " với dữ liệu: " + dataPoints.get(type);
-//    }
-//
-//    public void shareChart(Long doctorId) {
-//        System.out.println("Biểu đồ đã được chia sẻ với bác sĩ có ID: " + doctorId);
-//    }
 
+    // Các logic thêm vào
+    public double calculateBmi() {
+        Double height = dataPoints.get("height");
+        Double weight = dataPoints.get("weight");
+
+        if (height != null && weight != null && height > 0) {
+            double heightInMeters = height / 100;
+            return weight / (heightInMeters * heightInMeters);
+        }
+        return 0;
+    }
+
+    public void addDataPoint(String dataType, Double value) {
+        if (dataType != null && value != null) {
+            dataPoints.put(dataType, value);
+        }
+    }
+
+    public double calculateGrowthChange(String dataType) {
+        Double initialValue = dataPoints.get(dataType);
+        if (initialValue == null) {
+            return 0;
+        }
+        Double latestValue = dataPoints.get(dataType);
+        return latestValue - initialValue;
+    }
+
+    public String generateChart(String dataType) {
+        if (dataPoints == null || !dataPoints.containsKey(dataType)) {
+            return "Không có dữ liệu cho " + dataType;
+        }
+        Double value = dataPoints.get(dataType);
+        return "Biểu đồ được tạo cho " + dataType + " với giá trị: " + value;
+    }
+
+    public void shareChart(Long doctorId) {
+//        System.out.println("Biểu đồ đã được chia sẻ với bác sĩ có ID: " + doctorId);
+    }
+
+    public Set<String> getDataTypes() {
+        return dataPoints.keySet();
+    }
+
+    public boolean isValid() {
+        for (Map.Entry<String, Double> entry : dataPoints.entrySet()) {
+            if (entry.getValue() == null || entry.getValue() <= 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

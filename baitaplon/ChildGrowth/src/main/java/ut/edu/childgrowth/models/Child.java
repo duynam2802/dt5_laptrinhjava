@@ -13,9 +13,9 @@ public class Child {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long child_id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String fullName; // Họ và tên của trẻ
 
     @Column(nullable = false)
@@ -57,12 +57,12 @@ public class Child {
     }
 
     // Getters và Setters
-    public Long getId() {
-        return id;
+    public Long getChild_id() {
+        return child_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setChild_id(Long id) {
+        this.child_id = id;
     }
 
     public String getFullName() {
@@ -107,6 +107,6 @@ public class Child {
 
     // Enum cho giới tính
     public enum Gender {
-        MALE, FEMALE, OTHER
+        MALE, FEMALE
     }
 }

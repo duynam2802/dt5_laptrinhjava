@@ -87,5 +87,7 @@ public class UserResponse {
     }
 
 
-
+    public Long getUserId() {
+        return id;
+    }
 }

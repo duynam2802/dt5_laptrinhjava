@@ -86,6 +86,7 @@ public String registerUser(UserRegisterRequest userRegisterRequest) {
         return new UserResponse(user.getUser_id(), user.getUsername(), user.getEmail(), user.getFullName());
     }
 
+
     public UserResponse getUserByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
@@ -174,5 +175,6 @@ public String registerUser(UserRegisterRequest userRegisterRequest) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với username: " + username));
     }
+
 
 }
