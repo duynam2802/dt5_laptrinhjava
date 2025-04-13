@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ut.edu.childgrowth.dtos.AuthRequest;
 import ut.edu.childgrowth.dtos.AuthResponse;
 import ut.edu.childgrowth.services.UserService;
@@ -17,30 +18,34 @@ public class AuthController {
     private UserService userService;
 
     @GetMapping("/login")
-    public String showLoginForm() {
-        return "login"; // trả về login.html
+    public String showLoginForm(Model model) {
+        return "login";
     }
 
     @PostMapping("/login")
     public String handleLogin(
             @RequestParam String username,
             @RequestParam String password,
-            HttpSession session,         // ✅ thêm vào để lưu session
+            HttpSession session,
             Model model) {
 
         AuthRequest authRequest = new AuthRequest(username, password);
         try {
             AuthResponse authResponse = userService.loginUser(authRequest);
 
-            // ✅ Lưu token vào session để dùng lại
+            // Lưu token vào session
             session.setAttribute("token", authResponse.getToken());
 
-            return "redirect:/index";
+            return "redirect:/index"; // vẫn redirect nếu đăng nhập đúng
         } catch (RuntimeException e) {
+            // Gửi lỗi và giữ lại giá trị người dùng nhập
             model.addAttribute("error", e.getMessage());
-            return "login";
+            model.addAttribute("username", username);
+            return "login"; // không redirect -> load lại form trong cùng view
         }
     }
+
+
 
     @GetMapping("/index")
     public String showIndex(HttpSession session, Model model) {

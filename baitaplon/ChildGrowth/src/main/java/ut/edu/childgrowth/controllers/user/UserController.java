@@ -96,14 +96,14 @@ public String showProfile(Model model, HttpSession session) {
             User currentUser = userService.findByUsername(username);
 
             if (!updatedUser.getUser_id().equals(currentUser.getUser_id())) {
-                model.addAttribute("errorMessage", "Bạn không có quyền chỉnh sửa người dùng này!");
+                model.addAttribute("error", "Bạn không có quyền chỉnh sửa người dùng này!");
                 return "edit-profile";
             }
 
             UserResponse response = userService.updateUser(currentUser.getUser_id(), updatedUser);
 
             model.addAttribute("user", updatedUser);
-            model.addAttribute("successMessage", response.getMessage());
+            model.addAttribute("success", response.getMessage());
             return "edit-profile";
 
         } catch (Exception e) {

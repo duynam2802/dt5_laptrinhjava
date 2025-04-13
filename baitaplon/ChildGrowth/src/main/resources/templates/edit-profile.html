@@ -15,6 +15,11 @@
 
     <!-- Custom styles for this template -->
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Thêm toast.js -->
+    <script src="/js/toast.js"></script>
+    <!-- Thêm toast.css -->
+    <link href="/css/toast.css" rel="stylesheet">
 </head>
 
 <body class="bg-gradient-primary">
@@ -54,13 +59,17 @@
                             </form>
 
                             <!-- Success/Error Messages -->
-                            <div th:if="${successMessage}" class="mt-3 text-success text-center">
+                            <!-- <div th:if="${successMessage}" class="mt-3 text-success text-center">
                                 <span th:text="${successMessage}"></span>
                             </div>
                             <div th:if="${errorMessage}" class="mt-3 text-danger text-center">
                                 <span th:text="${errorMessage}"></span>
-                            </div>
+                            </div> -->
 
+                            <!-- toast -->
+                            <div th:if="${success}" class="alert alert-success text-center" th:text="${success}"></div>
+                            <div th:if="${error}" class="error-message" style="display: none;" th:text="${error}"></div>
+                            
                         </div>
                     </div>
                 </div>
