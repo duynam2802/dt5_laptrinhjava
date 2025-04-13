@@ -31,7 +31,13 @@ public class GrowthRecord {
 
     // Constructor mặc định
     public GrowthRecord(Child child, LocalDate thoiDiem, double canNang, double chieuCao, double bmi) {
+        this.child = child;
+        this.thoiDiem = thoiDiem;
+        this.canNang = canNang;
+        this.chieuCao = chieuCao;
+        this.bmi = bmi;
     }
+
 
     // Constructor với tham số
     public GrowthRecord(Child child, LocalDate thoiDiem, double canNang, double chieuCao) {

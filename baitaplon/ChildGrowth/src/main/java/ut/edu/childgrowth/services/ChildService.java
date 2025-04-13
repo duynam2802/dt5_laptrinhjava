@@ -35,11 +35,6 @@ public class ChildService {
     @Autowired
     UserService userService;
 
-//    @Autowired
-//    ChildService childService;
-
-
-
     // Phương thức đăng ký trẻ mới
     public Child registerChild(String authHeader, Child child) {
         String token = authHeader.substring(7);  // Cắt "Bearer " khỏi token
@@ -125,8 +120,6 @@ public class ChildService {
 
 
 
-
-
     public Child getChildByFullName(String fullName) {
         Optional <Child> child = childRepository.findByFullNameContaining(fullName);
         if (child.isEmpty()) {
@@ -136,26 +129,37 @@ public class ChildService {
     }
 
     // Phương thức cập nhật thông tin trẻ
-    public Child updateChild(Child updatedChild) {
-        // Kiểm tra xem trẻ với ID có tồn tại hay không
-        Optional<Child> existingChildOpt = childRepository.findById(updatedChild.getChild_id());
+    public Child updateChildInfo(Long childId, String hoTen, LocalDate ngaySinhMoi, String bietDanh, String tienSuBenh) {
+        Child child = childRepository.findById(childId)
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy trẻ có ID: " + childId));
 
-        if (existingChildOpt.isEmpty()) {
-            throw new RuntimeException("Trẻ với ID " + updatedChild.getChild_id() + " không tồn tại.");
+        // Nếu có dữ liệu tăng trưởng và có đề nghị đổi ngày sinh → kiểm tra
+        if (ngaySinhMoi != null) {
+            List<GrowthRecord> records = growthRecordRepository.findByChildId(childId);
+            for (GrowthRecord record : records) {
+                if (ngaySinhMoi.isAfter(record.getThoiDiem())) {
+                    throw new IllegalArgumentException("Không thể cập nhật: ngày sinh mới sau thời điểm đo tăng trưởng (" + record.getThoiDiem() + ")");
+                }
+            }
+            child.setBirthday(ngaySinhMoi); // Hợp lệ thì set
         }
 
-        // Lấy đối tượng trẻ hiện tại từ cơ sở dữ liệu
-        Child existingChild = existingChildOpt.get();
+        if (hoTen != null && !hoTen.isBlank()) {
+            child.setFullName(hoTen);
+        }
 
-        // Cập nhật thông tin của trẻ
-        existingChild.setFullName(updatedChild.getFullName());
-        existingChild.setBirthday(updatedChild.getBirthday());
-        existingChild.setGender(updatedChild.getGender());
-        //existingChild.setUser(updatedChild.getUser());
+        if (bietDanh != null) {
+            child.setNickname(bietDanh);
+        }
 
-        // Lưu lại đối tượng trẻ đã được cập nhật vào cơ sở dữ liệu
-        return childRepository.save(existingChild);
+        if (tienSuBenh != null) {
+            child.setMedicalHistory(tienSuBenh);
+        }
+
+        return childRepository.save(child);
     }
+
+
 
     public List<Child> getChildrenByUser(User user) {
         return childRepository.findByUser(user);

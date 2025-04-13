@@ -47,7 +47,7 @@ public class ChildController {
             // Gọi service để đăng ký child
             Child savedChild = childService.registerChild(authHeader, child);
 
-            // Xóa thông tin user khỏi savedChild nếu không muốn trả về user
+            // Xóa thông tin user khỏi savedChild
             savedChild.setUser(null); // Đảm bảo không trả về thông tin user
 
             // Trả về thông báo thành công
@@ -98,6 +98,34 @@ public class ChildController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi hệ thống: " + e.getMessage());
         }
     }
+
+    @PutMapping("/update-info/{childId}")
+    public ResponseEntity<?> updateChildInfo(
+            @PathVariable Long childId,
+            @RequestBody Map<String, Object> payload) {
+        try {
+            String hoTen = (String) payload.get("hoTen");
+            String bietDanh = (String) payload.get("bietDanh");
+            String tienSuBenh = (String) payload.get("tienSuBenh");
+            LocalDate ngaySinh = LocalDate.parse(payload.get("ngaySinh").toString());
+
+            Child updatedChild = childService.updateChildInfo(childId, hoTen, ngaySinh, bietDanh, tienSuBenh);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Cập nhật thông tin trẻ thành công");
+            response.put("child", updatedChild);
+
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Lỗi: " + e.getMessage());
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy trẻ: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi hệ thống: " + e.getMessage());
+        }
+    }
+
+
 
 
 
