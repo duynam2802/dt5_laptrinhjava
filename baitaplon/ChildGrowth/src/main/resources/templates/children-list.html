@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Danh sách trẻ em trong hệ thống ChildGrowth">
+    <meta name="author" content="ChildGrowth Team">
+    <title>ChildGrowth - Danh sách trẻ</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="../static/css/sb-admin-2.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="./css/sb-admin-2.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/toast.css" rel="stylesheet">
+    <script src="/js/toast.js"></script>
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/index">
+            <div class="sidebar-brand-icon">
+                <i class="fas fa-baby"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">ChildGrowth</div>
+        </a>
+        <hr class="sidebar-divider my-0">
+        <li class="nav-item">
+            <a class="nav-link" href="/index">
+                <i class="fas fa-fw fa-home"></i>
+                <span>Trang chủ</span></a>
+        </li>
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">Quản lý trẻ em</div>
+        <li class="nav-item active">
+            <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#childrenMenu" role="button" aria-expanded="true" aria-controls="childrenMenu">
+                <i class="fas fa-fw fa-child me-2"></i>
+                <span>Quản lý trẻ em</span>
+            </a>
+            <div id="childrenMenu" class="collapse show">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item active" href="/children-list">Danh sách trẻ</a>
+                    <a class="collapse-item" href="/add-child">Thêm trẻ mới</a>
+                    <a class="collapse-item" href="/growth-charts">Biểu đồ phát triển</a>
+                    <a class="collapse-item" href="/health-alerts">Cảnh báo sức khỏe</a>
+                </div>
+            </div>
+        </li>
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">Tư vấn sức khỏe</div>
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#consultMenu" role="button" aria-expanded="false" aria-controls="consultMenu">
+                <i class="fas fa-fw fa-stethoscope me-2"></i>
+                <span>Tư vấn bác sĩ</span>
+            </a>
+            <div id="consultMenu" class="collapse">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="/new-consult">Yêu cầu tư vấn mới</a>
+                </div>
+            </div>
+        </li>
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">Tài khoản</div>
+        <li class="nav-item">
+            <a class="nav-link" href="/users/profile/update">
+                <i class="fas fa-fw fa-user"></i>
+                <span>Thông tin tài khoản</span></a>
+        </li>
+        <hr class="sidebar-divider d-none d-md-block">
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+    </ul>
+    <!-- End of Sidebar -->
+
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..." aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary">
+                                <i class="bi bi-search"></i> Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </nav>
+            <!-- End of Topbar -->
+
+            <div class="container-fluid">
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Danh sách trẻ</h1>
+                    <button class="btn btn-primary btn-icon-split" data-bs-toggle="collapse" href="#addChildForm" role="button" aria-expanded="false" aria-controls="addChildForm">
+            <span class="icon text-white-50">
+                <i class="fas fa-plus"></i>
+            </span>
+                        <span class="text">Thêm trẻ mới</span>
+                    </button>
+                </div>
+
+                <!-- Add Child Form (Collapsible) -->
+                <div class="collapse mb-4" id="addChildForm">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Thêm trẻ mới</h6>
+                        </div>
+                        <div class="card-body">
+                            <form action="/add-child" method="post">
+                                <div class="mb-3">
+                                    <label for="fullName" class="form-label">Họ và tên</label>
+                                    <input type="text" class="form-control" id="fullName" name="fullName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nickname" class="form-label">Biệt danh</label>
+                                    <input type="text" class="form-control" id="nickname" name="nickname">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="birthday" class="form-label">Ngày sinh</label>
+                                    <input type="date" class="form-control" id="birthday" name="birthday" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="gender" class="form-label">Giới tính</label>
+                                    <select class="form-select" id="gender" name="gender" required>
+                                        <option value="MALE">Nam</option>
+                                        <option value="FEMALE">Nữ</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="medicalHistory" class="form-label">Tiền sử bệnh</label>
+                                    <textarea class="form-control" id="medicalHistory" name="medicalHistory" rows="4"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="height" class="form-label">Chiều cao (cm)</label>
+                                    <input type="number" step="0.1" class="form-control" id="height" name="height" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="weight" class="form-label">Cân nặng (kg)</label>
+                                    <input type="number" step="0.1" class="form-control" id="weight" name="weight" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Thêm trẻ</button>
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" href="#addChildForm">Hủy</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Children List -->
+                <div class="row mb-4">
+                    <div class="col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Danh sách trẻ em</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>Tên</th>
+                                            <th>Biệt danh</th>
+                                            <th>Tuổi</th>
+                                            <th>Ngày sinh</th>
+                                            <th>Giới tính</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="child : ${children}">
+                                            <td th:text="${child.fullName}"></td>
+                                            <td th:text="${child.nickname} ?: 'Không có'"></td>
+                                            <td th:text="${#temporals.createNow().minus(child.birthday).years}"></td>
+                                            <td th:text="${#temporals.format(child.birthday, 'dd/MM/yyyy')}"></td>
+                                            <td th:text="${child.gender == 'MALE' ? 'Nam' : 'Nữ'}"></td>
+                                            <td>
+                                                <button class="btn btn-info btn-icon-split btn-sm" data-bs-toggle="modal" th:attr="data-bs-target='#childModal' + ${child.child_id}">
+                                                    <span class="icon text-white-50"><i class="fas fa-info-circle"></i></span>
+                                                    <span class="text">Chi tiết</span>
+                                                </button>
+                                                <a th:href="@{/child/edit/{id}(id=${child.child_id})}" class="btn btn-warning btn-icon-split btn-sm">
+                                                    <span class="icon text-white-50"><i class="fas fa-edit"></i></span>
+                                                    <span class="text">Sửa</span>
+                                                </a>
+                                                <a th:href="@{/child/delete/{id}(id=${child.child_id})}" class="btn btn-danger btn-icon-split btn-sm">
+                                                    <span class="icon text-white-50"><i class="fas fa-trash"></i></span>
+                                                    <span class="text">Xóa</span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Child Details Modals -->
+                <div th:each="child : ${children}" class="modal fade" th:id="'childModal' + ${child.child_id}" tabindex="-1" aria-labelledby="childModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="childModalLabel">Thông tin chi tiết: <span th:text="${child.fullName}"></span></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>ID:</strong> <span th:text="${child.child_id}"></span></p>
+                                <p><strong>Họ và tên:</strong> <span th:text="${child.fullName}"></span></p>
+                                <p><strong>Biệt danh:</strong> <span th:text="${child.nickname} ?: 'Không có'"></span></p>
+                                <p><strong>Tuổi:</strong> <span th:text="${#temporals.createNow().minus(child.birthday).years}"></span></p>
+                                <p><strong>Ngày sinh:</strong> <span th:text="${#temporals.format(child.birthday, 'dd/MM/yyyy')}"></span></p>
+                                <p><strong>Giới tính:</strong> <span th:text="${child.gender == 'MALE' ? 'Nam' : 'Nữ'}"></span></p>
+                                <p><strong>Tiền sử bệnh:</strong> <span th:text="${child.medicalHistory} ?: 'Không có'"></span></p>
+                                <h6>Lịch sử phát triển gần đây:</h6>
+                                <ul>
+                                    <li th:each="record : ${child.growthRecords}" th:if="${#lists.size(child.growthRecords) - #lists.indexOf(record) <= 3}">
+                                        <span th:text="${#temporals.format(record.thoiDiem, 'dd/MM/yyyy')} + ': ' + ${record.canNang} + 'kg, ' + ${record.chieuCao} + 'cm'"></span>
+                                    </li>
+                                    <li th:if="${#lists.isEmpty(child.growthRecords)}">Chưa có bản ghi</li>
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                <a th:href="@{/growth-charts?childId=${child.child_id}}" class="btn btn-primary">Xem biểu đồ</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright © ChildGrowth 2023 - Hệ thống theo dõi sự phát triển của trẻ</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="js/sb-admin-2.min.js"></script>
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

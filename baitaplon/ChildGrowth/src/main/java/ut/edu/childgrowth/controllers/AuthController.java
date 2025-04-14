@@ -60,4 +60,25 @@ public class AuthController {
         session.invalidate(); // ✅ Xóa token & session khi logout
         return "redirect:/login";
     }
+
+    @GetMapping("/children-list")
+    public String showChildrenList() {
+        return "children-list"; // Spring sẽ tìm trong src/main/resources/templates
+    }
+
+    @GetMapping("/add-child")
+    public String showAddChild() {
+        return "add-child"; // Spring sẽ tìm trong src/main/resources/templates
+    }
+
+    @GetMapping("/growth-charts")
+    public String showGrowthCharts() {
+        return "growth-charts"; // Spring sẽ tìm trong src/main/resources/templates
+    }
+
+    @GetMapping("/health-alerts")
+    public String showHeathAlerts() {
+        return "health-alerts"; // Spring sẽ tìm trong src/main/resources/templates
+    }
+
 }
