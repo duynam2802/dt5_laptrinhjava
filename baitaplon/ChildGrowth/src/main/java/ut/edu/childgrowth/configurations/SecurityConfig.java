@@ -25,14 +25,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable())  // Vô hiệu hóa CSRF nếu sử dụng JWT
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/register", "/children/register").permitAll()  // Cho phép truy cập POST
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**", "/children/**").authenticated()  // 👈 Yêu cầu đăng nhập
+                        .requestMatchers("/user/**", "/children/**").authenticated()  // Yêu cầu đăng nhập
                         .anyRequest().permitAll()
                 )
                 .build();
     }
+
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
