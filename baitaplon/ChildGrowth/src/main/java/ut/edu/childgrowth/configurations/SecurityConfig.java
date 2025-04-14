@@ -25,15 +25,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable()) // Tắt CSRF
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // Chỉ ADMIN mới truy cập được
-                        .requestMatchers("/user/**").authenticated()   // User phải đăng nhập
-                        .anyRequest().permitAll()                     // Các trang còn lại truy cập tự do
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**", "/children/**").authenticated()  // 👈 Yêu cầu đăng nhập
+                        .anyRequest().permitAll()
                 )
-                // .userDetailsService(userService)
                 .build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

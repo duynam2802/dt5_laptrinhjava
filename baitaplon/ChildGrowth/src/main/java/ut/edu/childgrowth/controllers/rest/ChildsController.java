@@ -5,25 +5,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ut.edu.childgrowth.dtos.UserResponse;
 import ut.edu.childgrowth.jwt.JwtUtil;
 import ut.edu.childgrowth.models.Child;
-import ut.edu.childgrowth.models.GrowthRecord;
-import ut.edu.childgrowth.models.User;
 import ut.edu.childgrowth.services.ChildService;
 import ut.edu.childgrowth.services.UserService;
 import ut.edu.childgrowth.services.GrowthRecordService;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/children")
-public class ChildController {
+public class ChildsController {
 
     @Autowired
     private ChildService childService;

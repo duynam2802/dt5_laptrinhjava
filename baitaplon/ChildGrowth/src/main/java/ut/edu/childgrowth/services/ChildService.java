@@ -71,8 +71,11 @@ public class ChildService {
             chiTiet.put("birthday", child.getBirthday());
             chiTiet.put("gender", child.getGender());
             data.put("chiTiet", chiTiet);
+
             return data;
         }).toList();
+        System.out.println("Danh sách con: " + danhSachCon);  // Kiểm tra dữ liệu trả về
+
         Map<String, Object> response = new HashMap<>();
         response.put("soLuongCon", children.size());
         response.put("danhSachCon", danhSachCon);
