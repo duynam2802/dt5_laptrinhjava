@@ -61,10 +61,10 @@ public class AuthController {
         return "redirect:/login";
     }
 
-    @GetMapping("/children-list")
-    public String showChildrenList() {
-        return "children-list"; // Spring sẽ tìm trong src/main/resources/templates
-    }
+//    @GetMapping("/users/child/children-list")
+//    public String showChildrenList() {
+//        return "children-list"; // Spring sẽ tìm trong src/main/resources/templates
+//    }
 
     @GetMapping("/add-child")
     public String showAddChild() {

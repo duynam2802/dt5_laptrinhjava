@@ -22,117 +22,119 @@
 <body id="page-top">
 <div id="wrapper">
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index">
-            <div class="sidebar-brand-icon">
-                <i class="fas fa-baby"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">ChildGrowth</div>
-        </a>
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item active">
-            <a class="nav-link" href="index">
-                <i class="fas fa-fw fa-home"></i>
-                <span>Trang chủ</span></a>
-        </li>
-
-
-
-        <!-- Divider -->
-        <hr class="sidebar-divider">
-
-        <!-- Heading -->
-        <div class="sidebar-heading">
-            Quản lý trẻ em
-        </div>
-
-        <!-- Bootstrap 5 CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Font Awesome -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-        <!-- Bootstrap 5 JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-        <!-- Nav Item - Quản lý trẻ em -->
-        <li class="nav-item">
-            <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#childrenMenu"
-               role="button" aria-expanded="false" aria-controls="childrenMenu">
-                <i class="fas fa-fw fa-child me-2"></i>
-                <span>Quản lý trẻ em</span>
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/index">
+                <div class="sidebar-brand-icon">
+                    <i class="fas fa-baby"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">ChildGrowth</div>
             </a>
 
-            <div id="childrenMenu" class="collapse">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="children-list">Danh sách trẻ</a>
-                    <a class="collapse-item" href="/users/child/add-child">Thêm trẻ mới</a>
-                    <a class="collapse-item" href="growth-charts">Biểu đồ phát triển</a>
-                    <a class="collapse-item" href="health-alerts">Cảnh báo sức khỏe</a>
-                </div>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="/index">
+                    <i class="fas fa-fw fa-home"></i>
+                    <span>Trang chủ</span></a>
+            </li>
+
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Quản lý trẻ em
             </div>
-        </li>
 
-        <!-- Divider -->
-        <hr class="sidebar-divider">
+            <!-- Bootstrap 5 CSS -->
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+            <!-- Font Awesome -->
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+            <!-- Bootstrap 5 JS -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-        <!-- Heading -->
-        <div class="sidebar-heading">
-            Tư vấn
-        </div>
+            <!-- Nav Item - Quản lý trẻ em -->
+            <li class="nav-item">
+                <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#childrenMenu"
+                   role="button" aria-expanded="false" aria-controls="childrenMenu">
+                    <i class="fas fa-fw fa-child me-2"></i>
+                    <span>Quản lý trẻ em</span>
+                </a>
 
-        <!-- Nav Item - Tư vấn bác sĩ -->
-        <li class="nav-item">
-            <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#helpMenu"
-               role="button" aria-expanded="false" aria-controls="helpMenu">
-                <i class="fas fa-fw fa-stethoscope me-2"></i>
-                <span>Tư vấn</span>
-            </a>
-
-            <div id="helpMenu" class="collapse">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="new-consult">Tư vấn bác sĩ</a>
-                    <a class="collapse-item" href="support-request">Yêu cầu hổ trợ</a>
+                <div id="childrenMenu" class="collapse">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="/users/child/children-list">Danh sách trẻ</a>
+                        <a class="collapse-item" href="/users/child/add-child">Thêm trẻ mới</a>
+                        <a class="collapse-item" href="/growth-charts">Biểu đồ phát triển</a>
+                        <a class="collapse-item" href="/health-alerts">Cảnh báo sức khỏe</a>
+                    </div>
                 </div>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Tư vấn
             </div>
-        </li>
 
-        <li class="nav-item">
-            <a class="nav-link" href="blog">
-                <i class="fas fa-edit"></i>
-                <span>Blog </span></a>
-        </li>
+            <!-- Nav Item - Tư vấn bác sĩ -->
+            <li class="nav-item">
+                <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#helpMenu"
+                   role="button" aria-expanded="false" aria-controls="helpMenu">
+                    <i class="fas fa-fw fa-stethoscope me-2"></i>
+                    <span>Tư vấn</span>
+                </a>
+
+                <div id="helpMenu" class="collapse">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="/new-consult">Tư vấn bác sĩ</a>
+                        <a class="collapse-item" href="/support-request">Yêu cầu hổ trợ</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/blog">
+                    <i class="fas fa-edit"></i>
+                    <span>Blog </span></a>
+            </li>
 
 
-        <!-- Divider -->
-        <hr class="sidebar-divider">
+            <!-- Divider -->
+            <hr class="sidebar-divider">
 
-        <!-- Heading -->
-        <div class="sidebar-heading">
-            Tài khoản
-        </div>
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Tài khoản
+            </div>
 
-        <!-- Nav Item - Tài khoản -->
-        <li class="nav-item">
-            <a class="nav-link" href="/users/profile/update">
-                <i class="fas fa-fw fa-user"></i>
-                <span>Thông tin tài khoản</span></a>
-        </li>
+            <!-- Nav Item - Tài khoản -->
+            <li class="nav-item">
+                <a class="nav-link" href="/users/profile/update">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Thông tin tài khoản</span></a>
+            </li>
 
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
 
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
 
-    </ul>
-    <!-- End of Sidebar -->
+        </ul>
+        <!-- End of Sidebar -->
 
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">

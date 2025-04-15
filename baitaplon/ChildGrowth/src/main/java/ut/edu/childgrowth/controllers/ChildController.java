@@ -23,18 +23,23 @@ public class ChildController {
     private ChildService childService;
 
     @GetMapping("/children-list")
-    public ResponseEntity<Map<String, Object>> getChildrenPage(HttpSession session) {
+    public String showChildrenListPage() {
+        return "children-list";
+    }
+
+    // API trả về JSON
+    @GetMapping("/api/children-list")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getChildrenData(HttpSession session) {
         String token = (String) session.getAttribute("token");
-
         if (token == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Bạn cần đăng nhập để xem danh sách trẻ."));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Bạn cần đăng nhập"));
         }
-
         try {
             Map<String, Object> response = childService.getChildrenResponse("Bearer " + token);
-            return ResponseEntity.ok(response); // Trả về JSON hợp lệ
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Lỗi hệ thống: " + e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
         }
     }
 
