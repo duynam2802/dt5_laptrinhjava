@@ -33,7 +33,10 @@ public class ChildController {
     public ResponseEntity<Map<String, Object>> getChildrenData(HttpSession session) {
         String token = (String) session.getAttribute("token");
         if (token == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Bạn cần đăng nhập"));
+            Map<String, Object> response = new HashMap<>();
+            response.put("error", "Vui lòng đăng nhập lại");
+            response.put("redirect", "/login?message=Vui+lòng+đăng+nhập+lại");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
         try {
             Map<String, Object> response = childService.getChildrenResponse("Bearer " + token);
@@ -42,6 +45,7 @@ public class ChildController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
         }
     }
+
 
 
     @GetMapping("/add-child")
@@ -75,11 +79,5 @@ public class ChildController {
             return "add-child";
         }
     }
-
-
-
 }
-
-
-
 

@@ -18,7 +18,7 @@ public class JwtUtil {
                 .setSubject(username)
                 .claim("role", role) // Thêm thông tin role vào token
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 giờ
+                .setExpiration(new Date(System.currentTimeMillis() + 5000 * 60 * 60)) // 1 giờ
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
