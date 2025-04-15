@@ -81,4 +81,9 @@ public class AuthController {
         return "health-alerts"; // Spring sẽ tìm trong src/main/resources/templates
     }
 
+    @GetMapping("/new-consult")
+    public String showNewConsult() {
+        return "new-consult"; // Spring sẽ tìm trong src/main/resources/templates
+    }
+
 }

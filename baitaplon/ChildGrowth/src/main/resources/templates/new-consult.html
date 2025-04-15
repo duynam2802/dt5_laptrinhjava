@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Hệ thống theo dõi sự tăng trưởng của trẻ từ sơ sinh đến trưởng thành">
+    <meta name="author" content="ChildGrowth Team">
+
+    <title>ChildGrowth - Tư vấn bác sĩ</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="../static/css/sb-admin-2.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../static/css/all.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template-->
+    <link href="../static/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Thêm toast.css -->
+    <link href="../static/css/toast.css" rel="stylesheet">
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <div class="sidebar-brand-icon">
+                <i class="fas fa-baby"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">ChildGrowth</div>
+        </a>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item">
+            <a class="nav-link" href="index.html">
+                <i class="fas fa-fw fa-home"></i>
+                <span>Trang chủ</span></a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Quản lý trẻ em
+        </div>
+
+        <!-- Nav Item - Quản lý trẻ em -->
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#childrenMenu" role="button" aria-expanded="false" aria-controls="childrenMenu">
+                <i class="fas fa-fw fa-child me-2"></i>
+                <span>Quản lý trẻ em</span>
+            </a>
+            <div id="childrenMenu" class="collapse">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="children-list">Danh sách trẻ</a>
+                    <a class="collapse-item" href="/users/child/add-child">Thêm trẻ mới</a>
+                    <a class="collapse-item" href="growth-charts">Biểu đồ phát triển</a>
+                    <a class="collapse-item" href="health-alerts">Cảnh báo sức khỏe</a>
+                </div>
+            </div>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Tư vấn
+        </div>
+
+        <!-- Nav Item - Tư vấn -->
+        <li class="nav-item active">
+            <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#consultMenu" role="button" aria-expanded="true" aria-controls="consultMenu">
+                <i class="fas fa-fw fa-stethoscope me-2"></i>
+                <span>Tư vấn</span>
+            </a>
+            <div id="consultMenu" class="collapse show">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item active" href="new-consult.html">Tư vấn bác sĩ</a>
+                    <a class="collapse-item" href="support-request.html">Yêu cầu hỗ trợ</a>
+                </div>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="blog.html">
+                <i class="fas fa-edit"></i>
+                <span>Blog</span></a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Tài khoản
+        </div>
+
+        <!-- Nav Item - Tài khoản -->
+        <li class="nav-item">
+            <a class="nav-link" href="/users/profile/update">
+                <i class="fas fa-fw fa-user"></i>
+                <span>Thông tin tài khoản</span></a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <!-- Topbar Search -->
+                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..." aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary">
+                                <i class="bi bi-search"></i> Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto">
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="img-profile rounded-circle" src="../static/img/undraw_profile_1.svg">
+                        </a>
+                        <!-- Dropdown - User Information -->
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="/users/profile/update">
+                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Hồ sơ cá nhân
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Cài đặt
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Đăng xuất
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-4 text-gray-800">Tư vấn bác sĩ</h1>
+
+                <!-- Consultation Form -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Gửi yêu cầu tư vấn</h6>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="childSelect" class="form-label">Chọn trẻ</label>
+                                <select class="form-control" id="childSelect">
+                                    <option>Chọn trẻ...</option>
+                                    <!-- Dynamically populated -->
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="consultReason" class="form-label">Lý do tư vấn</label>
+                                <textarea class="form-control" id="consultReason" rows="5" placeholder="Mô tả chi tiết vấn đề cần tư vấn..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="attachment" class="form-label">Đính kèm (nếu có)</label>
+                                <input type="file" class="form-control" id="attachment">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Gửi yêu cầu</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; ChildGrowth 2023 - Hệ thống theo dõi sự phát triển của trẻ</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Bạn chắc chắn muốn đăng xuất?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Chọn "Đăng xuất" bên dưới nếu bạn muốn kết thúc phiên làm việc hiện tại.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                <a class="btn btn-primary" href="/logout">Đăng xuất</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="../static/vendor/jquery/jquery.min.js"></script>
+<script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="../static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="../static/js/sb-admin-2.min.js"></script>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Toast JS -->
+<script src="../static/js/toast.js"></script>
+
+</body>
+
+</html>
