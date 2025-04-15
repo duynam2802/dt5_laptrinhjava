@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ut.edu.childgrowth.dtos.UserRegisterRequest;
 import ut.edu.childgrowth.dtos.UserResponse;
 import ut.edu.childgrowth.jwt.JwtUtil;
@@ -65,33 +66,41 @@ public class UserController {
 //
 // Hiển thị trang chỉnh sửa thông tin
 @GetMapping("/profile/update")
-public String showProfile(Model model, HttpSession session) {
-    // ✅ Lấy token từ session
+public String showProfile(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
     String token = (String) session.getAttribute("token");
 
     if (token == null) {
+        redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập lại");
         return "redirect:/login";
     }
 
-    String username = jwtUtil.extractUsername(token);
-
-    User user = userService.findByUsername(username);
-    model.addAttribute("user", user);
-    return "edit-profile";
+    try {
+        String username = jwtUtil.extractUsername(token);
+        User user = userService.findByUsername(username);
+        model.addAttribute("user", user);
+        return "edit-profile";
+    } catch (Exception e) {
+        // Token sai/hết hạn
+        redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập lại");
+        return "redirect:/login";
+    }
 }
+
 
     // Xử lý cập nhật thông tin
     @PostMapping("/profile/update")
     public String updateProfile(@ModelAttribute("user") User updatedUser,
                                 Model model,
-                                HttpSession session) {
-        try {
-            // ✅ Lấy token từ session
-            String token = (String) session.getAttribute("token");
-            if (token == null) {
-                return "redirect:/login";
-            }
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+        String token = (String) session.getAttribute("token");
 
+        if (token == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập lại");
+            return "redirect:/login";
+        }
+
+        try {
             String username = jwtUtil.extractUsername(token);
             User currentUser = userService.findByUsername(username);
 
@@ -107,10 +116,12 @@ public String showProfile(Model model, HttpSession session) {
             return "edit-profile";
 
         } catch (Exception e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "edit-profile";
+            // Token lỗi hoặc update lỗi
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập lại");
+            return "redirect:/login";
         }
     }
+
 
 }
 
