@@ -1,9 +1,8 @@
 package ut.edu.childgrowth.models;
 
 import jakarta.persistence.*;
-import java.util.Map;
 
-//CẢNH BÁO
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "alerts")
@@ -13,8 +12,9 @@ public class Alert {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private Long childId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "child_id", nullable = false)
+    private Child child;
 
     @Column(name = "alertType", nullable = false)
     private String alertType;
@@ -22,11 +22,21 @@ public class Alert {
     @Column(nullable = false)
     private String message;
 
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+    private boolean resolved;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
+
     public Alert() {
     }
 
-    public Alert(Long childId, String alertType, String message) {
-        this.childId = childId;
+    public Alert(Child child, String alertType, String message) {
+        this.child = child;
         this.alertType = alertType;
         this.message = message;
     }
@@ -39,12 +49,12 @@ public class Alert {
         this.id = id;
     }
 
-    public Long getChildId() {
-        return childId;
+    public Child getChild() {
+        return child;
     }
 
-    public void setChildId(Long childId) {
-        this.childId = childId;
+    public void setChild(Child child) {
+        this.child = child;
     }
 
     public String getAlertType() {
@@ -63,11 +73,21 @@ public class Alert {
         this.message = message;
     }
 
-//    public boolean checkGrowthAnomaly(Map<String, Double> data) {
-//        return data.get("bmi") != null && (data.get("bmi") < 15 || data.get("bmi") > 25);
-//    }
-//
-//    public void sendAlert(Long userId) {
-//        System.out.println("Cảnh báo đã gửi đến ID: " + userId + " - " + message);
-//    }
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setResolved(boolean resolved) {
+        this.resolved = resolved;
+    }
+
+    public boolean isResolved() {
+        return resolved;
+    }
+
+
 }
