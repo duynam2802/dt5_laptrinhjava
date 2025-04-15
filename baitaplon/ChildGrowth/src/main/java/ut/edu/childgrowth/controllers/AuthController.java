@@ -86,4 +86,9 @@ public class AuthController {
         return "new-consult"; // Spring sẽ tìm trong src/main/resources/templates
     }
 
+    @GetMapping("/blog")
+    public String showBlogPage() {
+        return "blog"; // Trả về blog.html trong thư mục templates
+    }
+
 }

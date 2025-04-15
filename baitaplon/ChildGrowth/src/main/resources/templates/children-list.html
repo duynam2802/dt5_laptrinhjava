@@ -199,7 +199,7 @@
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span>Copyright © ChildGrowth 2023</span>
+                    <span>Copyright © ChildGrowth - VP</span>
                 </div>
             </div>
         </footer>
@@ -243,6 +243,58 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Cập nhật chỉ số -->
+<div class="modal fade" id="updateGrowthModal" tabindex="-1" aria-labelledby="updateGrowthModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="updateGrowthModalLabel">Cập nhật chỉ số</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="updateGrowthForm">
+                <div class="modal-body">
+                    <input type="hidden" id="growth-child-id">
+                    <div class="mb-3">
+                        <label for="update-date" class="form-label">Ngày cập nhật</label>
+                        <input type="date" class="form-control" id="update-date" value="">
+                    </div>
+                    <div class="mb-3">
+                        <label for="update-weight" class="form-label">Cân nặng (kg) <span class="text-danger">*</span></label>
+                        <input type="number" step="0.1" class="form-control" id="update-weight" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="update-height" class="form-label">Chiều cao (cm) <span class="text-danger">*</span></label>
+                        <input type="number" step="0.1" class="form-control" id="update-height" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal Xác nhận Xóa -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa trẻ này? Hành động này không thể hoàn tác!</p>
+                <input type="hidden" id="delete-child-id">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Xóa</button>
             </div>
         </div>
     </div>
@@ -292,8 +344,14 @@
                                             onclick="showChildDetail(${JSON.stringify(child).replace(/"/g, '&quot;')})">
                                         Chi tiết trẻ
                                     </button>
-                                <a class="btn btn-warning btn-sm mb-2 text-white" href="/child/edit/${child.id}">Cập nhật</a>
-                                <a class="btn btn-danger btn-sm" href="/child/delete/${child.id}" onclick="return confirm('Bạn có chắc muốn xóa trẻ này?');">Xóa trẻ</a>
+                                <button class="btn btn-primary btn-sm mb-2"
+        onclick="showGrowthForm('${child.id}', ${child.chiTiet.weight || 'null'}, ${child.chiTiet.height || 'null'})">
+    <i class="fas fa-edit me-1"></i> Cập nhật chỉ số
+</button>
+                                <button class="btn btn-danger btn-sm"
+        onclick="showDeleteConfirm('${child.id}', '${child.hoTen}')">
+    <i class="fas fa-trash-alt me-1"></i> Xóa
+</button>
                             </div>
                         </div>
                     </div>
@@ -341,6 +399,89 @@
         const modal = new bootstrap.Modal(document.getElementById('childDetailModal'));
         modal.show();
     }
+    // Hàm mở modal
+    function showGrowthForm(childId, currentWeight, currentHeight) {
+        const today = new Date().toISOString().split('T')[0]; // Lấy ngày hiện tại (YYYY-MM-DD)
+
+        document.getElementById('growth-child-id').value = childId;
+        document.getElementById('update-date').value = today; // Set mặc định
+        document.getElementById('update-weight').value = currentWeight || '';
+        document.getElementById('update-height').value = currentHeight || '';
+
+        const modal = new bootstrap.Modal(document.getElementById('updateGrowthModal'));
+        modal.show();
+    }
+
+    // Xử lý submit
+    document.getElementById('updateGrowthForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const childId = document.getElementById('growth-child-id').value;
+        const token = localStorage.getItem('token') || '';
+
+        const payload = {
+            canNang: parseFloat(document.getElementById('update-weight').value),
+            chieuCao: parseFloat(document.getElementById('update-height').value),
+            thoiDiem: document.getElementById('update-date').value || new Date().toISOString().split('T')[0]
+        };
+
+        try {
+            const response = await fetch(`/api/children/update-growth/${childId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) throw new Error(result.message || 'Cập nhật thất bại');
+
+            alert('Cập nhật thành công!');
+            bootstrap.Modal.getInstance(document.getElementById('updateGrowthModal')).hide();
+            location.reload();
+        } catch (error) {
+            console.error('Lỗi:', error);
+            alert(`Lỗi: ${error.message}`);
+        }
+    });
+    // Hàm mở modal xác nhận xóa
+    function showDeleteConfirm(childId, childName) {
+        document.getElementById('delete-child-id').value = childId;
+        document.getElementById('confirmDeleteModalLabel').innerText = `Xóa ${childName || 'trẻ này'}`;
+
+        const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        modal.show();
+    }
+
+    // Xử lý sự kiện nút xóa
+    document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+        const childId = document.getElementById('delete-child-id').value;
+        const token = localStorage.getItem('token') || '';
+
+        try {
+            const response = await fetch(`/api/children/delete/${childId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Xóa thất bại');
+            }
+
+            alert('Đã xóa trẻ thành công!');
+            bootstrap.Modal.getInstance(document.getElementById('confirmDeleteModal')).hide();
+            location.reload(); // Hoặc xóa phần tử khỏi DOM
+        } catch (error) {
+            console.error('Lỗi:', error);
+            alert(`Lỗi: ${error.message}`);
+        }
+    });
 </script>
 </body>
 </html>
