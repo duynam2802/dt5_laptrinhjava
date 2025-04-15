@@ -205,7 +205,48 @@
         </footer>
     </div>
 </div>
-
+<!-- Modal Chi tiết trẻ -->
+<div class="modal fade" id="childDetailModal" tabindex="-1" aria-labelledby="childDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="childDetailModalLabel">Thông tin chi tiết</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <img id="detail-avatar" src="" alt="Avatar" class="rounded-circle shadow mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Họ tên:</strong> <span id="detail-name"></span></p>
+                                <p><strong>Biệt danh:</strong> <span id="detail-nickname"></span></p>
+                                <p><strong>Ngày sinh:</strong> <span id="detail-dob"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Giới tính:</strong> <span id="detail-gender"></span></p>
+                                <p><strong>Tuổi:</strong> <span id="detail-age"></span></p>
+                                <p><strong>Cân nặng:</strong> <span id="detail-weight"></span> kg</p>
+                                <p><strong>Chiều cao:</strong> <span id="detail-height"></span> cm</p>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <h6 class="text-primary">Lịch sử sức khỏe</h6>
+                            <ul id="health-history" class="list-group">
+                                <!-- Dữ liệu sẽ được thêm bằng JS -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Bootstrap 5 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core JavaScript -->
@@ -247,7 +288,10 @@
                                 <p class="mb-0"><strong>Giới tính:</strong> ${child.chiTiet.gender === 'FEMALE' ? 'Nữ' : 'Nam'}</p>
                             </div>
                             <div class="ms-3 d-flex flex-column">
-                                <a class="btn btn-info btn-sm mb-2 text-white" data-bs-toggle="modal" data-bs-target="#childModal-${child.id}">Chi tiết trẻ</a>
+                                <button class="btn btn-info btn-sm mb-2 text-white"
+                                            onclick="showChildDetail(${JSON.stringify(child).replace(/"/g, '&quot;')})">
+                                        Chi tiết trẻ
+                                    </button>
                                 <a class="btn btn-warning btn-sm mb-2 text-white" href="/child/edit/${child.id}">Cập nhật</a>
                                 <a class="btn btn-danger btn-sm" href="/child/delete/${child.id}" onclick="return confirm('Bạn có chắc muốn xóa trẻ này?');">Xóa trẻ</a>
                             </div>
@@ -260,6 +304,43 @@
             }
         })
         .catch(error => console.error('Lỗi:', error));
+    // Hàm hiển thị modal chi tiết
+    function showChildDetail(child) {
+        // Đặt dữ liệu vào modal
+        document.getElementById('detail-avatar').src = child.chiTiet.gender === 'FEMALE' ? '/img/nu.jpg' : '/img/nam.jpg';
+        document.getElementById('detail-name').textContent = child.hoTen;
+        document.getElementById('detail-nickname').textContent = child.BietDanh || 'Không có';
+        document.getElementById('detail-dob').textContent = child.chiTiet.dateOfBirth || 'Chưa cập nhật';
+        document.getElementById('detail-gender').textContent = child.chiTiet.gender === 'FEMALE' ? 'Nữ' : 'Nam';
+        document.getElementById('detail-age').textContent = child.tuoi;
+        document.getElementById('detail-weight').textContent = child.chiTiet.weight || 'Chưa đo';
+        document.getElementById('detail-height').textContent = child.chiTiet.height || 'Chưa đo';
+
+        // Làm sạch lịch sử sức khỏe cũ
+        const healthList = document.getElementById('health-history');
+        healthList.innerHTML = '';
+
+        // Thêm lịch sử sức khỏe (nếu có)
+        if (child.healthRecords && child.healthRecords.length > 0) {
+            child.healthRecords.forEach(record => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.innerHTML = `
+                <strong>${record.date}</strong>: ${record.description}
+                <span class="badge bg-${record.severity === 'HIGH' ? 'danger' : 'warning'} float-end">
+                    ${record.severity === 'HIGH' ? 'Nghiêm trọng' : 'Bình thường'}
+                </span>
+            `;
+                healthList.appendChild(li);
+            });
+        } else {
+            healthList.innerHTML = '<li class="list-group-item text-muted">Chưa có dữ liệu lịch sử sức khỏe</li>';
+        }
+
+        // Hiển thị modal
+        const modal = new bootstrap.Modal(document.getElementById('childDetailModal'));
+        modal.show();
+    }
 </script>
 </body>
 </html>
