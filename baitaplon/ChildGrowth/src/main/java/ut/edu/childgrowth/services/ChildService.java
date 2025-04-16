@@ -26,7 +26,9 @@ public class ChildService {
     UserRepository userRepository;
     @Autowired
     UserService userService;
-
+    public List<Child> getAllChildren() {
+        return childRepository.findAll();
+    }
     // Phương thức đăng ký trẻ mới
     public Child registerChild(String authHeader, Child child) {
         String token = authHeader.substring(7);  // Cắt "Bearer " khỏi token

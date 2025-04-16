@@ -1,6 +1,5 @@
 package ut.edu.childgrowth.controllers;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,15 +30,12 @@ public class ConsultationController {
     }
 
     @GetMapping
-    public String showConsultationForm(Model model, Authentication authentication) {
-        String username = authentication.getName();
-        List<Child> children = childService.getChildrenByUser(
-                userRepository.findByUsername(username)
-                        .orElseThrow(() -> new RuntimeException("User not found"))
-        );
+    public String showConsultationForm(Model model) {
+        // Lấy tất cả children thay vì theo user
+        List<Child> children = childService.getAllChildren();
 
-        model.addAttribute("children", children); // ❗ cần có dòng này
-        return "consultation";                    // ❗ cần trả về tên view
+        model.addAttribute("children", children);
+        return "consultation";
     }
 
     @PostMapping
@@ -47,11 +43,9 @@ public class ConsultationController {
             @RequestParam("childId") Long childId,
             @RequestParam("consultReason") String consultReason,
             @RequestParam(value = "attachment", required = false) MultipartFile attachment,
-            Authentication authentication,
             RedirectAttributes redirectAttributes) {
 
         try {
-            String username = authentication.getName();
             Child child = childService.findById(childId);
 
             if (child == null) {
@@ -59,9 +53,10 @@ public class ConsultationController {
                 return "redirect:/consultation";
             }
 
+            // Sử dụng giá trị mặc định hoặc cách xử lý khác thay vì username
             consultationService.createConsultation(
                     child,
-                    username,
+                    "anonymous", // hoặc có thể thêm @RequestParam String username
                     consultReason,
                     attachment
             );
