@@ -3,9 +3,11 @@ package ut.edu.childgrowth.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ut.edu.childgrowth.models.Alert;
+import ut.edu.childgrowth.models.BmiBoysZWho2007Exp;
 import ut.edu.childgrowth.models.Child;
 import ut.edu.childgrowth.models.BmiGirlsZWho2007Exp;
 import ut.edu.childgrowth.repositories.AlertRepository;
+import ut.edu.childgrowth.repositories.BmiBoysZRepository;
 import ut.edu.childgrowth.repositories.BmiGirlsZRepository;
 
 import java.time.LocalDate;
@@ -21,6 +23,11 @@ public class AlertService {
     @Autowired
     private BmiGirlsZRepository bmiGirlsZRepository;
 
+    @Autowired
+    BmiBoysZRepository bmiBoysZRepository;
+
+
+
     public void checkAndHandleAlert(Child child, double heightCm, double weightKg) {
         double heightM = heightCm / 100.0;
         double bmi = weightKg / (heightM * heightM);
@@ -30,12 +37,23 @@ public class AlertService {
         int months = Period.between(dob, LocalDate.now()).getYears() * 12 +
                 Period.between(dob, LocalDate.now()).getMonths();
 
-        BmiGirlsZWho2007Exp ref = bmiGirlsZRepository.findByMonth(months).orElse(null);
-        if (ref == null) return;
+        // Khởi tạo các tham số L, M, S
+        double l, m, s;
 
-        double l = ref.getL();
-        double m = ref.getM();
-        double s = ref.getS();
+        // Kiểm tra giới tính và lấy dữ liệu tham chiếu
+        if (child.getGender().equals("MALE")) {
+            BmiBoysZWho2007Exp ref = bmiBoysZRepository.findByMonth(months).orElse(null);
+            if (ref == null) return;
+            l = ref.getL();
+            m = ref.getM();
+            s = ref.getS();
+        } else {
+            BmiGirlsZWho2007Exp ref = bmiGirlsZRepository.findByMonth(months).orElse(null);
+            if (ref == null) return;
+            l = ref.getL();
+            m = ref.getM();
+            s = ref.getS();
+        }
 
         // Tính Z-score
         double z;

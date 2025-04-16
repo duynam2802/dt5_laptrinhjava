@@ -129,6 +129,8 @@ public class Child {
 
     // Enum cho giới tính
     public enum Gender {
-        MALE, FEMALE
+        MALE, FEMALE;
+
+
     }
 }
