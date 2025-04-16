@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ut.edu.childgrowth.dtos.UserResponse;
 import ut.edu.childgrowth.jwt.JwtUtil;
+import ut.edu.childgrowth.models.Alert;
 import ut.edu.childgrowth.models.Child;
 import ut.edu.childgrowth.models.GrowthRecord;
 //import ut.edu.childgrowth.;
@@ -26,6 +27,11 @@ public class ChildService {
     UserRepository userRepository;
     @Autowired
     UserService userService;
+    @Autowired
+    AlertService alertService;
+
+
+
     public List<Child> getAllChildren() {
         return childRepository.findAll();
     }
@@ -60,7 +66,9 @@ public class ChildService {
         if (user == null) {
             throw new IllegalArgumentException("Không tìm thấy người dùng.");
         }
+
         List<Child> children = getChildrenByUser(user);
+
         List<Map<String, Object>> danhSachCon = children.stream().map(child -> {
             Map<String, Object> data = new HashMap<>();
             data.put("id", child.getChild_id());
@@ -81,14 +89,28 @@ public class ChildService {
                 chiTiet.put("height", latestRecord.get().getChieuCao());
             }
 
+            // Thêm danh sách cảnh báo
+            List<Alert> alerts = alertService.getUnresolvedAlertsForChild(child);
+            List<Map<String, Object>> alertList = alerts.stream().map(alert -> {
+                Map<String, Object> alertMap = new HashMap<>();
+                alertMap.put("alertType", alert.getAlertType());
+                alertMap.put("message", alert.getMessage());
+                alertMap.put("detailMessage", alert.getDetailMessage());
+                alertMap.put("createdAt", alert.getCreatedAt());
+                alertMap.put("resolved", alert.isResolved());
+                return alertMap;
+            }).toList();
+
             data.put("chiTiet", chiTiet);
+            data.put("alerts", alertList);
+
             return data;
         }).toList();
-        System.out.println("Danh sách con: " + danhSachCon);  // Kiểm tra dữ liệu trả về
 
         Map<String, Object> response = new HashMap<>();
         response.put("soLuongCon", children.size());
         response.put("danhSachCon", danhSachCon);
+        System.out.println(response);
         return response;
     }
     // Phương thức lấy thông tin trẻ theo ID

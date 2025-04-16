@@ -19,12 +19,23 @@ public class Alert {
     @Column(name = "alertType", nullable = false)
     private String alertType;
 
+    @Column(name = "detail_message", columnDefinition = "TEXT")
+    private String detailMessage;
+
     @Column(nullable = false)
     private String message;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
     private boolean resolved;
+
+    public Alert(Child child, String alertType, String message, String detailMessage) {
+        this.child = child;
+        this.alertType = alertType;
+        this.message = message;
+        this.detailMessage = detailMessage;
+        this.resolved = false;
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -89,5 +100,11 @@ public class Alert {
         return resolved;
     }
 
+    public String getDetailMessage() {
+        return detailMessage;
+    }
 
+    public void setDetailMessage(String detailMessage) {
+        this.detailMessage = detailMessage;
+    }
 }
