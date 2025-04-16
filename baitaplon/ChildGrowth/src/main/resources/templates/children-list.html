@@ -34,16 +34,18 @@
         .bg-girl {
             background-color: #f8d7da; /* hồng nhạt */
         }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
     </style>
-    
-    
-    
 </head>
 <body id="page-top">
 <div id="wrapper">
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/index">
             <div class="sidebar-brand-icon">
@@ -62,8 +64,6 @@
                 <span>Trang chủ</span></a>
         </li>
 
-
-
         <!-- Divider -->
         <hr class="sidebar-divider">
 
@@ -72,13 +72,6 @@
             Quản lý trẻ em
         </div>
 
-        <!-- Bootstrap 5 CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Font Awesome -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-        <!-- Bootstrap 5 JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
         <!-- Nav Item - Quản lý trẻ em -->
         <li class="nav-item">
             <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#childrenMenu"
@@ -86,7 +79,6 @@
                 <i class="fas fa-fw fa-child me-2"></i>
                 <span>Quản lý trẻ em</span>
             </a>
-
             <div id="childrenMenu" class="collapse">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" href="/users/child/children-list">Danh sách trẻ</a>
@@ -112,11 +104,10 @@
                 <i class="fas fa-fw fa-stethoscope me-2"></i>
                 <span>Tư vấn</span>
             </a>
-
             <div id="helpMenu" class="collapse">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" href="/new-consult">Tư vấn bác sĩ</a>
-                    <a class="collapse-item" href="/support-request">Yêu cầu hổ trợ</a>
+                    <a class="collapse-item" href="/support-request">Yêu cầu hỗ trợ</a>
                 </div>
             </div>
         </li>
@@ -124,9 +115,8 @@
         <li class="nav-item">
             <a class="nav-link" href="/blog">
                 <i class="fas fa-edit"></i>
-                <span>Blog </span></a>
+                <span>Blog</span></a>
         </li>
-
 
         <!-- Divider -->
         <hr class="sidebar-divider">
@@ -150,7 +140,6 @@
         <div class="text-center d-none d-md-inline">
             <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>
-
     </ul>
     <!-- End of Sidebar -->
 
@@ -182,16 +171,20 @@
                     </a>
                 </div>
 
-                <!-- Danh sách trẻ -->
-                <div id="children-list" class="row">
-                    <!-- Thông tin trẻ em sẽ được thêm vào đây từ script -->
+                <!-- Loading Spinner -->
+                <div id="loading-spinner" class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Đang tải...</span>
+                    </div>
                 </div>
+
+                <!-- Danh sách trẻ -->
+                <div id="children-list" class="row"></div>
 
                 <!-- Trạng thái rỗng -->
                 <div id="no-children" class="alert alert-info text-center" style="display:none;">
                     Hiện tại chưa có trẻ nào trong danh sách. Vui lòng thêm trẻ mới.
                 </div>
-
             </div>
         </div>
 
@@ -205,6 +198,7 @@
         </footer>
     </div>
 </div>
+
 <!-- Modal Chi tiết trẻ -->
 <div class="modal fade" id="childDetailModal" tabindex="-1" aria-labelledby="childDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -234,9 +228,7 @@
                         </div>
                         <div class="mt-3">
                             <h6 class="text-primary">Lịch sử sức khỏe</h6>
-                            <ul id="health-history" class="list-group">
-                                <!-- Dữ liệu sẽ được thêm bằng JS -->
-                            </ul>
+                            <ul id="health-history" class="list-group"></ul>
                         </div>
                     </div>
                 </div>
@@ -280,6 +272,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal Xác nhận Xóa -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -299,112 +292,156 @@
         </div>
     </div>
 </div>
+
 <!-- Bootstrap 5 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core JavaScript -->
 <script src="/vendor/jquery/jquery.min.js"></script>
 <script src="/js/sb-admin-2.min.js"></script>
+<!-- Custom JavaScript -->
 <script>
+    // Hàm tiện ích để hiển thị thông báo
+    function showNotification(message, type = 'success') {
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        alert.role = 'alert';
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        document.querySelector('.container-fluid').prepend(alert);
+        setTimeout(() => alert.remove(), 5000);
+    }
 
-    fetch('/users/child/api/children-list')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data); // Kiểm tra dữ liệu trả về từ backend
+    // Hàm mã hóa HTML để ngăn XSS
+    function escapeHTML(str) {
+        if (!str) return '';
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    // Hàm tạo thẻ card trẻ em
+    function createChildCard(child) {
+        const avatarSrc = child.chiTiet.gender === 'FEMALE' ? '/img/nu.jpg' : '/img/nam.jpg';
+        const card = document.createElement('div');
+        card.className = `col-md-4 mb-4`;
+        card.innerHTML = `
+            <div class="card shadow h-100 child-card ${child.chiTiet.gender === 'FEMALE' ? 'bg-girl' : 'bg-boy'}">
+                <div class="card-body d-flex align-items-center">
+                    <div class="me-3">
+                        <img src="${avatarSrc}" alt="Avatar" class="rounded-circle shadow" style="width: 80px; height: 80px; object-fit: cover;">
+                    </div>
+                    <div class="flex-grow-1">
+                        <h5 class="card-title mb-2">${escapeHTML(child.hoTen)}</h5>
+                        <p class="mb-1"><strong>Biệt danh:</strong> ${escapeHTML(child.BietDanh || 'Không có')}</p>
+                        <p class="mb-1"><strong>Tuổi:</strong> ${child.tuoi}</p>
+                        <p class="mb-0"><strong>Giới tính:</strong> ${child.chiTiet.gender === 'FEMALE' ? 'Nữ' : 'Nam'}</p>
+                    </div>
+                    <div class="ms-3 d-flex flex-column">
+                        <button class="btn btn-info btn-sm mb-2 text-white" data-child-id="${child.id}">Chi tiết trẻ</button>
+                        <button class="btn btn-primary btn-sm mb-2" data-child-id="${child.id}" data-weight="${child.chiTiet.weight || ''}" data-height="${child.chiTiet.height || ''}">
+                            <i class="fas fa-edit me-1"></i> Cập nhật chỉ số
+                        </button>
+                        <button class="btn btn-danger btn-sm" data-child-id="${child.id}" data-child-name="${escapeHTML(child.hoTen)}">
+                            <i class="fas fa-trash-alt me-1"></i> Xóa
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        card.querySelector('.btn-info').addEventListener('click', () => fetchChildDetails(child.id));
+        card.querySelector('.btn-primary').addEventListener('click', () => showGrowthForm(child.id, child.chiTiet.weight, child.chiTiet.height));
+        card.querySelector('.btn-danger').addEventListener('click', () => showDeleteConfirm(child.id, child.hoTen));
+
+        return card;
+    }
+
+    // Hàm hiển thị spinner loading
+    function showLoading(show) {
+        const spinner = document.getElementById('loading-spinner');
+        spinner.style.display = show ? 'block' : 'none';
+    }
+
+    // Hàm tải danh sách trẻ
+    async function loadChildren() {
+        showLoading(true);
+        try {
+            const response = await fetch('/users/child/api/children-list');
+            if (!response.ok) throw new Error('Không thể tải danh sách trẻ');
+            const data = await response.json();
             const childrenList = data.danhSachCon;
             const childrenContainer = document.getElementById('children-list');
             const noChildrenMessage = document.getElementById('no-children');
 
+            childrenContainer.innerHTML = '';
             if (childrenList.length === 0) {
-                noChildrenMessage.style.display = 'block';  // Hiển thị thông báo rỗng nếu không có trẻ em
+                noChildrenMessage.style.display = 'block';
             } else {
-                childrenList.forEach(child => {
-                    // Xác định avatar dựa trên giới tính
-                    const avatarSrc = child.chiTiet.gender === 'FEMALE' ? '/img/nu.jpg' : '/img/nam.jpg';
-
-                    const childCard = `
-                <div class="col-md-4 mb-4">
-                    <div class="card shadow h-100 child-card ${child.chiTiet.gender === 'FEMALE' ? 'bg-girl' : 'bg-boy'}">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="me-3">
-                                <img src="${avatarSrc}" alt="Avatar" class="rounded-circle shadow" style="width: 80px; height: 80px; object-fit: cover;">
-                            </div>
-                            <div class="flex-grow-1">
-                                <h5 class="card-title mb-2">${child.hoTen}</h5>
-                                <p class="mb-1"><strong>Biệt danh:</strong> ${child.BietDanh || 'Không có'}</p>
-                                <p class="mb-1"><strong>Tuổi:</strong> ${child.tuoi}</p>
-                                <p class="mb-0"><strong>Giới tính:</strong> ${child.chiTiet.gender === 'FEMALE' ? 'Nữ' : 'Nam'}</p>
-                            </div>
-                            <div class="ms-3 d-flex flex-column">
-                                <button class="btn btn-info btn-sm mb-2 text-white"
-                                            onclick="showChildDetail(${JSON.stringify(child).replace(/"/g, '&quot;')})">
-                                        Chi tiết trẻ
-                                    </button>
-                                <button class="btn btn-primary btn-sm mb-2"
-        onclick="showGrowthForm('${child.id}', ${child.chiTiet.weight || 'null'}, ${child.chiTiet.height || 'null'})">
-    <i class="fas fa-edit me-1"></i> Cập nhật chỉ số
-</button>
-                                <button class="btn btn-danger btn-sm"
-        onclick="showDeleteConfirm('${child.id}', '${child.hoTen}')">
-    <i class="fas fa-trash-alt me-1"></i> Xóa
-</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-                    childrenContainer.innerHTML += childCard;
-                });
+                noChildrenMessage.style.display = 'none';
+                childrenList.forEach(child => childrenContainer.appendChild(createChildCard(child)));
             }
-        })
-        .catch(error => console.error('Lỗi:', error));
-    // Hàm hiển thị modal chi tiết
-    function showChildDetail(child) {
-        // Đặt dữ liệu vào modal
-        document.getElementById('detail-avatar').src = child.chiTiet.gender === 'FEMALE' ? '/img/nu.jpg' : '/img/nam.jpg';
-        document.getElementById('detail-name').textContent = child.hoTen;
-        document.getElementById('detail-nickname').textContent = child.BietDanh || 'Không có';
-        document.getElementById('detail-dob').textContent = child.chiTiet.dateOfBirth || 'Chưa cập nhật';
-        document.getElementById('detail-gender').textContent = child.chiTiet.gender === 'FEMALE' ? 'Nữ' : 'Nam';
-        document.getElementById('detail-age').textContent = child.tuoi;
-        document.getElementById('detail-weight').textContent = child.chiTiet.weight || 'Chưa đo';
-        document.getElementById('detail-height').textContent = child.chiTiet.height || 'Chưa đo';
-
-        // Làm sạch lịch sử sức khỏe cũ
-        const healthList = document.getElementById('health-history');
-        healthList.innerHTML = '';
-
-        // Thêm lịch sử sức khỏe (nếu có)
-        if (child.healthRecords && child.healthRecords.length > 0) {
-            child.healthRecords.forEach(record => {
-                const li = document.createElement('li');
-                li.className = 'list-group-item';
-                li.innerHTML = `
-                <strong>${record.date}</strong>: ${record.description}
-                <span class="badge bg-${record.severity === 'HIGH' ? 'danger' : 'warning'} float-end">
-                    ${record.severity === 'HIGH' ? 'Nghiêm trọng' : 'Bình thường'}
-                </span>
-            `;
-                healthList.appendChild(li);
-            });
-        } else {
-            healthList.innerHTML = '<li class="list-group-item text-muted">Chưa có dữ liệu lịch sử sức khỏe</li>';
+        } catch (error) {
+            console.error('Lỗi:', error);
+            showNotification('Lỗi khi tải danh sách trẻ: ' + error.message, 'danger');
+        } finally {
+            showLoading(false);
         }
-
-        // Hiển thị modal
-        const modal = new bootstrap.Modal(document.getElementById('childDetailModal'));
-        modal.show();
     }
-    // Hàm mở modal
-    function showGrowthForm(childId, currentWeight, currentHeight) {
-        const today = new Date().toISOString().split('T')[0]; // Lấy ngày hiện tại (YYYY-MM-DD)
 
+    // Hàm lấy chi tiết trẻ
+    async function fetchChildDetails(childId) {
+        try {
+            const response = await fetch(`/api/children/${childId}`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
+            });
+            if (!response.ok) throw new Error('Không thể lấy thông tin trẻ');
+            const child = await response.json();
+
+            document.getElementById('detail-avatar').src = child.chiTiet.gender === 'FEMALE' ? '/img/nu.jpg' : '/img/nam.jpg';
+            document.getElementById('detail-name').textContent = escapeHTML(child.hoTen);
+            document.getElementById('detail-nickname').textContent = escapeHTML(child.BietDanh || 'Không có');
+            document.getElementById('detail-dob').textContent = child.chiTiet.dateOfBirth || 'Chưa cập nhật';
+            document.getElementById('detail-gender').textContent = child.chiTiet.gender === 'FEMALE' ? 'Nữ' : 'Nam';
+            document.getElementById('detail-age').textContent = child.tuoi;
+            document.getElementById('detail-weight').textContent = child.chiTiet.weight || 'Chưa đo';
+            document.getElementById('detail-height').textContent = child.chiTiet.height || 'Chưa đo';
+
+            const healthList = document.getElementById('health-history');
+            healthList.innerHTML = '';
+            if (child.healthRecords && child.healthRecords.length > 0) {
+                child.healthRecords.forEach(record => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.innerHTML = `
+                        <strong>${escapeHTML(record.date)}</strong>: ${escapeHTML(record.description)}
+                        <span class="badge bg-${record.severity === 'HIGH' ? 'danger' : 'warning'} float-end">
+                            ${record.severity === 'HIGH' ? 'Nghiêm trọng' : 'Bình thường'}
+                        </span>
+                    `;
+                    healthList.appendChild(li);
+                });
+            } else {
+                healthList.innerHTML = '<li class="list-group-item text-muted">Chưa có dữ liệu lịch sử sức khỏe</li>';
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('childDetailModal'));
+            modal.show();
+        } catch (error) {
+            console.error('Lỗi:', error);
+            showNotification('Lỗi khi lấy thông tin trẻ: ' + error.message, 'danger');
+        }
+    }
+
+    // Hàm mở modal cập nhật chỉ số
+    function showGrowthForm(childId, currentWeight, currentHeight) {
+        const today = new Date().toISOString().split('T')[0];
         document.getElementById('growth-child-id').value = childId;
-        document.getElementById('update-date').value = today; // Set mặc định
+        document.getElementById('update-date').value = today;
         document.getElementById('update-weight').value = currentWeight || '';
         document.getElementById('update-height').value = currentHeight || '';
 
@@ -412,16 +449,27 @@
         modal.show();
     }
 
-    // Xử lý submit
+    // Xử lý submit cập nhật chỉ số
     document.getElementById('updateGrowthForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const childId = document.getElementById('growth-child-id').value;
-        const token = localStorage.getItem('token') || '';
+        const token = localStorage.getItem('token');
+        if (!token) {
+            showNotification('Vui lòng đăng nhập lại', 'danger');
+            return;
+        }
+
+        const weight = parseFloat(document.getElementById('update-weight').value);
+        const height = parseFloat(document.getElementById('update-height').value);
+        if (isNaN(weight) || weight <= 0 || isNaN(height) || height <= 0) {
+            showNotification('Cân nặng và chiều cao phải là số dương', 'danger');
+            return;
+        }
 
         const payload = {
-            canNang: parseFloat(document.getElementById('update-weight').value),
-            chieuCao: parseFloat(document.getElementById('update-height').value),
+            canNang: weight,
+            chieuCao: height,
             thoiDiem: document.getElementById('update-date').value || new Date().toISOString().split('T')[0]
         };
 
@@ -436,37 +484,39 @@
             });
 
             const result = await response.json();
-
             if (!response.ok) throw new Error(result.message || 'Cập nhật thất bại');
 
-            alert('Cập nhật thành công!');
+            showNotification('Cập nhật chỉ số thành công!', 'success');
             bootstrap.Modal.getInstance(document.getElementById('updateGrowthModal')).hide();
-            location.reload();
+            loadChildren();
         } catch (error) {
             console.error('Lỗi:', error);
-            alert(`Lỗi: ${error.message}`);
+            showNotification(`Lỗi: ${error.message}`, 'danger');
         }
     });
+
     // Hàm mở modal xác nhận xóa
     function showDeleteConfirm(childId, childName) {
         document.getElementById('delete-child-id').value = childId;
-        document.getElementById('confirmDeleteModalLabel').innerText = `Xóa ${childName || 'trẻ này'}`;
+        document.getElementById('confirmDeleteModalLabel').innerText = `Xóa ${escapeHTML(childName || 'trẻ này')}`;
 
         const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
         modal.show();
     }
 
-    // Xử lý sự kiện nút xóa
+    // Xử lý xóa trẻ
     document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
         const childId = document.getElementById('delete-child-id').value;
-        const token = localStorage.getItem('token') || '';
+        const token = localStorage.getItem('token');
+        if (!token) {
+            showNotification('Vui lòng đăng nhập lại', 'danger');
+            return;
+        }
 
         try {
             const response = await fetch(`/api/children/delete/${childId}`, {
                 method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                headers: { 'Authorization': `Bearer ${token}` }
             });
 
             if (!response.ok) {
@@ -474,14 +524,17 @@
                 throw new Error(error.message || 'Xóa thất bại');
             }
 
-            alert('Đã xóa trẻ thành công!');
+            showNotification('Đã xóa trẻ thành công!', 'success');
             bootstrap.Modal.getInstance(document.getElementById('confirmDeleteModal')).hide();
-            location.reload(); // Hoặc xóa phần tử khỏi DOM
+            loadChildren();
         } catch (error) {
             console.error('Lỗi:', error);
-            alert(`Lỗi: ${error.message}`);
+            showNotification(`Lỗi: ${error.message}`, 'danger');
         }
     });
+
+    // Tải danh sách trẻ khi trang được tải
+    document.addEventListener('DOMContentLoaded', loadChildren);
 </script>
 </body>
 </html>
