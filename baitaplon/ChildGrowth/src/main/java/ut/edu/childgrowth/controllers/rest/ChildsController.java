@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ut.edu.childgrowth.jwt.JwtUtil;
 import ut.edu.childgrowth.models.Child;
+import ut.edu.childgrowth.services.AlertService;
 import ut.edu.childgrowth.services.ChildService;
 import ut.edu.childgrowth.services.UserService;
 import ut.edu.childgrowth.services.GrowthRecordService;
@@ -31,6 +32,10 @@ public class ChildsController {
 
     @Autowired
     private GrowthRecordService growthRecordService;
+
+    @Autowired
+    private AlertService alertService;
+
 
     // Đăng ký trẻ
 
@@ -89,6 +94,10 @@ public class ChildsController {
             // ✅ Trả về JSON hợp lệ
             Map<String, String> response = new HashMap<>();
             response.put("message", message);
+
+            Child child = growthRecordService.getChildById(childId); // Giả sử có method này
+            alertService.checkAndHandleAlert(child, height, weight);
+
             return ResponseEntity.ok(response);
 
         } catch (IllegalArgumentException | NoSuchElementException e) {
@@ -100,6 +109,8 @@ public class ChildsController {
             error.put("error", "Lỗi hệ thống: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
+
+
     }
 
 

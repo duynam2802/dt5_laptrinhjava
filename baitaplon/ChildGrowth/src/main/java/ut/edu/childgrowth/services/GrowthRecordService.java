@@ -8,6 +8,7 @@ import ut.edu.childgrowth.repositories.GrowthRecordRepository;
 
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class GrowthRecordService {
@@ -17,6 +18,9 @@ public class GrowthRecordService {
 
     @Autowired
     ChildService childService;
+    @Autowired
+    ChildService childRepository;
+
 
 
     public GrowthRecord saveGrowthRecord(GrowthRecord growthRecord) {
@@ -46,5 +50,15 @@ public class GrowthRecordService {
 
         return "Đã cập nhật thông tin thành công";
     }
+
+    public Child getChildById(Long childId) {
+        Optional<Child> childOptional = Optional.ofNullable(childRepository.findById(childId));
+        if (childOptional.isPresent()) {
+            return childOptional.get();
+        } else {
+            throw new RuntimeException("Không tìm thấy trẻ với ID: " + childId);
+        }
+    }
+
 
 }
