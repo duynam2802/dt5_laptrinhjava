@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ut.edu.childgrowth.dtos.AuthRequest;
 import ut.edu.childgrowth.dtos.AuthResponse;
 import ut.edu.childgrowth.services.UserService;
@@ -81,9 +80,19 @@ public class AuthController {
         return "health-alerts"; // Spring sẽ tìm trong src/main/resources/templates
     }
 
-    @GetMapping("/new-consult")
+    @GetMapping("/consultation-form")
     public String showNewConsult() {
-        return "new-consult"; // Spring sẽ tìm trong src/main/resources/templates
+        return "consultation"; // Spring sẽ tìm trong src/main/resources/templates
+    }
+
+    @GetMapping("/consultation-success")
+    public String consultationSuccess() {
+        return "consultation-success"; // Spring sẽ tìm trong src/main/resources/templates
+    }
+
+    @GetMapping("/support-request")
+    public String supportRequest() {
+        return "support-request"; // Spring sẽ tìm trong src/main/resources/templates
     }
 
     @GetMapping("/blog")

@@ -29,23 +29,23 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
-public String registerUser(UserRegisterRequest userRegisterRequest) {
-    if (userRepository.existsByUsername(userRegisterRequest.getUsername())) {
-        return "Username đã tồn tại!";
+
+    public String registerUser(UserRegisterRequest userRegisterRequest) {
+        if (userRepository.existsByUsername(userRegisterRequest.getUsername())) {
+            return "Username đã tồn tại!";
+        }
+
+        User user = new User();
+        user.setUsername(userRegisterRequest.getUsername());
+        user.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
+        user.setRole("USER");
+        user.setEmail(userRegisterRequest.getEmail());
+        user.setFullName(userRegisterRequest.getFullname());
+        user.setNumphone(userRegisterRequest.getNumPhone());
+
+        userRepository.save(user);
+        return "Tạo tài khoản thành công!";
     }
-
-    User user = new User();
-    user.setUsername(userRegisterRequest.getUsername());
-    user.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
-    user.setRole("USER");
-    user.setEmail(userRegisterRequest.getEmail());
-    user.setFullName(userRegisterRequest.getFullname());
-    user.setNumphone(userRegisterRequest.getNumPhone());
-
-    userRepository.save(user);
-    return "Tạo tài khoản thành công!";
-}
 
     public AuthResponse loginUser(AuthRequest request) {
         Optional<User> userOptional = userRepository.findByUsername(request.getUsername());
@@ -97,7 +97,7 @@ public String registerUser(UserRegisterRequest userRegisterRequest) {
 
     }
 
-     //Cập nhật thông tin user
+    //Cập nhật thông tin user
     public UserResponse updateUser(Long id, User updatedUser) {
         Optional<User> existingUserOptional = userRepository.findById(id);
         if (existingUserOptional.isEmpty()) {

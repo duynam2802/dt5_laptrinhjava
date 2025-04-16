@@ -5,14 +5,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Blog về sức khỏe và sự phát triển của trẻ em">
+    <meta name="description" content="Hệ thống theo dõi sự tăng trưởng của trẻ từ sơ sinh đến trưởng thành">
     <meta name="author" content="ChildGrowth Team">
 
-    <title>ChildGrowth - Blog</title>
+    <title>Yêu cầu hỗ trợ - ChildGrowth</title>
 
     <!-- Custom fonts for this template-->
     <link href="../static/css/sb-admin-2.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
     <!-- Font Awesome -->
     <link href="../static/css/all.min.css" rel="stylesheet" type="text/css">
 
@@ -21,12 +23,8 @@
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Toast.js and Toast.css -->
-    <script src="/js/toast.js"></script>
-    <link href="/css/toast.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body id="page-top">
@@ -114,7 +112,6 @@
             </div>
         </li>
 
-
         <li class="nav-item">
             <a class="nav-link" href="/blog">
                 <i class="fas fa-edit"></i>
@@ -156,52 +153,9 @@
 
             <!-- Topbar -->
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                <!-- Sidebar Toggle (Topbar) -->
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
-
-                <!-- Topbar Search -->
-                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..." aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary">
-                                <i class="bi bi-search"></i> Tìm kiếm
-                            </button>
-                        </div>
-                    </div>
-                </form>
-
-                <!-- Topbar Navbar -->
-                <ul class="navbar-nav ml-auto">
-
-                    <!-- Nav Item - User Information -->
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="img-profile rounded-circle" src="./img/undraw_profile_1.svg">
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="/users/profile/update">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Hồ sơ cá nhân
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Cài đặt
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Đăng xuất
-                            </a>
-                        </div>
-                    </li>
-
-                </ul>
-
             </nav>
             <!-- End of Topbar -->
 
@@ -210,71 +164,105 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Blog</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Yêu cầu hỗ trợ</h1>
                 </div>
 
-                <!-- Blog Posts -->
+                <!-- Content Row -->
                 <div class="row">
-                    <!-- Blog Post 1 -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="card shadow h-100">
-                            <img src="/img/blog1.jpg" class="card-img-top" alt="Dinh dưỡng cho trẻ">
-                            <div class="card-body">
-                                <h5 class="card-title">Dinh dưỡng hợp lý cho trẻ dưới 5 tuổi</h5>
-                                <p class="card-text">Tìm hiểu cách xây dựng chế độ ăn uống cân bằng để hỗ trợ sự phát triển toàn diện của trẻ.</p>
-                                <a href="#" class="btn btn-primary">Đọc thêm</a>
+
+                    <div class="col-lg-8">
+                        <!-- Support Request Form -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Gửi yêu cầu hỗ trợ</h6>
                             </div>
-                            <div class="card-footer text-muted">
-                                Đăng ngày: 10/04/2025
+                            <div class="card-body">
+                                <form id="supportRequestForm">
+                                    <div class="form-group">
+                                        <label for="requestType">Loại yêu cầu</label>
+                                        <select class="form-control" id="requestType" required>
+                                            <option value="" selected disabled>Chọn loại yêu cầu</option>
+                                            <option value="technical">Hỗ trợ kỹ thuật</option>
+                                            <option value="account">Vấn đề tài khoản</option>
+                                            <option value="payment">Thanh toán & gói dịch vụ</option>
+                                            <option value="feature">Yêu cầu tính năng mới</option>
+                                            <option value="other">Khác</option>
+                                        </select>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="requestTitle">Tiêu đề yêu cầu</label>
+                                        <input type="text" class="form-control" id="requestTitle" placeholder="Mô tả ngắn gọn vấn đề" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="requestDescription">Mô tả chi tiết</label>
+                                        <textarea class="form-control" id="requestDescription" rows="6" placeholder="Mô tả chi tiết vấn đề bạn gặp phải hoặc yêu cầu hỗ trợ..." required></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="attachment">Tệp đính kèm (nếu có)</label>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="attachment">
+                                            <label class="custom-file-label" for="attachment">Chọn tệp...</label>
+                                        </div>
+                                        <small class="form-text text-muted">Bạn có thể đính kèm ảnh chụp màn hình hoặc tài liệu liên quan (tối đa 5MB)</small>
+                                    </div>
+
+                                    <div class="form-group mt-4">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-paper-plane"></i> Gửi yêu cầu
+                                        </button>
+                                        <button type="reset" class="btn btn-secondary ml-2">
+                                            <i class="fas fa-undo"></i> Nhập lại
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Blog Post 2 -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="card shadow h-100">
-                            <img src="/img/blog2.jpg" class="card-img-top" alt="Giấc ngủ của trẻ">
+                    <div class="col-lg-4">
+                        <!-- Support Information -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 bg-info">
+                                <h6 class="m-0 font-weight-bold text-white">Thông tin hỗ trợ</h6>
+                            </div>
                             <div class="card-body">
-                                <h5 class="card-title">Tầm quan trọng của giấc ngủ đối với trẻ</h5>
-                                <p class="card-text">Khám phá vai trò của giấc ngủ trong sự phát triển thể chất và trí tuệ của trẻ.</p>
-                                <a href="#" class="btn btn-primary">Đọc thêm</a>
-                            </div>
-                            <div class="card-footer text-muted">
-                                Đăng ngày: 05/04/2025
-                            </div>
-                        </div>
-                    </div>
+                                <h5 class="card-title"><i class="fas fa-info-circle text-info"></i> Trước khi gửi yêu cầu</h5>
+                                <p class="card-text">Vui lòng kiểm tra các vấn đề thường gặp hoặc hướng dẫn sử dụng trong mục <a href="/help-center">Trung tâm trợ giúp</a> trước khi gửi yêu cầu hỗ trợ.</p>
 
-                    <!-- Blog Post 3 -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="card shadow h-100">
-                            <img src="/img/blog3.jpg" class="card-img-top" alt="Hoạt động thể chất">
-                            <div class="card-body">
-                                <h5 class="card-title">Hoạt động thể chất cho trẻ mẫu giáo</h5>
-                                <p class="card-text">Gợi ý các hoạt động thể chất giúp trẻ khỏe mạnh và năng động hơn mỗi ngày.</p>
-                                <a href="#" class="btn btn-primary">Đọc thêm</a>
-                            </div>
-                            <div class="card-footer text-muted">
-                                Đăng ngày: 01/04/2025
+                                <hr>
+
+                                <h5 class="card-title"><i class="fas fa-clock text-warning"></i> Thời gian phản hồi</h5>
+                                <ul class="list-group list-group-flush mb-3">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Hỗ trợ kỹ thuật
+                                        <span class="badge badge-primary badge-pill">24-48 giờ</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Vấn đề tài khoản
+                                        <span class="badge badge-primary badge-pill">12-24 giờ</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Thanh toán & gói dịch vụ
+                                        <span class="badge badge-primary badge-pill">24-72 giờ</span>
+                                    </li>
+                                </ul>
+
+                                <hr>
+
+                                <h5 class="card-title"><i class="fas fa-headset text-success"></i> Hỗ trợ khẩn cấp</h5>
+                                <p class="card-text">Đối với các vấn đề khẩn cấp ảnh hưởng đến sức khỏe của trẻ, vui lòng liên hệ:</p>
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-phone-alt"></i> <strong>Hotline:</strong> 1900 1234<br>
+                                    <i class="fas fa-envelope"></i> <strong>Email:</strong> vpanther@childgrowth.vn
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Pagination -->
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1">Trước</a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Sau</a>
-                        </li>
-                    </ul>
-                </nav>
 
             </div>
             <!-- /.container-fluid -->
@@ -304,7 +292,8 @@
 </a>
 
 <!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -331,6 +320,28 @@
 
 <!-- Custom scripts for all pages-->
 <script src="js/sb-admin-2.min.js"></script>
+
+<!-- Custom script for support request page -->
+<script>
+    // Update file input label
+    $('.custom-file-input').on('change', function() {
+        let fileName = $(this).val().split('\\').pop();
+        $(this).next('.custom-file-label').addClass("selected").html(fileName);
+    });
+
+    // Form submission
+    $('#supportRequestForm').on('submit', function(e) {
+        e.preventDefault();
+
+        // Here you would typically send the form data to the server
+        // For demo purposes, we'll just show an alert
+        alert('Yêu cầu hỗ trợ của bạn đã được gửi thành công! Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.');
+
+        // Reset form
+        this.reset();
+        $('.custom-file-label').html('Chọn tệp...');
+    });
+</script>
 
 </body>
 
