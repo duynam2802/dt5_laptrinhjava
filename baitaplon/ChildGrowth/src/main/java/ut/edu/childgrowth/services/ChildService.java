@@ -65,13 +65,21 @@ public class ChildService {
             data.put("hoTen", child.getFullName());
             data.put("tuoi", Period.between(child.getBirthday(), LocalDate.now()).getYears());
             data.put("BietDanh", child.getNickname());
+
+            // Thêm thông tin cân nặng và chiều cao mới nhất
+            Optional<GrowthRecord> latestRecord = growthRecordRepository.findTopByChildOrderByThoiDiemDesc(child);
             Map<String, Object> chiTiet = new HashMap<>();
             chiTiet.put("child_id", child.getChild_id());
             chiTiet.put("fullName", child.getFullName());
             chiTiet.put("birthday", child.getBirthday());
             chiTiet.put("gender", child.getGender());
-            data.put("chiTiet", chiTiet);
 
+            if (latestRecord.isPresent()) {
+                chiTiet.put("weight", latestRecord.get().getCanNang());
+                chiTiet.put("height", latestRecord.get().getChieuCao());
+            }
+
+            data.put("chiTiet", chiTiet);
             return data;
         }).toList();
         System.out.println("Danh sách con: " + danhSachCon);  // Kiểm tra dữ liệu trả về

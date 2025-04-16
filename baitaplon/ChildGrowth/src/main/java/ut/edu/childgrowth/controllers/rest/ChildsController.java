@@ -85,14 +85,23 @@ public class ChildsController {
                     : null;
 
             String message = growthRecordService.updateGrowth(childId, weight, height, date);
-            return ResponseEntity.ok(message);
+
+            // ✅ Trả về JSON hợp lệ
+            Map<String, String> response = new HashMap<>();
+            response.put("message", message);
+            return ResponseEntity.ok(response);
 
         } catch (IllegalArgumentException | NoSuchElementException e) {
-            return ResponseEntity.badRequest().body("Lỗi: " + e.getMessage());
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Lỗi: " + e.getMessage());
+            return ResponseEntity.badRequest().body(error);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi hệ thống: " + e.getMessage());
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Lỗi hệ thống: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
+
 
     @PutMapping("/update-info/{childId}")
     public ResponseEntity<?> updateChildInfo(
