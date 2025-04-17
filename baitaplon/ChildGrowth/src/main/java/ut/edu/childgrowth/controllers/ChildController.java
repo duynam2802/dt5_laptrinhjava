@@ -72,29 +72,27 @@ public class ChildController {
         try {
             String token = (String) session.getAttribute("token");
             if (token == null) {
-                model.addAttribute("message", "Lỗi: Bạn cần đăng nhập để thêm trẻ.");
+                model.addAttribute("error", "Lỗi: Bạn cần đăng nhập để thêm trẻ.");
                 return "add-child";
             }
             Child savedChild = childService.registerChild("Bearer " + token, child);
             savedChild.setUser(null);
-            model.addAttribute("message", "Trẻ đã được đăng ký thành công");
+            model.addAttribute("success", "Trẻ đã được đăng ký thành công");
             model.addAttribute("child", savedChild);
-            return "add-child";
+            return "children-list";
         } catch (Exception e) {
-            model.addAttribute("message", "Lỗi: " + e.getMessage());
+            model.addAttribute("error", "Lỗi: " + e.getMessage());
             return "add-child";
         }
     }
 
     // Xử lý xóa trẻ từ form HTML
-    // Display the delete confirmation page
     @GetMapping("/delete/{childId}")
     public String showDeleteForm(@PathVariable Long childId, Model model) {
         model.addAttribute("childId", childId);
-        return "children-list"; // Thymeleaf template name
+        return "children-list";
     }
 
-    // Handle DELETE via POST with _method=DELETE
     @PostMapping("/delete/{childId}")
     public String deleteChild(@PathVariable Long childId,
                               @RequestParam String password,
@@ -102,16 +100,16 @@ public class ChildController {
                               Model model) {
         try {
             String token = (String) session.getAttribute("token");
-            System.out.println("Token trong session: " + token);
-            System.out.println("ChildId: " + childId);
-            System.out.println("Password nhập vào: " + password);
+//            System.out.println("Token trong session: " + token);
+//            System.out.println("ChildId: " + childId);
+//            System.out.println("Password nhập vào: " + password);
 
             if (token == null) {
                 throw new SecurityException("Bạn chưa đăng nhập.");
             }
 
-            childService.deleteChild(token, childId, password);
-            return "redirect:/children?message=delete_success";
+            childService.deleteChild("Bearer " + token, childId, password);
+            return "redirect:/users/child/children-list?success=delete_success";
 
         } catch (IllegalArgumentException e) {
             System.out.println("Lỗi logic: " + e.getMessage());
@@ -125,8 +123,10 @@ public class ChildController {
         }
 
         model.addAttribute("childId", childId);
-        return "child-list";
+        return "children-list";
     }
+
+
 
 
 

@@ -12,6 +12,7 @@ import ut.edu.childgrowth.models.Child;
 import ut.edu.childgrowth.models.GrowthRecord;
 //import ut.edu.childgrowth.;
 import ut.edu.childgrowth.models.User;
+import ut.edu.childgrowth.repositories.AlertRepository;
 import ut.edu.childgrowth.repositories.ChildRepository;
 import ut.edu.childgrowth.repositories.GrowthRecordRepository;
 import ut.edu.childgrowth.repositories.UserRepository;
@@ -32,9 +33,10 @@ public class ChildService {
     UserService userService;
     @Autowired
     AlertService alertService;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    AlertRepository alertRepository;
 
 
 
@@ -202,6 +204,7 @@ public class ChildService {
             throw new IllegalArgumentException("Mật khẩu không chính xác.");
         }
 
+
         // Kiểm tra trẻ có tồn tại và thuộc về user không
         Child child = childRepository.findById(childId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy trẻ với ID đã cung cấp."));
@@ -209,6 +212,8 @@ public class ChildService {
         if (!child.getUser().getUser_id().equals(user.getUser_id())) {
             throw new SecurityException("Bạn không có quyền xóa trẻ này.");
         }
+        // Xóa tất cả các bản ghi alert liên quan đến trẻ
+        alertRepository.deleteByChild(child);
 
         // Xóa toàn bộ bản ghi growth liên quan đến trẻ
         growthRecordRepository.deleteByChild(child);

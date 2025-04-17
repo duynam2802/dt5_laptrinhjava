@@ -28,23 +28,18 @@
 
     <style>
         /* Fixed sidebar */
+        /* Đảm bảo sidebar không bị che */
         #accordionSidebar {
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
-            width: 14rem; /* Chiều rộng sidebar */
+            width: 14rem;
             z-index: 1000;
             overflow-y: auto;
         }
 
-        /* Điều chỉnh content-wrapper để không bị che bởi sidebar */
-        #content-wrapper {
-            margin-left: 14rem;
-            width: calc(100% - 14rem);
-        }
-
-        /* Đảm bảo topbar không bị che */
+        /* Đảm bảo topbar không che sidebar */
         .topbar {
             position: fixed;
             top: 0;
@@ -53,9 +48,19 @@
             z-index: 999;
         }
 
-        /* Điều chỉnh padding cho main content */
-        .container-fluid {
-            padding-top: 4.5rem; /* Để không bị che bởi topbar */
+        /* Đảm bảo content không che sidebar */
+        #content-wrapper {
+            margin-left: 14rem;
+            width: calc(100% - 14rem);
+            z-index: 998;
+        }
+
+        /* Đảm bảo nav-item hiển thị */
+        .nav-item {
+            display: block !important;
+            visibility: visible !important;
+            position: relative;
+            z-index: 1001;
         }
 
         /* Responsive cho mobile */
@@ -64,6 +69,7 @@
                 width: 100%;
                 height: auto;
                 position: relative;
+                z-index: 1000;
             }
 
             #content-wrapper {
@@ -73,6 +79,12 @@
 
             .topbar {
                 left: 0;
+                z-index: 999;
+            }
+
+            .nav-item {
+                display: block !important;
+                visibility: visible !important;
             }
         }
     </style>
@@ -525,7 +537,7 @@
                 <!-- /.container-fluid -->
 
                 <!-- Thông báo login thành công -->
-                <div th:if="${success}" class="alert alert-success text-center" th:text="${success}"></div>
+<!--                <div th:if="${success}" class="alert alert-success text-center" th:text="${success}"></div>-->
 
             </div>
             <!-- End of Main Content -->
@@ -583,13 +595,13 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
-    <!-- <div id="toastNotification" class="toast-notification">
-    <div class="message"></div>
-    <button class="close-btn">&times;</button>
-    <div class="progress-bar"></div>
-</div> -->
+
+</div> 
 
 
+    <!-- toast -->
+    <div th:if="${success}" class="alert alert-success text-center" th:text="${success}"></div>
+    <div th:if="${error}" class="error-message" style="display: none;" th:text="${error}"></div>
 
 </body>
 

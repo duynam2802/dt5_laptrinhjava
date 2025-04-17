@@ -13,6 +13,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="/css/toast.css" rel="stylesheet">
+    <script src="/js/toast.js"></script>
 
     <style>
         .child-card {
@@ -114,8 +116,16 @@
             }
         }
     </style>
+
+
 </head>
 <body id="page-top">
+<!-- TOAST -->
+<div class="error-message" th:text="${error}" style="display:none;"></div>
+<div class="alert alert-success" th:text="${success}" style="display:none;"></div>
+
+<!--END TOAST-->
+
 <div id="wrapper">
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -660,7 +670,8 @@
             const token = localStorage.getItem('token') || '';
 
             const formData = new URLSearchParams();
-            formData.append('password', password); // ❗ KHÔNG cần _method
+            formData.append('password', password);
+            console.log("Sending password as JSON:", JSON.stringify({ password: password }));
 
             const response = await fetch(`/users/child/delete/${childId}`, {
                 method: 'POST',
@@ -668,7 +679,8 @@
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Authorization': `Bearer ${token}`
                 },
-                body: formData
+                body: `password=${encodeURIComponent(password)}`
+
             });
 
             if (response.redirected) {
@@ -698,6 +710,18 @@
         document.getElementById('delete-error').textContent = '';
     });
 
+</script>
+
+
+<div class="error-message" th:text="${error}" style="display:none;"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const success = urlParams.get('success');
+        if (success === 'delete_success') {
+            showToast("Xóa trẻ thành công!", 3000, 'success');
+        }
+    });
 </script>
 </body>
 </html>

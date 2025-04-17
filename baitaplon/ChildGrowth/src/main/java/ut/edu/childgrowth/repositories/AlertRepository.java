@@ -11,4 +11,6 @@ public interface AlertRepository extends JpaRepository<Alert, Long> {
     boolean existsByChildAndAlertTypeAndResolvedFalse(Child child, String alertType);
 
     List<Alert> findByChildAndResolvedFalse(Child child);
+
+    void deleteByChild(Child child);
 }
