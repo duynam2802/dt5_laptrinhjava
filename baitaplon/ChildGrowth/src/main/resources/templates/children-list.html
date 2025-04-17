@@ -457,11 +457,11 @@
                                     <div class="ms-3 d-flex flex-column">
                                         <button class="btn btn-info btn-sm mb-2 text-white"
                                                 onclick='showChildDetail(${JSON.stringify(child).replace(/"/g, '"')})'>
-                                            Chi tiết trẻ
+                                            <i  class="fas fa-info-circle" ></i>&nbsp;&nbsp;Chi tiết trẻ
                                         </button>
                                         <button class="btn btn-primary btn-sm mb-2"
                                                 onclick="showGrowthForm('${child.id}', ${child.chiTiet.weight || 'null'}, ${child.chiTiet.height || 'null'})">
-                                            <i class="fas fa-edit me-1"></i> Cập nhật chỉ số
+                                            <i class="fas fa-edit me-1 "></i> Cập nhật chỉ số
                                         </button>
                                         <button class="btn btn-danger btn-sm"
                                                 onclick="showDeleteConfirm('${child.id}', '${child.hoTen}')">

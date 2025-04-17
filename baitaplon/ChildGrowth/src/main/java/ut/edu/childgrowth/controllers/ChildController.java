@@ -40,6 +40,7 @@ public class ChildController {
         }
         try {
             Map<String, Object> response = childService.getChildrenResponse("Bearer " + token);
+
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
