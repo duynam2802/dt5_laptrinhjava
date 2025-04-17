@@ -127,6 +127,10 @@ public class Child {
         this.growthRecords = growthRecords;
     }
 
+    public void getId() {
+    }
+
+
     // Enum cho giới tính
     public enum Gender {
         MALE, FEMALE;

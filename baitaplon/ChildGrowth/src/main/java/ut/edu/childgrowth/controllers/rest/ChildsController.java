@@ -141,7 +141,27 @@ public class ChildsController {
     }
 
 
+    // Xóa trẻ
+    @DeleteMapping("/delete/{childId}")
+    public ResponseEntity<String> deleteChild(@RequestHeader("Authorization") String authHeader,
+                                              @PathVariable Long childId,
+                                              @RequestBody Map<String, String> body) {
+        try {
+            // Lấy mật khẩu từ body request
+            String password = body.get("password");
 
+            // Gọi service để xử lý xóa trẻ
+            childService.deleteChild(authHeader, childId, password);
+
+            return ResponseEntity.ok("Xóa trẻ thành công.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi: " + e.getMessage());
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Lỗi: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Đã xảy ra lỗi: " + e.getMessage());
+        }
+    }
 
 
 

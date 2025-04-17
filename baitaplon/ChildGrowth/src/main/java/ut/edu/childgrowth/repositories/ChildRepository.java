@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ut.edu.childgrowth.models.Child;
 import ut.edu.childgrowth.models.User;
 
+//import java.lang.ScopedValue;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +17,6 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
     List<Child> findByUser(User user);
 
     Optional<Child> findByUserAndFullName(User user, String fullName);
+
+//    Optional<Child> findByIdAndUser(Long id, User user);
 }

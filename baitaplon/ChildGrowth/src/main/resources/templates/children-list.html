@@ -341,7 +341,7 @@
         </div>
     </div>
 </div>
-<!-- Modal Xác nhận Xóa -->
+<<!-- Modal Xác nhận Xóa -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -352,6 +352,10 @@
             <div class="modal-body">
                 <p>Bạn có chắc chắn muốn xóa trẻ này? Hành động này không thể hoàn tác!</p>
                 <input type="hidden" id="delete-child-id">
+                <div class="mb-3">
+                    <input type="password" id="delete-password" class="form-control" placeholder="Nhập mật khẩu để xác nhận" required>
+                    <div id="delete-error" class="invalid-feedback"></div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -627,41 +631,73 @@
         }
     });
 
+
     // Hàm mở modal xác nhận xóa
     function showDeleteConfirm(childId, childName) {
         document.getElementById('delete-child-id').value = childId;
         document.getElementById('confirmDeleteModalLabel').innerText = `Xóa ${childName || 'trẻ này'}`;
+        document.getElementById('delete-password').classList.remove('is-invalid');
+        document.getElementById('delete-error').textContent = '';
 
         const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
         modal.show();
     }
 
-    // Xử lý sự kiện nút xóa
-    document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+    document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
         const childId = document.getElementById('delete-child-id').value;
-        const token = localStorage.getItem('token') || '';
+        const password = document.getElementById('delete-password').value;
+        const passwordInput = document.getElementById('delete-password');
+        const errorElement = document.getElementById('delete-error');
+
+        // Validate password
+        if (!password) {
+            passwordInput.classList.add('is-invalid');
+            errorElement.textContent = 'Vui lòng nhập mật khẩu';
+            return;
+        }
 
         try {
-            const response = await fetch(`/api/children/delete/${childId}`, {
-                method: 'DELETE',
+            const token = localStorage.getItem('token') || '';
+
+            const formData = new URLSearchParams();
+            formData.append('password', password); // ❗ KHÔNG cần _method
+
+            const response = await fetch(`/users/child/delete/${childId}`, {
+                method: 'POST',
                 headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
                     'Authorization': `Bearer ${token}`
-                }
+                },
+                body: formData
             });
 
-            if (!response.ok) {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else if (response.ok) {
+                window.location.href = '/users/child/children-list?message=delete_success';
+            } else {
                 const error = await response.json();
-                throw new Error(error.message || 'Xóa thất bại');
-            }
+                passwordInput.classList.add('is-invalid');
+                errorElement.textContent = error.error || error.message || 'Xóa thất bại';
 
-            alert('Đã xóa trẻ thành công!');
-            bootstrap.Modal.getInstance(document.getElementById('confirmDeleteModal')).hide();
-            location.reload();
+                if (response.status === 401) {
+                    window.location.href = '/login?message=Vui+lòng+đăng+nhập+lại';
+                }
+            }
         } catch (error) {
             console.error('Lỗi:', error);
-            alert(`Lỗi: ${error.message}`);
+            passwordInput.classList.add('is-invalid');
+            errorElement.textContent = 'Đã xảy ra lỗi khi kết nối đến server';
         }
     });
+
+
+    // Reset validation khi nhập lại password
+    document.getElementById('delete-password').addEventListener('input', function() {
+        this.classList.remove('is-invalid');
+        document.getElementById('delete-error').textContent = '';
+    });
+
 </script>
 </body>
 </html>

@@ -1,7 +1,10 @@
 package ut.edu.childgrowth.services;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+//import sun.net.www.MimeEntry;
 import ut.edu.childgrowth.dtos.UserResponse;
 import ut.edu.childgrowth.jwt.JwtUtil;
 import ut.edu.childgrowth.models.Alert;
@@ -29,6 +32,11 @@ public class ChildService {
     UserService userService;
     @Autowired
     AlertService alertService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
 
 
 
@@ -175,4 +183,41 @@ public class ChildService {
     public Child findById(Long childId) {
         return childRepository.findById(childId).orElse(null);
     }
+
+
+    // Phương thức xóa trẻ
+    @Transactional
+    public void deleteChild(String authHeader, Long childId, String password) {
+
+        // Lấy token từ header và trích xuất username
+        String token = authHeader.substring(7);
+        String username = jwtUtil.extractUsername(token);
+
+        // Lấy thông tin user từ username
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Người dùng không tồn tại."));
+
+        // Xác thực mật khẩu
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("Mật khẩu không chính xác.");
+        }
+
+        // Kiểm tra trẻ có tồn tại và thuộc về user không
+        Child child = childRepository.findById(childId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy trẻ với ID đã cung cấp."));
+
+        if (!child.getUser().getUser_id().equals(user.getUser_id())) {
+            throw new SecurityException("Bạn không có quyền xóa trẻ này.");
+        }
+
+        // Xóa toàn bộ bản ghi growth liên quan đến trẻ
+        growthRecordRepository.deleteByChild(child);
+
+        // Xóa trẻ
+        childRepository.delete(child);
+    }
+
+
+
+
 }

@@ -19,4 +19,7 @@ public interface GrowthRecordRepository extends JpaRepository<GrowthRecord, Long
     List<GrowthRecord> findByChildId(@Param("childId") Long childId);
 
     Optional<GrowthRecord> findByChildAndThoiDiem(Child child, LocalDate thoiDiem);
+
+    void deleteByChild(Child child);
+
 }
