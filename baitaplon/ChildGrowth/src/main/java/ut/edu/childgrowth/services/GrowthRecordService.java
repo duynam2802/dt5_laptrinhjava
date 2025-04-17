@@ -45,11 +45,20 @@ public class GrowthRecordService {
         }
 
         LocalDate thoiDiem = (date != null) ? date : LocalDate.now();
-        GrowthRecord record = new GrowthRecord(child, thoiDiem, weight, height);
-        growthRecordRepository.save(record);
+
+        // Kiểm tra và xóa bản ghi cũ nếu đã tồn tại trong ngày
+        Optional<GrowthRecord> existingRecord = growthRecordRepository
+                .findByChildAndThoiDiem(child, thoiDiem);
+
+        existingRecord.ifPresent(record -> growthRecordRepository.delete(record));
+
+        // Lưu bản ghi mới
+        GrowthRecord newRecord = new GrowthRecord(child, thoiDiem, weight, height);
+        growthRecordRepository.save(newRecord);
 
         return "Đã cập nhật thông tin thành công";
     }
+
 
     public Child getChildById(Long childId) {
         Optional<Child> childOptional = Optional.ofNullable(childRepository.findById(childId));

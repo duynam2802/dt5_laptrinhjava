@@ -27,7 +27,6 @@ public class AlertService {
     BmiBoysZRepository bmiBoysZRepository;
 
 
-
     public void checkAndHandleAlert(Child child, double heightCm, double weightKg) {
         double heightM = heightCm / 100.0;
         double bmi = weightKg / (heightM * heightM);

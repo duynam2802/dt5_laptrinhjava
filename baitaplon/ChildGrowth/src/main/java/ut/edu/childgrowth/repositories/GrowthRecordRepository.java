@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import ut.edu.childgrowth.models.Child;
 import ut.edu.childgrowth.models.GrowthRecord;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +17,6 @@ public interface GrowthRecordRepository extends JpaRepository<GrowthRecord, Long
 
     @Query("SELECT gr FROM GrowthRecord gr WHERE gr.child.child_id = :childId")
     List<GrowthRecord> findByChildId(@Param("childId") Long childId);
+
+    Optional<GrowthRecord> findByChildAndThoiDiem(Child child, LocalDate thoiDiem);
 }
