@@ -63,6 +63,57 @@
             margin-bottom: 0.5rem;
         }
     </style>
+
+    <style>
+        /* Fixed sidebar */
+        #accordionSidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 14rem; /* Chiều rộng sidebar */
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        /* Điều chỉnh content-wrapper để không bị che bởi sidebar */
+        #content-wrapper {
+            margin-left: 14rem;
+            width: calc(100% - 14rem);
+        }
+
+        /* Đảm bảo topbar không bị che */
+        .topbar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 14rem;
+            z-index: 999;
+        }
+
+        /* Điều chỉnh padding cho main content */
+        .container-fluid {
+            padding-top: 4.5rem; /* Để không bị che bởi topbar */
+        }
+
+        /* Responsive cho mobile */
+        @media (max-width: 768px) {
+            #accordionSidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            #content-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .topbar {
+                left: 0;
+            }
+        }
+    </style>
 </head>
 <body id="page-top">
 <div id="wrapper">
