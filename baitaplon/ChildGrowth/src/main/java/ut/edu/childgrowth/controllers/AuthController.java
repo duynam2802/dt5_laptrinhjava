@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ut.edu.childgrowth.dtos.AuthRequest;
 import ut.edu.childgrowth.dtos.AuthResponse;
 import ut.edu.childgrowth.services.UserService;
@@ -20,27 +21,29 @@ public class AuthController {
     public String showLoginForm(Model model) {
         return "login";
     }
+    RedirectAttributes redirectAttributes;
+
 
     @PostMapping("/login")
     public String handleLogin(
             @RequestParam String username,
             @RequestParam String password,
             HttpSession session,
-            Model model) {
+            Model model,
+            RedirectAttributes redirectAttributes) {  // Thêm RedirectAttributes
 
         AuthRequest authRequest = new AuthRequest(username, password);
         try {
             AuthResponse authResponse = userService.loginUser(authRequest);
-
-            // Lưu token vào session
             session.setAttribute("token", authResponse.getToken());
 
-            return "redirect:/index"; // vẫn redirect nếu đăng nhập đúng
+            // Thêm thông báo thành công
+            redirectAttributes.addFlashAttribute("success", "Đăng nhập thành công!");
+            return "redirect:/index";
         } catch (RuntimeException e) {
-            // Gửi lỗi và giữ lại giá trị người dùng nhập
             model.addAttribute("error", e.getMessage());
             model.addAttribute("username", username);
-            return "login"; // không redirect -> load lại form trong cùng view
+            return "login";
         }
     }
 
@@ -56,8 +59,8 @@ public class AuthController {
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // ✅ Xóa token & session khi logout
-        return "redirect:/login";
+        session.invalidate(); // Xóa token & session khi logout
+        return "redirect:/login?msg=đã đăng xuất tài khoản!";
     }
 
 //    @GetMapping("/users/child/children-list")

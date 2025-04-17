@@ -13,8 +13,8 @@
     <!-- Custom fonts for this template-->
     <link href="../static/css/sb-admin-2.min.css" rel="stylesheet" type="text/css">
     <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
     <!-- Font Awesome -->
     <link href="../static/css/all.min.css" rel="stylesheet" type="text/css">
 
@@ -27,65 +27,33 @@
     <link href="/css/toast.css" rel="stylesheet">
 
     <style>
-        /* Fixed sidebar */
-        /* Đảm bảo sidebar không bị che */
-        #accordionSidebar {
+        /* Cố định sidebar */
+        .sidebar {
             position: fixed;
             top: 0;
+            bottom: 0;
             left: 0;
-            height: 100vh;
-            width: 14rem;
-            z-index: 1000;
-            overflow-y: auto;
+            z-index: 100;
+            padding: 0; /* Đã bỏ padding-top 48px */
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+            overflow-y: hidden;
         }
 
-        /* Đảm bảo topbar không che sidebar */
-        .topbar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            left: 14rem;
-            z-index: 999;
-        }
-
-        /* Đảm bảo content không che sidebar */
+        /* Điều chỉnh content-wrapper */
         #content-wrapper {
-            margin-left: 14rem;
-            width: calc(100% - 14rem);
-            z-index: 998;
+            margin-left: 250px;
+            padding-top: 0; /* Đã bỏ padding-top 48px */
+            transition: margin-left .3s ease;
         }
 
-        /* Đảm bảo nav-item hiển thị */
-        .nav-item {
-            display: block !important;
-            visibility: visible !important;
-            position: relative;
-            z-index: 1001;
+        /* Topbar cần margin-top = 0 */
+        .topbar {
+            margin-top: 0;
         }
 
-        /* Responsive cho mobile */
-        @media (max-width: 768px) {
-            #accordionSidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                z-index: 1000;
-            }
-
-            #content-wrapper {
-                margin-left: 0;
-                width: 100%;
-            }
-
-            .topbar {
-                left: 0;
-                z-index: 999;
-            }
-
-            .nav-item {
-                display: block !important;
-                visibility: visible !important;
-            }
+        /* Logo và brand trong sidebar */
+        .sidebar-brand {
+            padding: 1.5rem 1rem; /* Điều chỉnh padding cho phần logo */
         }
     </style>
 
@@ -93,515 +61,517 @@
 
 <body id="page-top">
 
-    <!-- Page Wrapper -->
-    <div id="wrapper">
+<!-- Page Wrapper -->
+<div id="wrapper">
 
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/index">
-                <div class="sidebar-brand-icon">
-                    <i class="fas fa-baby"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">ChildGrowth</div>
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/index">
+            <div class="sidebar-brand-icon">
+                <i class="fas fa-baby"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">ChildGrowth</div>
+        </a>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item active">
+            <a class="nav-link" href="/index">
+                <i class="fas fa-fw fa-home"></i>
+                <span>Trang chủ</span></a>
+        </li>
+
+
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Quản lý trẻ em
+        </div>
+
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <!-- Bootstrap 5 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Nav Item - Quản lý trẻ em -->
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#childrenMenu"
+               role="button" aria-expanded="false" aria-controls="childrenMenu">
+                <i class="fas fa-fw fa-child me-2"></i>
+                <span>Quản lý trẻ em</span>
             </a>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="/index">
-                    <i class="fas fa-fw fa-home"></i>
-                    <span>Trang chủ</span></a>
-            </li>
-
-
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Quản lý trẻ em
-            </div>
-
-            <!-- Bootstrap 5 CSS -->
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-            <!-- Font Awesome -->
-            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-            <!-- Bootstrap 5 JS -->
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-            <!-- Nav Item - Quản lý trẻ em -->
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#childrenMenu"
-                   role="button" aria-expanded="false" aria-controls="childrenMenu">
-                    <i class="fas fa-fw fa-child me-2"></i>
-                    <span>Quản lý trẻ em</span>
-                </a>
-
-                <div id="childrenMenu" class="collapse">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="/users/child/children-list">Danh sách trẻ</a>
-                        <a class="collapse-item" href="/users/child/add-child">Thêm trẻ mới</a>
-                        <a class="collapse-item" href="/growth-charts">Biểu đồ phát triển</a>
-                        <a class="collapse-item" href="/health-alerts">Cảnh báo sức khỏe</a>
-                    </div>
+            <div id="childrenMenu" class="collapse">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="/users/child/children-list">Danh sách trẻ</a>
+                    <a class="collapse-item" href="/users/child/add-child">Thêm trẻ mới</a>
+                    <a class="collapse-item" href="/growth-charts">Biểu đồ phát triển</a>
+                    <a class="collapse-item" href="/health-alerts">Cảnh báo sức khỏe</a>
                 </div>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Tư vấn
             </div>
+        </li>
 
-            <!-- Nav Item - Tư vấn bác sĩ -->
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#helpMenu"
-                   role="button" aria-expanded="false" aria-controls="helpMenu">
-                    <i class="fas fa-fw fa-stethoscope me-2"></i>
-                    <span>Tư vấn</span>
-                </a>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
 
-                <div id="helpMenu" class="collapse">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="/consultation">Tư vấn bác sĩ</a>
-                        <a class="collapse-item" href="/support-request">Yêu cầu hổ trợ</a>
-                    </div>
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Tư vấn
+        </div>
+
+        <!-- Nav Item - Tư vấn bác sĩ -->
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#helpMenu"
+               role="button" aria-expanded="false" aria-controls="helpMenu">
+                <i class="fas fa-fw fa-stethoscope me-2"></i>
+                <span>Tư vấn</span>
+            </a>
+
+            <div id="helpMenu" class="collapse">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="/consultation">Tư vấn bác sĩ</a>
+                    <a class="collapse-item" href="/support-request">Yêu cầu hổ trợ</a>
                 </div>
-            </li>
-
-
-            <li class="nav-item">
-                <a class="nav-link" href="/blog">
-                    <i class="fas fa-edit"></i>
-                    <span>Blog </span></a>
-            </li>
-
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Tài khoản
             </div>
+        </li>
 
-            <!-- Nav Item - Tài khoản -->
-            <li class="nav-item">
-                <a class="nav-link" href="/users/profile/update">
-                    <i class="fas fa-fw fa-user"></i>
-                    <span>Thông tin tài khoản</span></a>
-            </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
+        <li class="nav-item">
+            <a class="nav-link" href="/blog">
+                <i class="fas fa-edit"></i>
+                <span>Blog </span></a>
+        </li>
 
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
 
-        </ul>
-        <!-- End of Sidebar -->
+        <!-- Divider -->
+        <hr class="sidebar-divider">
 
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Tài khoản
+        </div>
 
-            <!-- Main Content -->
-            <div id="content">
+        <!-- Nav Item - Tài khoản -->
+        <li class="nav-item">
+            <a class="nav-link" href="/users/profile/update">
+                <i class="fas fa-fw fa-user"></i>
+                <span>Thông tin tài khoản</span></a>
+        </li>
 
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
 
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
 
-                    <!-- Topbar Search -->
-                    <form
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <!-- Topbar Search -->
+                <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary">
-                                    <i class="bi bi-search"></i> Tìm kiếm
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
-                    <!-- Topbar Navbar -->
-                    <!--                <ul class="navbar-nav ml-auto">-->
-
-                    <!--                    &lt;!&ndash; Nav Item - Alerts &ndash;&gt;-->
-                    <!--                    <li class="nav-item dropdown no-arrow mx-1">-->
-                    <!--                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"-->
-                    <!--                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-                    <!--                            <i class="fas fa-bell fa-fw"></i>-->
-                    <!--                            &lt;!&ndash; Counter - Alerts &ndash;&gt;-->
-                    <!--                            <span class="badge badge-danger badge-counter">2</span>-->
-                    <!--                        </a>-->
-                    <!-- Dropdown - Alerts -->
-                    <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                        aria-labelledby="alertsDropdown">
-                        <h6 class="dropdown-header">
-                            Thông báo
-                        </h6>
-                        <a class="dropdown-item d-flex align-items-center" href="#">
-                            <div class="mr-3">
-                                <div class="icon-circle bg-success">
-                                    <i class="fas fa-comment-alt text-white"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="small text-gray-500">Hôm nay</div>
-                                Bác sĩ đã phản hồi yêu cầu tư vấn của bạn
-                            </div>
-                        </a>
-                        <a class="dropdown-item d-flex align-items-center" href="#">
-                            <div class="mr-3">
-                                <div class="icon-circle bg-warning">
-                                    <i class="fas fa-exclamation text-white"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="small text-gray-500">Hôm qua</div>
-                                Bé Minh có dấu hiệu thừa cân theo biểu đồ BMI
-                            </div>
-                        </a>
-                        <a class="dropdown-item text-center small text-gray-500" href="#">Xem tất cả thông báo</a>
-                    </div>
-                    </li>
-
-                    <div class="topbar-divider d-none d-sm-block"></div>
-
-                    <!-- Nav Item - User Information -->
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="img-profile rounded-circle" src="./img/undraw_profile_1.svg">
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                            aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="/users/profile/update">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Hồ sơ cá nhân
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Cài đặt
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Đăng xuất
-                            </a>
-                        </div>
-                    </li>
-
-                    </ul>
-
-                </nav>
-                <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Trang chủ</h1>
-                    </div>
-
-                    <!-- Content Row -->
-                    <div class="row mb-4">
-                        <div class="col-lg-12">
-                            <div class="card shadow mb-4 intro-card">
-                                <div class="card-body">
-                                    <div class="text-center">
-                                        <img class="img-fluid rounded-circle mt-3 mb-4"
-                                             style="width: 10rem; height: 10rem; object-fit: cover;"
-                                             src="/img/anhlogobao.jpg"
-                                             alt="ChildGrowth">
-                                    </div>
-
-                                    <h2 class="text-center mb-4">Chào mừng đến với ChildGrowth - VP</h2>
-                                    <p class="text-center">Hệ thống theo dõi sự phát triển toàn diện của trẻ từ sơ sinh
-                                        đến trưởng thành</p>
-                                </div>
-                            </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..."
+                               aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary">
+                                <i class="bi bi-search"></i> Tìm kiếm
+                            </button>
                         </div>
                     </div>
+                </form>
 
-                    <!-- Features Row -->
-                    <div class="row">
-                        <!-- Feature 1 -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2 intro-card">
-                                <div class="card-body text-center">
-                                    <div class="feature-icon">
-                                        <i class="fas fa-chart-line"></i>
-                                    </div>
-                                    <h5 class="card-title">Theo dõi phát triển</h5>
-                                    <p class="card-text">Ghi nhận và theo dõi các chỉ số phát triển quan trọng của trẻ
-                                        theo thời gian</p>
-                                </div>
+                <!-- Topbar Navbar -->
+                <!--                <ul class="navbar-nav ml-auto">-->
+
+                <!--                    &lt;!&ndash; Nav Item - Alerts &ndash;&gt;-->
+                <!--                    <li class="nav-item dropdown no-arrow mx-1">-->
+                <!--                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"-->
+                <!--                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                <!--                            <i class="fas fa-bell fa-fw"></i>-->
+                <!--                            &lt;!&ndash; Counter - Alerts &ndash;&gt;-->
+                <!--                            <span class="badge badge-danger badge-counter">2</span>-->
+                <!--                        </a>-->
+                <!-- Dropdown - Alerts -->
+                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                     aria-labelledby="alertsDropdown">
+                    <h6 class="dropdown-header">
+                        Thông báo
+                    </h6>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <div class="mr-3">
+                            <div class="icon-circle bg-success">
+                                <i class="fas fa-comment-alt text-white"></i>
                             </div>
                         </div>
-
-                        <!-- Feature 2 -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2 intro-card">
-                                <div class="card-body text-center">
-                                    <div class="feature-icon">
-                                        <i class="fas fa-bell"></i>
-                                    </div>
-                                    <h5 class="card-title">Cảnh báo sức khỏe</h5>
-                                    <p class="card-text">Hệ thống tự động cảnh báo các vấn đề bất thường về phát triển
-                                        của trẻ</p>
-                                </div>
+                        <div>
+                            <div class="small text-gray-500">Hôm nay</div>
+                            Bác sĩ đã phản hồi yêu cầu tư vấn của bạn
+                        </div>
+                    </a>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <div class="mr-3">
+                            <div class="icon-circle bg-warning">
+                                <i class="fas fa-exclamation text-white"></i>
                             </div>
                         </div>
-
-                        <!-- Feature 3 -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2 intro-card">
-                                <div class="card-body text-center">
-                                    <div class="feature-icon">
-                                        <i class="fas fa-user-md"></i>
-                                    </div>
-                                    <h5 class="card-title">Tư vấn chuyên gia</h5>
-                                    <p class="card-text">Kết nối với bác sĩ nhi khoa để nhận tư vấn về sự phát triển của
-                                        trẻ</p>
-                                </div>
-                            </div>
+                        <div>
+                            <div class="small text-gray-500">Hôm qua</div>
+                            Bé Minh có dấu hiệu thừa cân theo biểu đồ BMI
                         </div>
-
-                        <!-- Feature 4 -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2 intro-card">
-                                <div class="card-body text-center">
-                                    <div class="feature-icon">
-                                        <i class="fas fa-users"></i>
-                                    </div>
-                                    <h5 class="card-title">Quản lý nhiều trẻ</h5>
-                                    <p class="card-text">Theo dõi cùng lúc nhiều trẻ trong gia đình với giao diện đơn
-                                        giản</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- How It Works -->
-                    <div class="row mb-4">
-                        <div class="col-lg-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Hướng dẫn sử dụng</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-lg-4 mb-4">
-                                            <div class="card h-100">
-                                                <div class="card-body text-center">
-                                                    <div class="text-primary mb-3">
-                                                        <i class="fas fa-child fa-2x"></i>
-                                                    </div>
-                                                    <h5>1. Thêm thông tin trẻ</h5>
-                                                    <p>Đăng ký thông tin cơ bản của trẻ bao gồm ngày sinh, giới tính,
-                                                        chiều cao và cân nặng ban đầu</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-4">
-                                            <div class="card h-100">
-                                                <div class="card-body text-center">
-                                                    <div class="text-success mb-3">
-                                                        <i class="fas fa-edit fa-2x"></i>
-                                                    </div>
-                                                    <h5>2. Cập nhật chỉ số</h5>
-                                                    <p>Thường xuyên cập nhật các chỉ số phát triển của trẻ theo định kỳ
-                                                        để hệ thống theo dõi chính xác</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 mb-4">
-                                            <div class="card h-100">
-                                                <div class="card-body text-center">
-                                                    <div class="text-info mb-3">
-                                                        <i class="fas fa-chart-pie fa-2x"></i>
-                                                    </div>
-                                                    <h5>3. Theo dõi biểu đồ</h5>
-                                                    <p>Xem các biểu đồ phát triển và nhận cảnh báo tự động từ hệ thống
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Membership Plans -->
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Các gói thành viên</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row text-center">
-                                        <!-- Basic Plan -->
-                                        <div class="col-lg-4 mb-4">
-                                            <div class="card membership-card h-100">
-                                                <div class="card-header py-3">
-                                                    <h5 class="m-0 font-weight-bold">Cơ bản</h5>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="mb-3">
-                                                        <span class="display-4 font-weight-bold">Miễn phí</span>
-                                                    </div>
-                                                    <ul class="list-unstyled mb-4">
-                                                        <li>Theo dõi 1 trẻ</li>
-                                                        <li>Biểu đồ cơ bản</li>
-                                                        <li>Cảnh báo đơn giản</li>
-                                                        <li class="text-muted">Không có tư vấn bác sĩ</li>
-                                                        <li class="text-muted">Không xuất báo cáo</li>
-                                                    </ul>
-                                                    <button class="btn btn-outline-primary">Đang sử dụng</button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Premium Plan -->
-                                        <div class="col-lg-4 mb-4">
-                                            <div class="card membership-card h-100">
-                                                <div class="card-header py-3">
-                                                    <h5 class="m-0 font-weight-bold">Nâng cao</h5>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="mb-3">
-                                                        <span class="display-4 font-weight-bold">199.000đ</span>
-                                                        <span class="text-muted">/tháng</span>
-                                                    </div>
-                                                    <ul class="list-unstyled mb-4">
-                                                        <li>Theo dõi tối đa 3 trẻ</li>
-                                                        <li>Biểu đồ chi tiết</li>
-                                                        <li>Cảnh báo nâng cao</li>
-                                                        <li>2 yêu cầu tư vấn/tháng</li>
-                                                        <li>Xuất báo cáo PDF</li>
-                                                    </ul>
-                                                    <button class="btn btn-primary">Nâng cấp</button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Family Plan -->
-                                        <div class="col-lg-4 mb-4">
-                                            <div class="card membership-card h-100">
-                                                <div class="card-header py-3">
-                                                    <h5 class="m-0 font-weight-bold">Gia đình</h5>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="mb-3">
-                                                        <span class="display-4 font-weight-bold">399.000đ</span>
-                                                        <span class="text-muted">/tháng</span>
-                                                    </div>
-                                                    <ul class="list-unstyled mb-4">
-                                                        <li>Theo dõi không giới hạn trẻ</li>
-                                                        <li>Biểu đồ chi tiết + so sánh</li>
-                                                        <li>Cảnh báo nâng cao + đề xuất</li>
-                                                        <li>5 yêu cầu tư vấn/tháng</li>
-                                                        <li>Xuất báo cáo PDF/Excel</li>
-                                                    </ul>
-                                                    <button class="btn btn-primary">Nâng cấp</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                    </a>
+                    <a class="dropdown-item text-center small text-gray-500" href="#">Xem tất cả thông báo</a>
                 </div>
-                <!-- /.container-fluid -->
+                </li>
 
-                <!-- Thông báo login thành công -->
-<!--                <div th:if="${success}" class="alert alert-success text-center" th:text="${success}"></div>-->
+                <div class="topbar-divider d-none d-sm-block"></div>
+
+                <!-- Nav Item - User Information -->
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="img-profile rounded-circle" src="./img/undraw_profile_1.svg">
+                    </a>
+                    <!-- Dropdown - User Information -->
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                         aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="/users/profile/update">
+                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Hồ sơ cá nhân
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Cài đặt
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Đăng xuất
+                        </a>
+                    </div>
+                </li>
+
+                </ul>
+
+            </nav>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Trang chủ</h1>
+                </div>
+
+                <!-- Content Row -->
+                <div class="row mb-4">
+                    <div class="col-lg-12">
+                        <div class="card shadow mb-4 intro-card">
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <img class="img-fluid rounded-circle mt-3 mb-4"
+                                         style="width: 10rem; height: 10rem; object-fit: cover;"
+                                         src="/img/anhlogobao.jpg"
+                                         alt="ChildGrowth">
+                                </div>
+
+                                <h2 class="text-center mb-4">Chào mừng đến với ChildGrowth - VP</h2>
+                                <p class="text-center">Hệ thống theo dõi sự phát triển toàn diện của trẻ từ sơ sinh
+                                    đến trưởng thành</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features Row -->
+                <div class="row">
+                    <!-- Feature 1 -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2 intro-card">
+                            <div class="card-body text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <h5 class="card-title">Theo dõi phát triển</h5>
+                                <p class="card-text">Ghi nhận và theo dõi các chỉ số phát triển quan trọng của trẻ
+                                    theo thời gian</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2 intro-card">
+                            <div class="card-body text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <h5 class="card-title">Cảnh báo sức khỏe</h5>
+                                <p class="card-text">Hệ thống tự động cảnh báo các vấn đề bất thường về phát triển
+                                    của trẻ</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-info shadow h-100 py-2 intro-card">
+                            <div class="card-body text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <h5 class="card-title">Tư vấn chuyên gia</h5>
+                                <p class="card-text">Kết nối với bác sĩ nhi khoa để nhận tư vấn về sự phát triển của
+                                    trẻ</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-warning shadow h-100 py-2 intro-card">
+                            <div class="card-body text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h5 class="card-title">Quản lý nhiều trẻ</h5>
+                                <p class="card-text">Theo dõi cùng lúc nhiều trẻ trong gia đình với giao diện đơn
+                                    giản</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How It Works -->
+                <div class="row mb-4">
+                    <div class="col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Hướng dẫn sử dụng</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-4 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-body text-center">
+                                                <div class="text-primary mb-3">
+                                                    <i class="fas fa-child fa-2x"></i>
+                                                </div>
+                                                <h5>1. Thêm thông tin trẻ</h5>
+                                                <p>Đăng ký thông tin cơ bản của trẻ bao gồm ngày sinh, giới tính,
+                                                    chiều cao và cân nặng ban đầu</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-body text-center">
+                                                <div class="text-success mb-3">
+                                                    <i class="fas fa-edit fa-2x"></i>
+                                                </div>
+                                                <h5>2. Cập nhật chỉ số</h5>
+                                                <p>Thường xuyên cập nhật các chỉ số phát triển của trẻ theo định kỳ
+                                                    để hệ thống theo dõi chính xác</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-body text-center">
+                                                <div class="text-info mb-3">
+                                                    <i class="fas fa-chart-pie fa-2x"></i>
+                                                </div>
+                                                <h5>3. Theo dõi biểu đồ</h5>
+                                                <p>Xem các biểu đồ phát triển và nhận cảnh báo tự động từ hệ thống
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Membership Plans -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Các gói thành viên</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <!-- Basic Plan -->
+                                    <div class="col-lg-4 mb-4">
+                                        <div class="card membership-card h-100">
+                                            <div class="card-header py-3">
+                                                <h5 class="m-0 font-weight-bold">Cơ bản</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <span class="display-4 font-weight-bold">Miễn phí</span>
+                                                </div>
+                                                <ul class="list-unstyled mb-4">
+                                                    <li>Theo dõi 1 trẻ</li>
+                                                    <li>Biểu đồ cơ bản</li>
+                                                    <li>Cảnh báo đơn giản</li>
+                                                    <li class="text-muted">Không có tư vấn bác sĩ</li>
+                                                    <li class="text-muted">Không xuất báo cáo</li>
+                                                </ul>
+                                                <button class="btn btn-outline-primary">Đang sử dụng</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Premium Plan -->
+                                    <div class="col-lg-4 mb-4">
+                                        <div class="card membership-card h-100">
+                                            <div class="card-header py-3">
+                                                <h5 class="m-0 font-weight-bold">Nâng cao</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <span class="display-4 font-weight-bold">199.000đ</span>
+                                                    <span class="text-muted">/tháng</span>
+                                                </div>
+                                                <ul class="list-unstyled mb-4">
+                                                    <li>Theo dõi tối đa 3 trẻ</li>
+                                                    <li>Biểu đồ chi tiết</li>
+                                                    <li>Cảnh báo nâng cao</li>
+                                                    <li>2 yêu cầu tư vấn/tháng</li>
+                                                    <li>Xuất báo cáo PDF</li>
+                                                </ul>
+                                                <button class="btn btn-primary">Nâng cấp</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Family Plan -->
+                                    <div class="col-lg-4 mb-4">
+                                        <div class="card membership-card h-100">
+                                            <div class="card-header py-3">
+                                                <h5 class="m-0 font-weight-bold">Gia đình</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <span class="display-4 font-weight-bold">399.000đ</span>
+                                                    <span class="text-muted">/tháng</span>
+                                                </div>
+                                                <ul class="list-unstyled mb-4">
+                                                    <li>Theo dõi không giới hạn trẻ</li>
+                                                    <li>Biểu đồ chi tiết + so sánh</li>
+                                                    <li>Cảnh báo nâng cao + đề xuất</li>
+                                                    <li>5 yêu cầu tư vấn/tháng</li>
+                                                    <li>Xuất báo cáo PDF/Excel</li>
+                                                </ul>
+                                                <button class="btn btn-primary">Nâng cấp</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
-            <!-- End of Main Content -->
+            <!-- /.container-fluid -->
 
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; ChildGrowth 2023 - VP</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
+            <!-- Thông báo login thành công -->
+            <div th:if="${success}" class="alert alert-success text-center" th:text="${success}"></div>
 
         </div>
-        <!-- End of Content Wrapper -->
+        <!-- End of Main Content -->
 
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Bạn chắc chắn muốn đăng xuất?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Chọn "Đăng xuất" bên dưới nếu bạn muốn kết thúc phiên làm việc hiện tại.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                    <a class="btn btn-primary" href="/logout">Đăng xuất</a>
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; ChildGrowth 2023 - VP</span>
                 </div>
             </div>
-        </div>
-        <div th:if="${success}" class="alert alert-success text-center" th:text="${success}"></div>
+        </footer>
+        <!-- End of Footer -->
 
     </div>
+    <!-- End of Content Wrapper -->
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+</div>
+<!-- End of Page Wrapper -->
 
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
 
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
-
-
-</div> 
-
-
-    <!-- toast -->
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Bạn chắc chắn muốn đăng xuất?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Chọn "Đăng xuất" bên dưới nếu bạn muốn kết thúc phiên làm việc hiện tại.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                <a class="btn btn-primary" href="/logout">Đăng xuất</a>
+            </div>
+        </div>
+    </div>
     <div th:if="${success}" class="alert alert-success text-center" th:text="${success}"></div>
-    <div th:if="${error}" class="error-message" style="display: none;" th:text="${error}"></div>
+
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin-2.min.js"></script>
+
+ <div id="toastNotification" class="toast-notification">
+<div class="message"></div>
+<button class="close-btn">&times;</button>
+<div class="progress-bar"></div>
+</div>
+<div th:if="${success}" class="alert alert-success text-center" th:text="${success}"></div>
+<div th:if="${error}" class="error-message" style="display: none;" th:text="${error}"></div>
+
+
 
 </body>
 

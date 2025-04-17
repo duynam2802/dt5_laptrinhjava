@@ -32,7 +32,7 @@ public class GrowthRecordService {
     }
 
     public String updateGrowth(Long childId, double weight, double height, LocalDate date) {
-        if (weight <= 0 || weight > 300) {
+        if (weight <= 0.5 || weight > 300) {
             throw new IllegalArgumentException("Cân nặng không hợp lệ.");
         }
         if (height <= 10 || height > 250) {
