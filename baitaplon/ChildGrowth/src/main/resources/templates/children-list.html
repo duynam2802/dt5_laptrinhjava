@@ -391,59 +391,42 @@
 <script src="/js/sb-admin-2.min.js"></script>
 <script>
     // Hàm xác định lớp màu và tên cảnh báo
-    // Hàm xác định lớp màu và tên cảnh báo
     function getAlertInfo(alerts) {
-        // Nếu không có cảnh báo, trả về trạng thái bình thường
         if (!alerts || alerts.length === 0) {
-            return { class: 'alert-ok', message: 'Bình thường' };
+            return { class: 'alert-none', message: 'Không xác định' };
         }
 
-        // Ánh xạ alertType sang tên thân thiện cho danh sách trẻ
         const alertNames = {
             'BMI_SEVERELY_HIGH': 'Béo phì',
             'BMI_SEVERELY_LOW': 'Suy dinh dưỡng',
-            'BMI_HIGH': 'Thừa cân',
-            'BMI_LOW': 'Thiếu cân',
+            'BMI_MILDLY_HIGH': 'Hơi cao',
+            'BMI_MILDLY_LOW': 'Hơi thấp',
             'BMI_MODERATELY_HIGH': 'Thừa cân',
             'BMI_MODERATELY_LOW': 'Thiếu cân',
             'BMI_NORMAL': 'Bình thường',
             'NORMAL': 'Bình thường'
         };
 
-        // Tìm cảnh báo mới nhất dựa trên createdAt
         const latestAlert = alerts.reduce((latest, current) => {
             return new Date(current.createdAt) > new Date(latest.createdAt) ? current : latest;
         }, alerts[0]);
 
-        // Xác định lớp màu dựa trên alertType
         let alertClass;
         if (latestAlert.alertType.includes('SEVERELY')) {
             alertClass = 'alert-severe';
-        } else if (latestAlert.alertType.includes('HIGH') || latestAlert.alertType.includes('LOW')) {
+        } else if (latestAlert.alertType.includes('MODERATELY')) {
             alertClass = 'alert-high';
-        } else if (latestAlert.alertType.includes('NORMAL')) {
+        } else if (latestAlert.alertType.includes('MILDLY')) {
+            alertClass = 'alert-moderate';
+        } else if (latestAlert.alertType === 'BMI_NORMAL' || latestAlert.alertType === 'NORMAL') {
             alertClass = 'alert-ok';
         } else {
-            alertClass = 'alert-moderate';
+            alertClass = 'alert-none'; // Trường hợp alertType không khớp
         }
 
-        // Lấy tên cảnh báo từ alertNames
         const alertMessage = alertNames[latestAlert.alertType] || 'Không xác định';
-
         return { class: alertClass, message: alertMessage };
     }
-
-    // Hàm hiển thị modal chi tiết
-    const alertNames = {
-        'BMI_SEVERELY_HIGH': 'Béo phì',
-        'BMI_SEVERELY_LOW': 'Suy dinh dưỡng',
-        'BMI_HIGH': 'Thừa cân',
-        'BMI_LOW': 'Thiếu cân',
-        'BMI_MODERATELY_HIGH': 'Thừa cân',
-        'BMI_MODERATELY_LOW': 'Thiếu cân',
-        'BMI_NORMAL': 'Bình thường',
-        'NORMAL': 'Bình thường'
-    };
 
     // Hàm hiển thị modal chi tiết
     // Hàm hiển thị modal chi tiết
@@ -464,14 +447,12 @@
 
         // Ánh xạ alertType sang tên thân thiện
         const alertNames = {
-            'BMI_SEVERELY_HIGH': 'Béo phì',
-            'BMI_SEVERELY_LOW': 'Suy dinh dưỡng',
-            'BMI_HIGH': 'Thừa cân',
-            'BMI_LOW': 'Thiếu cân',
+            'BMI_SEVERELY_HIGH': 'Béo phì',//
+            'BMI_SEVERELY_LOW': 'Suy dinh dưỡng',//
+            'BMI_MILDLY_HIGH': 'Hơi thừa cân',
+            'BMI_MILDLY_LOW': 'Hơi thiếu cân',
             'BMI_MODERATELY_HIGH': 'Thừa cân',
             'BMI_MODERATELY_LOW': 'Thiếu cân',
-            'BMI_MILDLY_HIGH': 'Bình thường',
-            'BMI_MILDLY_LOW': 'Bình thường',
             'BMI_NORMAL': 'Bình thường',
             'NORMAL': 'Bình thường'
         };
@@ -488,14 +469,11 @@
                 if (alert.alertType.includes('SEVERELY')) {
                     badgeClass = 'alert-severe'; // đỏ nhạt
                 } else if (
-                    alert.alertType.includes('MODERATELY') ||
-                    alert.alertType === 'BMI_HIGH' ||
-                    alert.alertType === 'BMI_LOW'
+                    alert.alertType.includes('MODERATELY')
                 ) {
                     badgeClass = 'alert-high'; // cam nhạt
                 } else if (
-                    alert.alertType === 'BMI_MILDLY_HIGH' ||
-                    alert.alertType === 'BMI_MILDLY_LOW'
+                    alert.alertType.includes('MILDLY')
                 ) {
                     badgeClass = 'alert-warning-light'; // vàng nhạt
                 } else if (
@@ -535,7 +513,11 @@
             return response.json();
         })
         .then(data => {
-            console.log(data); // Kiểm tra dữ liệu trả về từ backend
+            // console.log(data); // Kiểm tra dữ liệu trả về từ backend
+            // console.log('Dữ liệu từ API:', data);
+            // data.danhSachCon.forEach(child => {
+            //     console.log(`Trẻ ${child.hoTen}:`, child.alerts);
+            // });
             const childrenList = data.danhSachCon;
             const childrenContainer = document.getElementById('children-list');
             const noChildrenMessage = document.getElementById('no-children');
@@ -552,7 +534,7 @@
 
                     const childCard = `
                         <div class="col-md-4 mb-4">
-                            <div class="card shadow h-100 child-card ${alertInfo.class}">
+                            <div class="card shadow h-100 child-card ${alertInfo.class }">
                                 <div class="card-body d-flex align-items-center">
                                     <div class="me-3">
                                         <img src="${avatarSrc}" alt="Avatar" class="rounded-circle shadow" style="width: 80px; height: 80px; object-fit: cover;">
@@ -588,65 +570,6 @@
         })
         .catch(error => console.error('Lỗi:', error));
 
-    // Hàm xác định lớp màu và tên cảnh báo
-    function getAlertInfo(alerts) {
-        // Nếu không có cảnh báo, trả về trạng thái bình thường
-        if (!alerts || alerts.length === 0) {
-            return { class: 'moderately', message: 'Chưa xác định' };
-        }
-
-        // Ánh xạ alertType sang tên thân thiện cho danh sách trẻ
-        const alertNames = {
-            'BMI_SEVERELY_HIGH': 'Béo phì',
-            'BMI_SEVERELY_LOW': 'Suy dinh dưỡng',
-            'BMI_HIGH': 'Thừa cân',
-            'BMI_LOW': 'Thiếu cân',
-            'BMI_MODERATELY_HIGH': 'Thừa cân',
-            'BMI_MODERATELY_LOW': 'Thiếu cân',
-            'BMI_MILDLY_HIGH': 'Hơi cao',
-            'BMI_MILDLY_LOW': 'Hơi thấp',
-            'BMI_NORMAL': 'Bình thường',
-            'NORMAL': 'Bình thường'
-        };
-
-        // Tìm cảnh báo mới nhất dựa trên createdAt
-        const latestAlert = alerts.reduce((latest, current) => {
-            return new Date(current.createdAt) > new Date(latest.createdAt) ? current : latest;
-        }, alerts[0]);
-
-        // Xác định lớp màu dựa trên alertType
-        let alertClass;
-        if (latestAlert.alertType.includes('SEVERELY')) {
-            alertClass = 'alert-severe';
-        } else if (
-            latestAlert.alertType.includes('HIGH') ||
-            latestAlert.alertType.includes('LOW')   ||
-            latestAlert.alertType.includes('MODERATELY')
-        ) {
-            alertClass = 'alert-high';
-        } else if (
-            latestAlert.alertType === 'BMI_NORMAL' ||
-            latestAlert.alertType === 'NORMAL'
-            // latestAlert.alertType === 'BMI_MILDLY_HIGH' ||
-            // latestAlert.alertType === 'BMI_MILDLY_LOW'
-        ) {
-            alertClass = 'alert-ok'; // Áp dụng màu xanh nhạt cho trạng thái bình thườn
-        } else if (
-            latestAlert.alertType === 'BMI_MILDLY_HIGH' ||
-            latestAlert.alertType === 'BMI_MILDLY_LOW'
-    ) {
-            alertClass = 'alert-warning-light'
-        }
-         else {
-            alertClass = 'alert-moderate';
-        }
-
-        // Lấy tên cảnh báo từ alertNames
-        const alertMessage = alertNames[latestAlert.alertType] || 'Không xác định';
-
-        return { class: alertClass, message: alertMessage };
-    }
-
     // Hàm hiển thị modal chi tiết
     function showChildDetail(child) {
         // Đặt dữ liệu vào modal
@@ -665,14 +588,12 @@
 
         // Ánh xạ alertType sang tên thân thiện
         const alertNames = {
-            'BMI_SEVERELY_HIGH': 'Béo phì',
-            'BMI_SEVERELY_LOW': 'Suy dinh dưỡng',
-            'BMI_HIGH': 'Thừa cân',
-            'BMI_LOW': 'Thiếu cân',
+            'BMI_SEVERELY_HIGH': 'Béo phì',//
+            'BMI_SEVERELY_LOW': 'Suy dinh dưỡng',//
+            'BMI_MILDLY_HIGH': 'Hơi thừa cân',
+            'BMI_MILDLY_LOW': 'Hơi thiếu cân',
             'BMI_MODERATELY_HIGH': 'Thừa cân',
             'BMI_MODERATELY_LOW': 'Thiếu cân',
-            'BMI_MILDLY_HIGH': 'Hơi cao',
-            'BMI_MILDLY_LOW': 'Hơi thấp',
             'BMI_NORMAL': 'Bình thường',
             'NORMAL': 'Bình thường'
         };
@@ -803,7 +724,7 @@
 
             const formData = new URLSearchParams();
             formData.append('password', password);
-            console.log("Sending password as JSON:", JSON.stringify({ password: password }));
+            // console.log("Sending password as JSON:", JSON.stringify({ password: password }));
 
             const response = await fetch(`/users/child/delete/${childId}`, {
                 method: 'POST',
