@@ -31,8 +31,53 @@
 
         /* Các lớp màu nhạt cho cảnh báo */
         .alert-severe {
-            background-color: #F8D7DA !important; /* Đỏ nhạt */
-            color: #721C24; /* Chữ đỏ đậm nhạt cho dễ đọc */
+            background-color: #ff9999 !important; /* Đỏ đậm hơn */
+            color: #ffffff !important; /* Chữ trắng cho độ tương phản */
+            box-shadow: 0 0 15px rgba(255, 77, 79, 0.5) !important; /* Viền sáng đỏ */
+            animation: pulse 2s infinite; /* Hiệu ứng nhấp nháy */
+        }
+
+        .alert-severe-low {
+            background-color: #ffcc00 !important; /* Vàng đậm hơn */
+            color: #3c2f2f !important; /* Chữ nâu đậm cho độ tương phản */
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.5) !important; /* Viền sáng vàng */
+            animation: pulse 2s infinite; /* Hiệu ứng nhấp nháy */
+        }
+
+        /* Hiệu ứng pulse */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(255, 77, 79, 0.5);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 0 20px rgba(255, 77, 79, 0.7);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(255, 77, 79, 0.5);
+            }
+        }
+
+        /* Điều chỉnh cho alert-severe-low */
+        .alert-severe-low {
+            animation: pulse-yellow 2s infinite;
+        }
+
+        @keyframes pulse-yellow {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 0 20px rgba(255, 204, 0, 0.7);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+            }
         }
 
         .alert-high {
@@ -527,8 +572,8 @@
             } else {
                 childrenList.forEach(child => {
                     // Xác định avatar dựa trên giới tính
-                    const avatarSrc = child.chiTiet.gender === 'FEMALE' ? '/img/nu.jpg' : '/img/nam.jpg';
-
+                    // const avatarSrc = child.chiTiet.gender === 'FEMALE' ? '/img/nu.jpg' : '/img/nam.jpg';
+                    const avatarSrc = getAvatarByAgeAndGender(child.chiTiet.birthday, child.chiTiet.gender);
                     // Xác định lớp màu và thông báo
                     const alertInfo = getAlertInfo(child.alerts);
 
@@ -542,7 +587,8 @@
                                     <div class="flex-grow-1">
                                         <h5 class="card-title mb-2">${child.hoTen}</h5>
                                         <p class="mb-1"><strong>Biệt danh:</strong> ${child.BietDanh || 'Không có'}</p>
-                                        <p class="mb-1"><strong>Tuổi:</strong> ${child.tuoi}</p>
+<!--                                        <p class="mb-1"><strong>Tuổi:</strong> ${child.tuoi}</p>-->
+                                       <p class="mb-1"><strong>Tuổi:</strong> ${calculateAge(child.chiTiet.birthday)}</p>
                                         <p class="mb-1"><strong>Giới tính:</strong> ${child.chiTiet.gender === 'FEMALE' ? 'Nữ' : 'Nam'}</p>
                                         <p class="mb-0"><strong>Trạng thái:</strong> ${alertInfo.message}</p>
                                     </div>
@@ -573,12 +619,14 @@
     // Hàm hiển thị modal chi tiết
     function showChildDetail(child) {
         // Đặt dữ liệu vào modal
-        document.getElementById('detail-avatar').src = child.chiTiet.gender === 'FEMALE' ? '/img/nu.jpg' : '/img/nam.jpg';
+        // document.getElementById('detail-avatar').src = child.chiTiet.gender === 'FEMALE' ? '/img/nu.jpg' : '/img/nam.jpg';
+        document.getElementById('detail-avatar').src = getAvatarByAgeAndGender(child.chiTiet.birthday, child.chiTiet.gender);
         document.getElementById('detail-name').textContent = child.hoTen;
         document.getElementById('detail-nickname').textContent = child.BietDanh || 'Không có';
         document.getElementById('detail-dob').textContent = child.chiTiet.birthday || 'Chưa cập nhật';
         document.getElementById('detail-gender').textContent = child.chiTiet.gender === 'FEMALE' ? 'Nữ' : 'Nam';
-        document.getElementById('detail-age').textContent = child.tuoi;
+        // document.getElementById('detail-age').textContent = child.tuoi;
+        document.getElementById('detail-age').textContent = calculateAge(child.chiTiet.birthday);
         document.getElementById('detail-weight').textContent = child.chiTiet.weight || 'Chưa đo';
         document.getElementById('detail-height').textContent = child.chiTiet.height || 'Chưa đo';
 
@@ -685,7 +733,10 @@
 
             if (!response.ok) throw new Error(result.message || 'Cập nhật thất bại');
 
-            alert('Cập nhật thành công!');
+            // alert('Cập nhật thành công!');
+            localStorage.setItem('success', 'Cập nhật thành công!');
+            window.location.href = "/children-list";
+            showToast('Cập nhật thành công!')
             bootstrap.Modal.getInstance(document.getElementById('updateGrowthModal')).hide();
             location.reload();
         } catch (error) {
@@ -763,6 +814,50 @@
         document.getElementById('delete-error').textContent = '';
     });
 
+    // Hàm chọn avatar dựa trên tuổi và giới tính
+    function getAvatarByAgeAndGender(birthday, gender) {
+        if (!birthday) return '/img/default.jpg';
+
+        const birthDate = new Date(birthday);
+        const today = new Date();
+
+        if (isNaN(birthDate.getTime())) return '/img/default.jpg';
+
+        const minYear = 2000;
+        const currentYear = today.getFullYear();
+        const birthYear = birthDate.getFullYear();
+        if (birthYear < minYear || birthYear > currentYear) {
+            return '/img/default.jpg';
+        }
+
+        const diffMs = today - birthDate;
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        const diffMonths = Math.floor(diffDays / 30.42);
+        const diffYears = Math.floor(diffDays / 365.25);
+
+        if (diffYears < 0 || diffMonths < 0 || diffDays < 0) {
+            return '/img/default.jpg';
+        }
+
+        const isFemale = gender === 'FEMALE';
+
+        if (diffDays < 30) {
+            return isFemale ? '/img/so_sinh.png' : '/img/so_sinh.png';
+        } else if (diffYears < 1) {
+            return isFemale ? '/img/1_3_tuoi_nu.png' : '/img/1_3_tuoi_nam.png';
+        } else if (diffYears >= 1 && diffYears < 3) {
+            return isFemale ? '/img/1_3_tuoi_nu.png' : '/img/1_3_tuoi_nam.png';
+        } else if (diffYears >= 3 && diffYears < 5) {
+            return isFemale ? '/img/3_5_tuoi_nu.png' : '/img/3_5_tuoi_nam.png';
+        } else if (diffYears >= 5 && diffYears < 12) {
+            return isFemale ? '/img/5_12_tuoi_nu.png' : '/img/5_12_tuoi_nam.png';
+        } else if (diffYears >= 12 && diffYears <= 18) {
+            return isFemale ? '/img/12_18_tuoi_nu.png' : '/img/12_18_tuoi_nam.png';
+        } else {
+            return isFemale ? '/img/1_3_tuoi_nu.png' : '/img/1_3_tuoi_nam.png';
+        }
+    }
+
 </script>
 
 
@@ -774,7 +869,44 @@
         if (success === 'delete_success') {
             showToast("Xóa trẻ thành công!", 3000, 'success');
         }
+
+        const cleanUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
     });
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+        const message = localStorage.getItem('success');
+        if (message) {
+        showToast(message); // Gọi toast
+        localStorage.removeItem('success');
+    }
+    });
+
+    // Hàm tính tuổi dựa trên ngày sinh
+    function calculateAge(birthday) {
+        if (!birthday) return "Chưa cập nhật";
+
+        const birthDate = new Date(birthday);
+        const today = new Date();
+
+        // Kiểm tra ngày sinh hợp lệ
+        if (isNaN(birthDate.getTime())) return "Ngày sinh không hợp lệ";
+
+        const diffMs = today - birthDate; // Khoảng cách thời gian (milliseconds)
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)); // Số ngày
+        const diffMonths = Math.floor(diffDays / 30.42); // Số tháng (gần đúng)
+        const diffYears = Math.floor(diffDays / 365.25); // Số năm (gần đúng)
+
+        if (diffYears >= 1) {
+            return `${diffYears}`;
+        } else if (diffMonths >= 1) {
+            return `${diffMonths} tháng`;
+        } else {
+            return `${diffDays} ngày`;
+        }
+    }
 </script>
 </body>
 </html>

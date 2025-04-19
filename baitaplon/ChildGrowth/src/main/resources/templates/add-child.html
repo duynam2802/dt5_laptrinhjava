@@ -19,6 +19,10 @@
     <link href="/css/toast.css" rel="stylesheet">
     <script src="/js/toast.js"></script>
     <style>
+        #birthday-error {
+            display: block;
+            margin-top: 5px;
+        }
         /* Fixed sidebar */
         #accordionSidebar {
             position: fixed;
@@ -238,8 +242,17 @@
                                     <div class="mb-3">
                                         <label for="birthday" class="form-label">Ngày sinh</label>
                                         <input type="date" class="form-control" th:field="*{birthday}" required>
+                                        <span id="birthday-error" class="text-danger"></span> <!-- Hiển thị lỗi -->
                                         <span th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}" class="text-danger"></span>
                                     </div>
+
+                                    <div th:if="${#fields.hasErrors('birthday')}" class="alert alert-danger">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('birthday')}" th:text="${err}"></li>
+                                        </ul>
+                                    </div>
+
+
                                     <div class="mb-3">
                                         <label for="gender" class="form-label">Giới tính</label>
                                         <select class="form-select" th:field="*{gender}" required>
@@ -279,6 +292,50 @@
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
 </a>
+
+<script>
+    document.querySelector("input[name='birthday']").addEventListener("change", function() {
+        const birthdayInput = this;
+        const errorMessage = document.querySelector("#birthday-error");
+        const birthday = new Date(birthdayInput.value);
+        const today = new Date();
+
+        if (!birthdayInput.value) {
+            errorMessage.textContent = "Vui lòng nhập ngày sinh.";
+            errorMessage.classList.add("text-danger");
+            return;
+        }
+
+        if (isNaN(birthday.getTime())) {
+            errorMessage.textContent = "Ngày sinh không hợp lệ.";
+            errorMessage.classList.add("text-danger");
+            return;
+        }
+
+        if (birthday > today) {
+            errorMessage.textContent = "Ngày sinh không thể trong tương lai.";
+            errorMessage.classList.add("text-danger");
+            return;
+        }
+
+        let age = today.getFullYear() - birthday.getFullYear();
+        const monthDiff = today.getMonth() - birthday.getMonth();
+        const dayDiff = today.getDate() - birthday.getDate();
+
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+            age--;
+        }
+
+        if (age >= 19) {
+            errorMessage.textContent = "Hệ thống không hỗ trợ (vui lòng nhập trẻ dưới 19 tuổi!).";
+            errorMessage.classList.add("text-danger");
+            return;
+        }
+
+        errorMessage.textContent = "";
+    });
+</script>
+
 
 <!-- Bootstrap core JavaScript-->
 <script src="vendor/jquery/jquery.min.js"></script>

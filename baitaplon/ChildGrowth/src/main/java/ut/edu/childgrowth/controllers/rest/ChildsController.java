@@ -95,7 +95,7 @@ public class ChildsController {
             Map<String, String> response = new HashMap<>();
             response.put("message", message);
 
-            Child child = growthRecordService.getChildById(childId); // Giả sử có method này
+            Child child = growthRecordService.getChildById(childId);
             alertService.checkAndHandleAlert(child, height, weight);
 
             return ResponseEntity.ok(response);

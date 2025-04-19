@@ -18,6 +18,7 @@ import ut.edu.childgrowth.repositories.GrowthRecordRepository;
 import ut.edu.childgrowth.repositories.UserRepository;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 @Service
 public class ChildService {
@@ -49,22 +50,40 @@ public class ChildService {
     public Child registerChild(String authHeader, Child child) {
         String token = authHeader.substring(7);  // Cắt "Bearer " khỏi token
         String username = jwtUtil.extractUsername(token);  // Lấy username từ token
+
         // Tìm User entity từ DB
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if (!optionalUser.isPresent()) {
             throw new IllegalArgumentException("Người dùng không tồn tại.");
         }
         User user = optionalUser.get();
+
+        // Kiểm tra ngày sinh
+        LocalDate birthDate = child.getBirthday();
+        LocalDate today = LocalDate.now();
+
+        if (birthDate.isAfter(today)) {
+            throw new IllegalArgumentException("Ngày sinh không hợp lệ.");
+        }
+
+        long age = ChronoUnit.YEARS.between(birthDate, today);
+        if (age > 19) {
+            throw new IllegalArgumentException("Hệ thống không hỗ trợ (vui lòng nhập trẻ dưới 19 tuổi!)");
+        }
+
         // Kiểm tra nếu trẻ đã tồn tại với user_id và full_name
         Optional<Child> existingChild = childRepository.findByUserAndFullName(user, child.getFullName());
         if (existingChild.isPresent()) {
             throw new IllegalArgumentException("Trẻ đã tồn tại.");
         }
+
         // Gán user vào child
         child.setUser(user);
+
         // Lưu Child vào DB và trả về
         return childRepository.save(child);
     }
+
     // Lấy thông tin trẻ
     public Map<String, Object> getChildrenResponse(String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
