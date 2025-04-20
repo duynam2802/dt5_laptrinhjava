@@ -115,4 +115,12 @@ public class AlertService {
         return alertRepository.findByChildAndResolvedFalse(child);
     }
 
+    // Phương thức resolveAlert
+    public void resolveAlert(Long alertId) {
+        Alert alert = alertRepository.findById(alertId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy cảnh báo với ID: " + alertId));
+        alert.setResolved(true);
+        alertRepository.save(alert);
+    }
 }
+
