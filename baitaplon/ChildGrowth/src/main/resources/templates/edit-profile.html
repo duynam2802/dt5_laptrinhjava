@@ -10,84 +10,95 @@
 
     <title>Chỉnh sửa hồ sơ</title>
 
-    <!-- Custom fonts for this template -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700,900" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
+    <!-- Custom styles -->
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
-
-    <!-- Thêm toast.js -->
-    <script src="/js/toast.js"></script>
-    <!-- Thêm toast.css -->
     <link href="/css/toast.css" rel="stylesheet">
+
+    <!-- Toast.js -->
+    <script src="/js/toast.js"></script>
+
+    <style>
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 40px;
+            background-color: #f8f9fc;
+        }
+
+        .logo-container img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            margin-top:180px; /* Thêm khoảng cách từ trên xuống */
+        }
+    </style>
 </head>
 
 <body class="bg-gradient-primary">
+<div class="container">
+    <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="row no-gutters">
 
-    <div class="container">
+            <!-- Cột trái: Logo -->
+            <div class="col-lg-4 logo-container">
+                <img src="/img/avatar.jpg" alt="Logo">
+            </div>
 
-        <div class="card o-hidden border-0 shadow-lg my-5">
-            <div class="card-body p-0">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="p-5">
-                            <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Chỉnh sửa hồ sơ</h1>
-                            </div>
+            <!-- Cột phải: Form -->
+            <div class="col-lg-8">
+                <div class="p-5">
+                    <h1 class="h4 text-gray-900 mb-4 text-center">Chỉnh sửa hồ sơ</h1>
+                    <form class="user" th:action="@{/users/profile/update}" th:object="${user}" method="POST"
+                          onsubmit="console.log('Form submitted to:', this.action); return true;">
+                        <input type="hidden" th:field="*{user_id}" />
 
-                            <!-- Profile Edit Form -->
-                            <form class="user" th:action="@{/users/profile/update}" th:object="${user}" method="POST" onsubmit="console.log('Form submitted to:', this.action); return true;">
-                                <input type="hidden" th:field="*{user_id}" />
-                                <div class="form-group">
-                                    <label for="username" class="text-gray-900">Tên đăng nhập</label>
-                                    <input type="text" class="form-control form-control-user" id="username" th:field="*{username}" placeholder="Tên đăng nhập" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label for="fullName" class="text-gray-900">Họ và tên</label>
-                                    <input type="text" class="form-control form-control-user" id="fullName" th:field="*{fullName}" placeholder="Họ và tên">
-                                </div>
-                                <div class="form-group">
-                                    <label for="numphone" class="text-gray-900">Số điện thoại</label>
-                                    <input type="text" class="form-control form-control-user" id="numphone" th:field="*{numphone}" placeholder="Số điện thoại">
-                                </div>
-                                <div class="form-group">
-                                    <label for="email" class="text-gray-900">Email</label>
-                                    <input type="email" class="form-control form-control-user" id="email" th:field="*{email}" placeholder="Email">
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-user btn-block">Cập nhật</button>
-                                <a th:href="@{/index}" class="btn btn-secondary btn-user btn-block">Quay lại</a>
-                            </form>
-
-                            <!-- Success/Error Messages -->
-                            <!-- <div th:if="${successMessage}" class="mt-3 text-success text-center">
-                                <span th:text="${successMessage}"></span>
-                            </div>
-                            <div th:if="${errorMessage}" class="mt-3 text-danger text-center">
-                                <span th:text="${errorMessage}"></span>
-                            </div> -->
-
-                            <!-- toast -->
-                            <div th:if="${success}" class="alert alert-success text-center" th:text="${success}"></div>
-                            <div th:if="${error}" class="error-message" style="display: none;" th:text="${error}"></div>
-
+                        <div class="form-group">
+                            <label for="username" class="text-gray-900">Tên đăng nhập</label>
+                            <input type="text" class="form-control form-control-user" id="username"
+                                   th:field="*{username}" placeholder="Tên đăng nhập" readonly>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label for="fullName" class="text-gray-900">Họ và tên</label>
+                            <input type="text" class="form-control form-control-user" id="fullName"
+                                   th:field="*{fullName}" placeholder="Họ và tên">
+                        </div>
+                        <div class="form-group">
+                            <label for="numphone" class="text-gray-900">Số điện thoại</label>
+                            <input type="text" class="form-control form-control-user" id="numphone"
+                                   th:field="*{numphone}" placeholder="Số điện thoại">
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="text-gray-900">Email</label>
+                            <input type="email" class="form-control form-control-user" id="email"
+                                   th:field="*{email}" placeholder="Email">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-user btn-block">Cập nhật</button>
+                        <a th:href="@{/index}" class="btn btn-secondary btn-user btn-block">Quay lại</a>
+                    </form>
+
+                    <!-- Thông báo -->
+                    <div th:if="${success}" class="alert alert-success text-center mt-3" th:text="${success}"></div>
+                    <div th:if="${error}" class="error-message" style="display: none;" th:text="${error}"></div>
                 </div>
             </div>
+
         </div>
-
     </div>
+</div>
 
-    <!-- Bootstrap core JavaScript -->
-    <script src="/vendor/jquery/jquery.min.js"></script>
-    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript -->
-    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages -->
-    <script src="/js/sb-admin-2.min.js"></script>
-
+<!-- JavaScript -->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/js/sb-admin-2.min.js"></script>
 </body>
 
 </html>
