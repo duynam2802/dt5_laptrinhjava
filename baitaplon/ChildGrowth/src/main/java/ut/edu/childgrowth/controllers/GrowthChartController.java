@@ -1,20 +1,35 @@
 package ut.edu.childgrowth.controllers;
 
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import ut.edu.childgrowth.jwt.JwtUtil;
 import ut.edu.childgrowth.models.Child;
 import ut.edu.childgrowth.models.GrowthRecord;
+import ut.edu.childgrowth.models.User;
 import ut.edu.childgrowth.services.ChildService;
 import ut.edu.childgrowth.services.GrowthRecordService;
 import ut.edu.childgrowth.models.GrowthChart;
+import ut.edu.childgrowth.services.UserService;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
 public class GrowthChartController {
+
+    @Autowired
+    JwtUtil jwtUtil;
+    @Autowired
+    UserService userService;
+
+
 
     private final ChildService childService;
     private final GrowthRecordService growthRecordService;
@@ -25,12 +40,19 @@ public class GrowthChartController {
     }
 
     @GetMapping("/growth-charts")
-    public String showGrowthCharts(@RequestParam(required = false) Long childId, Model model) {
+    public String showGrowthCharts(
+                                   HttpSession session,
+                                   @RequestParam(required = false) Long childId, Model model) {
         // Get all children for the list
-        List<Child> children = childService.getAllChildren();
+//        List<Child> children = childService.getAllChildren();
+        String token = (String) session.getAttribute("token");
+//        String token = authHeader.substring(7);
+        String username = jwtUtil.extractUsername(token);
+        User user = userService.findByUsername(username);
+        List<Child> children = childService.getChildrenByUser(user);
         model.addAttribute("children", children);
 
-        int age = java.time.Period.between(children.getLast().getBirthday(), java.time.LocalDate.now()).getYears();
+        int age = Period.between(children.getLast().getBirthday(), LocalDate.now()).getYears();
         model.addAttribute("age", age);
         model.addAttribute("fullname", children.getLast().getFullName());
         model.addAttribute("nickname", children.getLast().getNickname());

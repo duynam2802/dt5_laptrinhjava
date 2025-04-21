@@ -1,15 +1,20 @@
 package ut.edu.childgrowth.controllers;
 
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ut.edu.childgrowth.jwt.JwtUtil;
 import ut.edu.childgrowth.models.Child;
 import ut.edu.childgrowth.models.Consultation;
+import ut.edu.childgrowth.models.User;
 import ut.edu.childgrowth.repositories.UserRepository;
 import ut.edu.childgrowth.services.ChildService;
 import ut.edu.childgrowth.services.ConsultationService;
+import ut.edu.childgrowth.services.UserService;
 
 import java.util.List;
 
@@ -17,11 +22,17 @@ import java.util.List;
 @RequestMapping("/consultation")
 public class ConsultationController {
 
+    @Autowired
+    JwtUtil jwtUtil;
+    @Autowired
+    UserService userService;
+
     private final ChildService childService;
     private final ConsultationService consultationService;
     private final UserRepository userRepository;
 
-    public ConsultationController(ChildService childService,
+    public ConsultationController(
+                                    ChildService childService,
                                   ConsultationService consultationService,
                                   UserRepository userRepository) {
         this.childService = childService;
@@ -30,9 +41,12 @@ public class ConsultationController {
     }
 
     @GetMapping
-    public String showConsultationForm(Model model) {
-        // Lấy tất cả children thay vì theo user
-        List<Child> children = childService.getAllChildren();
+    public String showConsultationForm(HttpSession session,
+                                       Model model) {
+        String token = (String) session.getAttribute("token");
+        String username = jwtUtil.extractUsername(token);
+        User user = userService.findByUsername(username);
+        List<Child> children = childService.getChildrenByUser(user);
 
         model.addAttribute("children", children);
         return "consultation";
