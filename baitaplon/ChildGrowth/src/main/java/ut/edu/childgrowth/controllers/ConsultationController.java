@@ -48,6 +48,8 @@ public class ConsultationController {
         User user = userService.findByUsername(username);
         List<Child> children = childService.getChildrenByUser(user);
 
+
+
         model.addAttribute("children", children);
         return "consultation";
     }
@@ -57,20 +59,29 @@ public class ConsultationController {
             @RequestParam("childId") Long childId,
             @RequestParam("consultReason") String consultReason,
             @RequestParam(value = "attachment", required = false) MultipartFile attachment,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
 
         try {
-            Child child = childService.findById(childId);
+            // Lấy username từ session
+            String token = (String) session.getAttribute("token");
+            String username = jwtUtil.extractUsername(token);
+            User user = userService.findByUsername(username);
 
-            if (child == null) {
-                redirectAttributes.addFlashAttribute("error", "Child not found");
+            if (user == null) {
+                redirectAttributes.addFlashAttribute("error", "User not authenticated");
+                return "redirect:/login";
+            }
+
+            Child child = childService.findById(childId);
+            if (child == null || !child.getUser().getUser_id().equals(user.getUser_id())) {
+                redirectAttributes.addFlashAttribute("error", "Child not found or not belong to user");
                 return "redirect:/consultation";
             }
 
-            // Sử dụng giá trị mặc định hoặc cách xử lý khác thay vì username
             consultationService.createConsultation(
                     child,
-                    "anonymous", // hoặc có thể thêm @RequestParam String username
+                    username,
                     consultReason,
                     attachment
             );
@@ -82,4 +93,5 @@ public class ConsultationController {
             return "redirect:/consultation";
         }
     }
+
 }

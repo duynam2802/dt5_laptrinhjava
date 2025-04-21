@@ -1,9 +1,6 @@
 package ut.edu.childgrowth.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
 import java.time.LocalDateTime;
 
@@ -80,5 +77,9 @@ public class Consultation {
     public void setSubmittedBy(String submittedBy) {
         this.submittedBy = submittedBy;
     }
+
+    @Lob
+    @Column(name = "attachment_file", columnDefinition = "LONGBLOB")
+    private byte[] attachmentFile;
 }
 

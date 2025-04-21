@@ -127,7 +127,8 @@ public class Child {
         this.growthRecords = growthRecords;
     }
 
-    public void getId() {
+    public Long getId() {
+        return child_id;
     }
 
 
