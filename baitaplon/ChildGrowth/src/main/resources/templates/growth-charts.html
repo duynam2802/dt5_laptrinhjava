@@ -4,7 +4,35 @@
     <meta charset="UTF-8">
     <title>Biểu đồ tăng trưởng</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .health-status {
+            border-left: 5px solid;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .underweight {
+            border-left-color: #ffc107;
+            background-color: #fff8e1;
+        }
+        .normal {
+            border-left-color: #4caf50;
+            background-color: #e8f5e9;
+        }
+        .overweight {
+            border-left-color: #ff9800;
+            background-color: #fff3e0;
+        }
+        .obese {
+            border-left-color: #f44336;
+            background-color: #ffebee;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
 
@@ -33,34 +61,252 @@
             </div>
         </div>
 
-        <!-- BIỂU ĐỒ -->
+        <!-- BIỂU ĐỒ VÀ THÔNG TIN -->
         <div class="col-md-9">
+            <!-- THÔNG TIN CẢNH BÁO BMI -->
+            <div class="card shadow" th:if="${selectedChild}">
+                <div class="card-header bg-warning text-dark">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Tình trạng BMI hiện tại
+                </div>
+                <div class="card-body">
+                    <p>
+                        <strong>Họ tên:</strong> <span th:text="${selectedChild.fullName}"></span><br>
+                        <strong>Biệt danh:</strong> <span th:text="${selectedChild.nickname} ?: 'Không có'"></span><br>
+                        <strong>Ngày sinh:</strong> <span th:text="${selectedChild.birthday}"></span><br>
+                        <strong>Tuổi:</strong> <span th:text="${age}"></span> tuổi<br>
+                        <strong>Giới tính:</strong> <span id="genderDisplay" th:text="${selectedChild.gender}"></span><br>
+                        <strong>Cân nặng gần nhất:</strong>
+                        <span th:if="${weights != null and !weights.isEmpty()}"
+                              th:text="${#numbers.formatDecimal(weights[weights.size() - 1], 1, 2)} + ' kg'">N/A</span>
+                        <span th:unless="${weights != null and !weights.isEmpty()}">Chưa có dữ liệu</span><br>
+                        <strong>Chiều cao gần nhất:</strong>
+                        <span th:if="${heights != null and !heights.isEmpty()}"
+                              th:text="${#numbers.formatDecimal(heights[heights.size() - 1], 1, 2)} + ' cm'">N/A</span>
+                        <span th:unless="${heights != null and !heights.isEmpty()}">Chưa có dữ liệu</span><br>
+                        <strong>Thời gian cập nhật:</strong>
+                        <span th:if="${dates != null and !dates.isEmpty()}"
+                              th:text="${dates[dates.size() - 1]}">Chưa có dữ liệu</span><br>
+                        <strong>Tiền sử y khoa:</strong> <span th:text="${selectedChild.medicalHistory} ?: 'Không có'"></span><br>
+                    </p>
+                </div>
+            </div>
+
+
+
+            <!-- BIỂU ĐỒ BMI -->
+            <div class="card shadow" th:if="${selectedChild}">
+                <div class="card-header bg-info text-white">
+                    <i class="fas fa-chart-line me-2"></i> Biểu đồ BMI theo thời gian
+                </div>
+                <div class="card-body">
+                    <canvas id="bmiChart" height="100"></canvas>
+                    <div class="mt-3" style="margin-left: 100px;">
+                        <small class="text-muted" >
+                            <strong>Giải thích BMI:</strong><br>
+                            - Dưới 18.5: Thiếu cân<br>
+                            - 18.5 - 24.9: Bình thường<br>
+                            - 25 - 29.9: Thừa cân<br>
+                            - Trên 30: Béo phì
+                        </small>
+                    </div>
+                </div>
+                <!-- Cảnh báo mức BMI -->
+                <div class="bmi-warning" style="margin-left: 100px;">
+                    <h4>Chi tiết :</h4>
+                </div>
+                <div th:switch="${bmis[bmis.size() - 1]}" class="bmi-warning" style="margin-left: 100px;">
+                    <!-- Gầy độ III -->
+                    <div th:if="${bmis[bmis.size() - 1] < 16.0}" class="bmi-warning gay-do-iii">
+                        <h5>Phân loại: Gầy độ III (Rất gầy)</h5>
+                        <p><strong>Tác động đến sức khỏe:</strong></p>
+                        <ul>
+                            <li>Suy dinh dưỡng nghiêm trọng</li>
+                            <li>Nguy cơ cao bị thiếu vitamin, khoáng chất</li>
+                            <li>Suy giảm miễn dịch nghiêm trọng</li>
+                        </ul>
+                        <p><strong>Lời khuyên chi tiết:</strong></p>
+                        <ul>
+                            <li>Cần được tư vấn y tế ngay</li>
+                            <li>Ăn nhiều thực phẩm giàu calo (bơ, sữa, đạm, trứng, thịt)</li>
+                            <li>Theo dõi sức khỏe thường xuyên</li>
+                        </ul>
+                    </div>
+                    <!-- Gầy độ II -->
+                    <div th:if="${bmis[bmis.size() - 1] >= 16.0 and bmis[bmis.size() - 1] <= 16.9}" class="bmi-warning gay-do-ii">
+                        <h5>Phân loại: Gầy độ II</h5>
+                        <p><strong>Tác động đến sức khỏe:</strong></p>
+                        <ul>
+                            <li>Mệt mỏi, kém tập trung</li>
+                            <li>Nguy cơ rối loạn kinh nguyệt</li>
+                            <li>Dễ bị cảm cúm, thiếu máu</li>
+                        </ul>
+                        <p><strong>Lời khuyên chi tiết:</strong></p>
+                        <ul>
+                            <li>Tăng khẩu phần ăn</li>
+                            <li>Chia nhỏ bữa ăn (5–6 bữa/ngày)</li>
+                            <li>Bổ sung sữa, sinh tố, ngũ cốc nguyên hạt</li>
+                            <li>Tập thể dục nhẹ nhàng như yoga, đi bộ</li>
+                        </ul>
+                    </div>
+                    <!-- Gầy độ I -->
+                    <div th:if="${bmis[bmis.size() - 1] >= 17.0 and bmis[bmis.size() - 1] <= 18.4}" class="bmi-warning gay-do-i">
+                        <h5>Phân loại: Gầy độ I</h5>
+                        <p><strong>Tác động đến sức khỏe:</strong></p>
+                        <ul>
+                            <li>Khó tăng cơ, giảm sức đề kháng</li>
+                            <li>Rủi ro khi mang thai</li>
+                        </ul>
+                        <p><strong>Lời khuyên chi tiết:</strong></p>
+                        <ul>
+                            <li>Ăn đa dạng, bổ sung thêm protein và chất béo tốt</li>
+                            <li>Không bỏ bữa</li>
+                            <li>Tăng cường nghỉ ngơi và ngủ đủ 7–8 tiếng/ngày</li>
+                        </ul>
+                    </div>
+                    <!-- Bình thường -->
+                    <div th:if="${bmis[bmis.size() - 1] >= 18.5 and bmis[bmis.size() - 1] <= 22.9}" class="bmi-warning binh-thuong">
+                        <h5>Phân loại: Bình thường (chuẩn châu Á)</h5>
+                        <p><strong>Tác động đến sức khỏe:</strong></p>
+                        <ul>
+                            <li>Cân nặng hợp lý, ít nguy cơ bệnh tật</li>
+                        </ul>
+                        <p><strong>Lời khuyên chi tiết:</strong></p>
+                        <ul>
+                            <li>Tiếp tục duy trì chế độ ăn uống lành mạnh</li>
+                            <li>Tập thể dục đều đặn 150 phút/tuần</li>
+                            <li>Kiểm tra sức khỏe định kỳ</li>
+                        </ul>
+                    </div>
+                    <!-- Hơi thừa cân -->
+                    <div th:if="${bmis[bmis.size() - 1] >= 23.0 and bmis[bmis.size() - 1] <= 24.9}" class="bmi-warning hoi-thua-can">
+                        <h5>Phân loại: Hơi thừa cân (chuẩn châu Á)</h5>
+                        <p><strong>Tác động đến sức khỏe:</strong></p>
+                        <ul>
+                            <li>Nguy cơ bắt đầu tăng với bệnh tim, mỡ máu</li>
+                        </ul>
+                        <p><strong>Lời khuyên chi tiết:</strong></p>
+                        <ul>
+                            <li>Giảm thực phẩm giàu tinh bột, đường</li>
+                            <li>Ưu tiên thực phẩm tươi, ít dầu mỡ</li>
+                            <li>Tăng cường vận động: bơi, đi bộ nhanh, đạp xe</li>
+                        </ul>
+                    </div>
+                    <!-- Thừa cân -->
+                    <div th:if="${bmis[bmis.size() - 1] >= 25.0 and bmis[bmis.size() - 1] <= 29.9}" class="bmi-warning thua-can">
+                        <h5>Phân loại: Thừa cân (béo phì độ I)</h5>
+                        <p><strong>Tác động đến sức khỏe:</strong></p>
+                        <ul>
+                            <li>Tăng huyết áp, cholesterol, tiểu đường loại 2</li>
+                            <li>Tăng nguy cơ gan nhiễm mỡ, xơ vữa động mạch</li>
+                        </ul>
+                        <p><strong>Lời khuyên chi tiết:</strong></p>
+                        <ul>
+                            <li>Cắt giảm khẩu phần ăn, đặc biệt là đồ chiên rán</li>
+                            <li>Kiểm tra lượng calo nạp vào mỗi ngày</li>
+                            <li>Tập thể dục tối thiểu 30 phút/ngày</li>
+                        </ul>
+                    </div>
+                    <!-- Béo phì độ II -->
+                    <div th:if="${bmis[bmis.size() - 1] >= 30.0 and bmis[bmis.size() - 1] <= 34.9}" class="bmi-warning beo-phi-do-ii">
+                        <h5>Phân loại: Béo phì độ II</h5>
+                        <p><strong>Tác động đến sức khỏe:</strong></p>
+                        <ul>
+                            <li>Nguy cơ cao mắc bệnh tim mạch, đột quỵ</li>
+                            <li>Gây khó thở khi ngủ (ngưng thở khi ngủ)</li>
+                        </ul>
+                        <p><strong>Lời khuyên chi tiết:</strong></p>
+                        <ul>
+                            <li>Nên được hỗ trợ bởi chuyên gia dinh dưỡng</li>
+                            <li>Ăn nhiều rau xanh, trái cây tươi</li>
+                            <li>Hạn chế rượu bia, nước ngọt</li>
+                            <li>Tập thể dục có giám sát</li>
+                        </ul>
+                    </div>
+                    <!-- Béo phì độ III -->
+                    <div th:if="${bmis[bmis.size() - 1] >= 35.0 and bmis[bmis.size() - 1] <= 39.9}" class="bmi-warning beo-phi-do-iii">
+                        <h5>Phân loại: Béo phì độ III</h5>
+                        <p><strong>Tác động đến sức khỏe:</strong></p>
+                        <ul>
+                            <li>Nguy cơ rất cao: đái tháo đường, ung thư, đau khớp, vô sinh</li>
+                        </ul>
+                        <p><strong>Lời khuyên chi tiết:</strong></p>
+                        <ul>
+                            <li>Có thể cần can thiệp y tế chuyên sâu</li>
+                            <li>Điều chỉnh lối sống toàn diện</li>
+                            <li>Xem xét điều trị bằng thuốc hoặc phẫu thuật theo chỉ định bác sĩ</li>
+                        </ul>
+                    </div>
+                    <!-- Béo phì độ IV -->
+                    <div th:if="${bmis[bmis.size() - 1] >= 40.0}" class="bmi-warning beo-phi-do-iv">
+                        <h5>Phân loại: Béo phì độ IV (rất nặng)</h5>
+                        <p><strong>Tác động đến sức khỏe:</strong></p>
+                        <ul>
+                            <li>Nguy hiểm tính mạng: suy tim, hô hấp, tắc nghẽn mạch máu, tử vong sớm</li>
+                        </ul>
+                        <p><strong>Lời khuyên chi tiết:</strong></p>
+                        <ul>
+                            <li>Cần được theo dõi y tế liên tục</li>
+                            <li>Có thể cần phẫu thuật giảm cân (bariatric)</li>
+                            <li>Kiểm soát tâm lý (nhiều người béo phì mắc trầm cảm, lo âu)</li>
+                        </ul>
+                    </div>
+                    <br>
+
+                </div>
+            </div>
+
+
+
+            <!-- BIỂU ĐỒ CHI TIẾT -->
             <div class="card shadow">
                 <div class="card-header bg-info text-white">
-                    Biểu đồ phát triển của
+                    <i class="fas fa-chart-area me-2"></i> Biểu đồ phát triển của
                     <span th:text="${selectedChild?.fullName} ?: 'Vui lòng chọn trẻ'"></span>
                 </div>
                 <div class="card-body">
                     <canvas id="growthChart" height="100"></canvas>
-
                     <p class="mt-3">Biểu đồ hiển thị chiều cao, cân nặng và BMI của trẻ theo thời gian.</p>
-
                     <a th:if="${selectedChild}" th:href="@{/child/details/{id}(id=${selectedChild.child_id})}" class="btn btn-secondary btn-sm">
-                        Xem chi tiết trẻ
+                        <i class="fas fa-info-circle me-1"></i> Xem chi tiết trẻ
                     </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const genderElement = document.getElementById('genderDisplay');
+        if (genderElement) {
+            const genderValue = /*[[${selectedChild?.gender}]]*/ 'UNKNOWN';
+            if (genderValue === 'FEMALE') {
+                genderElement.textContent = 'Nữ';
+            } else if (genderValue === 'MALE') {
+                genderElement.textContent = 'Nam';
+            } else {
+                genderElement.textContent = 'Không xác định';
+            }
+        }
+    });
+</script>
 
 <!-- SCRIPT CHART -->
 <script th:inline="javascript">
+    // Dữ liệu cho biểu đồ chính
     const labels = /*[[${dates}]]*/ [];
     const weights = /*[[${weights}]]*/ [];
     const heights = /*[[${heights}]]*/ [];
     const bmis = /*[[${bmis}]]*/ [];
 
+    // Màu sắc cho các trạng thái BMI
+    const bmiColors = bmis.map(bmi => {
+        if (bmi < 18.5) return '#ffc107'; // Thiếu cân - vàng
+        if (bmi >= 18.5 && bmi < 25) return '#4caf50'; // Bình thường - xanh lá
+        if (bmi >= 25 && bmi < 30) return '#ff9800'; // Thừa cân - cam
+        return '#f44336'; // Béo phì - đỏ
+    });
+
+    // Biểu đồ chính
     const ctx = document.getElementById('growthChart').getContext('2d');
     const growthChart = new Chart(ctx, {
         type: 'line',
@@ -71,21 +317,24 @@
                     label: 'Cân nặng (kg)',
                     data: weights,
                     borderColor: 'rgb(75, 192, 192)',
-                    fill: false,
+                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                    fill: true,
                     tension: 0.2
                 },
                 {
                     label: 'Chiều cao (cm)',
                     data: heights,
                     borderColor: 'rgb(255, 99, 132)',
-                    fill: false,
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    fill: true,
                     tension: 0.2
                 },
                 {
                     label: 'BMI',
                     data: bmis,
                     borderColor: 'rgb(153, 102, 255)',
-                    fill: false,
+                    backgroundColor: 'rgba(153, 102, 255, 0.1)',
+                    fill: true,
                     tension: 0.2
                 }
             ]
@@ -95,6 +344,125 @@
             scales: {
                 y: {
                     beginAtZero: false
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.datasetIndex === 2) { // BMI dataset
+                                label += context.raw.toFixed(1);
+                                // Thêm phân loại BMI vào tooltip
+                                const bmiValue = context.raw;
+                                if (bmiValue < 18.5) label += ' (Thiếu cân)';
+                                else if (bmiValue >= 18.5 && bmiValue < 25) label += ' (Bình thường)';
+                                else if (bmiValue >= 25 && bmiValue < 30) label += ' (Thừa cân)';
+                                else label += ' (Béo phì)';
+                            } else {
+                                label += context.raw.toFixed(2);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Biểu đồ BMI riêng
+    const bmiCtx = document.getElementById('bmiChart').getContext('2d');
+    const bmiChart = new Chart(bmiCtx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Chỉ số BMI',
+                data: bmis,
+                backgroundColor: bmiColors,
+                borderColor: bmiColors.map(color => color.replace('0.6', '1')),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Chỉ số BMI'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Thời gian'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = 'BMI: ' + context.raw.toFixed(1);
+                            const bmiValue = context.raw;
+                            if (bmiValue < 18.5) label += ' (Thiếu cân)';
+                            else if (bmiValue >= 18.5 && bmiValue < 25) label += ' (Bình thường)';
+                            else if (bmiValue >= 25 && bmiValue < 30) label += ' (Thừa cân)';
+                            else label += ' (Béo phì)';
+                            return label;
+                        }
+                    }
+                },
+                annotation: {
+                    annotations: {
+                        line1: {
+                            type: 'line',
+                            yMin: 18.5,
+                            yMax: 18.5,
+                            borderColor: 'rgb(75, 192, 192)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                content: 'Thiếu cân',
+                                enabled: true,
+                                position: 'left'
+                            }
+                        },
+                        line2: {
+                            type: 'line',
+                            yMin: 25,
+                            yMax: 25,
+                            borderColor: 'rgb(255, 159, 64)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                content: 'Thừa cân',
+                                enabled: true,
+                                position: 'left'
+                            }
+                        },
+                        line3: {
+                            type: 'line',
+                            yMin: 30,
+                            yMax: 30,
+                            borderColor: 'rgb(255, 99, 132)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                content: 'Béo phì',
+                                enabled: true,
+                                position: 'left'
+                            }
+                        }
+                    }
                 }
             }
         }

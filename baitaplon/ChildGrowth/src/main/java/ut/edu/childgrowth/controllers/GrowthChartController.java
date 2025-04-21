@@ -8,6 +8,7 @@ import ut.edu.childgrowth.models.Child;
 import ut.edu.childgrowth.models.GrowthRecord;
 import ut.edu.childgrowth.services.ChildService;
 import ut.edu.childgrowth.services.GrowthRecordService;
+import ut.edu.childgrowth.models.GrowthChart;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,14 @@ public class GrowthChartController {
         // Get all children for the list
         List<Child> children = childService.getAllChildren();
         model.addAttribute("children", children);
+
+        int age = java.time.Period.between(children.getLast().getBirthday(), java.time.LocalDate.now()).getYears();
+        model.addAttribute("age", age);
+        model.addAttribute("fullname", children.getLast().getFullName());
+        model.addAttribute("nickname", children.getLast().getNickname());
+        model.addAttribute("birthday", children.getLast().getBirthday());
+        model.addAttribute("gender", children.getLast().getGender());
+        model.addAttribute("medicalHistory", children.getLast().getMedicalHistory());
 
         // If a child is selected, get their growth records
         if (childId != null) {
