@@ -22,4 +22,9 @@ public interface GrowthRecordRepository extends JpaRepository<GrowthRecord, Long
 
     void deleteByChild(Child child);
 
+    @Query("SELECT gr FROM GrowthRecord gr WHERE gr.child.child_id = :childId ORDER BY gr.thoiDiem ASC")
+    List<GrowthRecord> findByChildOrderByThoiDiemAsc(@Param("childId") Long childId);
+
+
+
 }

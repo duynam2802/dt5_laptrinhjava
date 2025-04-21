@@ -73,10 +73,10 @@ public class AuthController {
         return "add-child"; // Spring sẽ tìm trong src/main/resources/templates
     }
 
-    @GetMapping("/growth-charts")
-    public String showGrowthCharts() {
-        return "growth-charts"; // Spring sẽ tìm trong src/main/resources/templates
-    }
+//    @GetMapping("/growth-charts")
+//    public String showGrowthCharts() {
+//        return "growth-charts"; // Spring sẽ tìm trong src/main/resources/templates
+//    }
 
     @GetMapping("/health-alerts")
     public String showHeathAlerts() {

@@ -1,299 +1,107 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Biểu đồ phát triển của trẻ trong hệ thống ChildGrowth">
-    <meta name="author" content="ChildGrowth Team">
-    <title>ChildGrowth - Biểu đồ phát triển</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="../static/css/sb-admin-2.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-    <link href="./css/sb-admin-2.min.css" rel="stylesheet">
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/css/toast.css" rel="stylesheet">
-    <script src="/js/toast.js"></script>
-    <style>
-        .child-list-panel {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .child-list-panel .list-group-item {
-            cursor: pointer;
-        }
-        .child-list-panel .list-group-item:hover {
-            background-color: #f8f9fc;
-        }
-    </style>
-    <style>
-        /* Fixed sidebar */
-        #accordionSidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 14rem; /* Chiều rộng sidebar */
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        /* Điều chỉnh content-wrapper để không bị che bởi sidebar */
-        #content-wrapper {
-            margin-left: 14rem;
-            width: calc(100% - 14rem);
-        }
-
-        /* Đảm bảo topbar không bị che */
-        .topbar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            left: 14rem;
-            z-index: 999;
-        }
-
-        /* Điều chỉnh padding cho main content */
-        .container-fluid {
-            padding-top: 4.5rem; /* Để không bị che bởi topbar */
-        }
-
-        /* Responsive cho mobile */
-        @media (max-width: 768px) {
-            #accordionSidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-
-            #content-wrapper {
-                margin-left: 0;
-                width: 100%;
-            }
-
-            .topbar {
-                left: 0;
-            }
-        }
-    </style>
+    <meta charset="UTF-8">
+    <title>Biểu đồ tăng trưởng</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body id="page-top">
-<div id="wrapper">
+<body>
 
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/index">
-                <div class="sidebar-brand-icon">
-                    <i class="fas fa-baby"></i>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- DANH SÁCH TRẺ -->
+        <div class="col-md-3">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <span>Danh sách trẻ</span>
+                    <button class="btn btn-sm btn-light" data-bs-toggle="collapse" data-bs-target="#childListPanel">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
                 </div>
-                <div class="sidebar-brand-text mx-3">ChildGrowth</div>
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="/index">
-                    <i class="fas fa-fw fa-home"></i>
-                    <span>Trang chủ</span></a>
-            </li>
-
-
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Quản lý trẻ em
-            </div>
-
-            <!-- Bootstrap 5 CSS -->
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-            <!-- Font Awesome -->
-            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-            <!-- Bootstrap 5 JS -->
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-            <!-- Nav Item - Quản lý trẻ em -->
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#childrenMenu"
-                   role="button" aria-expanded="false" aria-controls="childrenMenu">
-                    <i class="fas fa-fw fa-child me-2"></i>
-                    <span>Quản lý trẻ em</span>
-                </a>
-
-                <div id="childrenMenu" class="collapse">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="/users/child/children-list">Danh sách trẻ</a>
-                        <a class="collapse-item" href="/users/child/add-child">Thêm trẻ mới</a>
-                        <a class="collapse-item" href="/growth-charts">Biểu đồ phát triển</a>
-                        <a class="collapse-item" href="/health-alerts">Cảnh báo sức khỏe</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Tư vấn
-            </div>
-
-            <!-- Nav Item - Tư vấn bác sĩ -->
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#helpMenu"
-                   role="button" aria-expanded="false" aria-controls="helpMenu">
-                    <i class="fas fa-fw fa-stethoscope me-2"></i>
-                    <span>Tư vấn</span>
-                </a>
-
-                <div id="helpMenu" class="collapse">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="/consultation">Tư vấn bác sĩ</a>
-                        <a class="collapse-item" href="/support-request">Yêu cầu hổ trợ</a>
-                    </div>
-                </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="/blog">
-                    <i class="fas fa-edit"></i>
-                    <span>Blog </span></a>
-            </li>
-
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Tài khoản
-            </div>
-
-            <!-- Nav Item - Tài khoản -->
-            <li class="nav-item">
-                <a class="nav-link" href="/users/profile/update">
-                    <i class="fas fa-fw fa-user"></i>
-                    <span>Thông tin tài khoản</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-        </ul>
-        <!-- End of Sidebar -->
-
-    <div id="content-wrapper" class="d-flex flex-column">
-        <div id="content">
-            <!-- Topbar -->
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                    <i class="fa fa-bars"></i>
-                </button>
-                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..." aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary">
-                                <i class="bi bi-search"></i> Tìm kiếm
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </nav>
-            <!-- End of Topbar -->
-
-            <div class="container-fluid">
-                <!-- Page Heading -->
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Biểu đồ phát triển</h1>
-                </div>
-
-                <!-- Content Row -->
-                <div class="row mb-4">
-                    <!-- Child List Panel (Collapsible) -->
-                    <div class="col-lg-3">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">
-                                    Danh sách trẻ
-                                    <button class="btn btn-sm btn-primary float-end" type="button" data-bs-toggle="collapse" data-bs-target="#childListPanel" aria-expanded="true" aria-controls="childListPanel">
-                                        <i class="fas fa-chevron-down"></i>
-                                    </button>
-                                </h6>
-                            </div>
-                            <div class="card-body collapse show" id="childListPanel">
-                                <div class="child-list-panel">
-                                    <div class="list-group">
-                                        <a th:each="child : ${children}" th:href="@{/growth-charts?childId=${child.child_id}}"
-                                           class="list-group-item list-group-item-action"
-                                           th:classappend="${child.child_id == selectedChild?.child_id} ? 'active' : ''">
-                                            <span th:text="${child.fullName}"></span>
-                                            <small th:if="${child.nickname}" class="text-muted">(<span th:text="${child.nickname}"></span>)</small>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Chart Area -->
-                    <div class="col-lg-9">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Biểu đồ phát triển của <span th:text="${selectedChild?.fullName} ?: 'Vui lòng chọn trẻ'"></span></h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-area">
-                                    <canvas id="growthChart"></canvas>
-                                </div>
-                                <p class="mt-3">Biểu đồ hiển thị chiều cao và cân nặng của trẻ theo thời gian.</p>
-                                <a th:if="${selectedChild}" th:href="@{/child/details/{id}(id=${selectedChild.child_id})}" class="btn btn-info btn-sm">Xem chi tiết trẻ</a>
-                            </div>
-                        </div>
+                <div class="card-body collapse show" id="childListPanel">
+                    <div class="list-group">
+                        <a th:each="child : ${children}"
+                           th:href="@{/growth-charts(childId=${child.child_id})}"
+                           class="list-group-item list-group-item-action"
+                           th:classappend="${selectedChild?.child_id == child.child_id} ? 'active' : ''">
+                            <span th:text="${child.fullName}">Tên trẻ</span>
+                            <small th:if="${child.nickname}" class="text-muted">(<span th:text="${child.nickname}"></span>)</small>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright © ChildGrowth - VP</span>
+        <!-- BIỂU ĐỒ -->
+        <div class="col-md-9">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    Biểu đồ phát triển của
+                    <span th:text="${selectedChild?.fullName} ?: 'Vui lòng chọn trẻ'"></span>
+                </div>
+                <div class="card-body">
+                    <canvas id="growthChart" height="100"></canvas>
+
+                    <p class="mt-3">Biểu đồ hiển thị chiều cao, cân nặng và BMI của trẻ theo thời gian.</p>
+
+                    <a th:if="${selectedChild}" th:href="@{/child/details/{id}(id=${selectedChild.child_id})}" class="btn btn-secondary btn-sm">
+                        Xem chi tiết trẻ
+                    </a>
                 </div>
             </div>
-        </footer>
+        </div>
     </div>
 </div>
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
+<!-- SCRIPT CHART -->
+<script th:inline="javascript">
+    const labels = /*[[${dates}]]*/ [];
+    const weights = /*[[${weights}]]*/ [];
+    const heights = /*[[${heights}]]*/ [];
+    const bmis = /*[[${bmis}]]*/ [];
 
-<!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-<script src="js/sb-admin-2.min.js"></script>
-<!-- Bootstrap 5 JS -->
+    const ctx = document.getElementById('growthChart').getContext('2d');
+    const growthChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Cân nặng (kg)',
+                    data: weights,
+                    borderColor: 'rgb(75, 192, 192)',
+                    fill: false,
+                    tension: 0.2
+                },
+                {
+                    label: 'Chiều cao (cm)',
+                    data: heights,
+                    borderColor: 'rgb(255, 99, 132)',
+                    fill: false,
+                    tension: 0.2
+                },
+                {
+                    label: 'BMI',
+                    data: bmis,
+                    borderColor: 'rgb(153, 102, 255)',
+                    fill: false,
+                    tension: 0.2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+</script>
+
+<!-- BOOTSTRAP JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Chart.js for growth charts -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
