@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/children/register").permitAll()  // Cho phép truy cập POST
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/doctor/**").hasRole("DOCTOR")
                         .requestMatchers("/user/**", "/children/**").authenticated()  // Yêu cầu đăng nhập
                         .anyRequest().permitAll()
                 )

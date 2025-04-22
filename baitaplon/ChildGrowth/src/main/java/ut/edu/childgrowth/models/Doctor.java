@@ -2,8 +2,6 @@ package ut.edu.childgrowth.models;
 
 import jakarta.persistence.*;
 
-//BÁC SĨ
-
 @Entity
 @Table(name = "doctors")
 public class Doctor {
@@ -16,15 +14,33 @@ public class Doctor {
     private String name;
 
     @Column(nullable = false)
-    private String specialty;
+    private String numphone;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private boolean active = true; // true = đang kích hoạt, false = bị tắt
 
     public Doctor() {
     }
 
-    public Doctor(String name, String specialty) {
+    public Doctor(String name, String numphone, String email, String username, String password) {
         this.name = name;
-        this.specialty = specialty;
+        this.numphone = numphone;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.active = true;
     }
+
+    // Getters và Setters
 
     public Long getDoctorId() {
         return doctorId;
@@ -42,19 +58,43 @@ public class Doctor {
         this.name = name;
     }
 
-    public String getSpecialty() {
-        return specialty;
+    public String getNumphone() {
+        return numphone;
     }
 
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
+    public void setNumphone(String numphone) {
+        this.numphone = numphone;
     }
 
-//    public String viewRequest(Long requestId) {
-//        return "Đang xem yêu cầu ID: " + requestId;
-//    }
-//
-//    public void respondToRequest(Long requestId, String advice) {
-//        System.out.println("Phản hồi yêu cầu ID " + requestId + ": " + advice);
-//    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }

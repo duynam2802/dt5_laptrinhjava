@@ -119,6 +119,19 @@
             <version>1.18.36</version>
         </dependency>
 
+        <!-- Spring Boot Starter Web (bao gồm Servlet API) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Thêm Dependency cho javax.servlet (nếu cần thiết) -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version> <!-- Hoặc phiên bản phù hợp với dự án của anh -->
+            <scope>provided</scope> <!-- scope provided để không bao gồm trong package cuối cùng -->
+        </dependency>
 
     </dependencies>
 
