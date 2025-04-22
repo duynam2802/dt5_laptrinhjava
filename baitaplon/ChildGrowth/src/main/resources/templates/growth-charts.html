@@ -2,14 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Biểu đồ tăng trưởng</title>
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="/css/toast.css" rel="stylesheet">
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .health-status {
             border-left: 5px solid;
@@ -17,11 +18,25 @@
             margin-bottom: 15px;
             border-radius: 4px;
         }
-        .underweight { border-left-color: #ffc107; background-color: #fff8e1; }
-        .normal { border-left-color: #4caf50; background-color: #e8f5e9; }
-        .overweight { border-left-color: #ff9800; background-color: #fff3e0; }
-        .obese { border-left-color: #f44336; background-color: #ffebee; }
-        .card { margin-bottom: 20px; }
+        .underweight {
+            border-left-color: #ffc107;
+            background-color: #fff8e1;
+        }
+        .normal {
+            border-left-color: #4caf50;
+            background-color: #e8f5e9;
+        }
+        .overweight {
+            border-left-color: #ff9800;
+            background-color: #fff3e0;
+        }
+        .obese {
+            border-left-color: #f44336;
+            background-color: #ffebee;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
 
         /* Fixed sidebar */
         #accordionSidebar {
@@ -29,38 +44,44 @@
             top: 0;
             left: 0;
             height: 100vh;
-            width: 14rem;
+            width: 14rem; /* Chiều rộng sidebar */
             z-index: 1000;
             overflow-y: auto;
         }
 
+        /* Điều chỉnh content-wrapper để không bị che bởi sidebar */
         #content-wrapper {
             margin-left: 14rem;
             width: calc(100% - 14rem);
         }
 
-        .topbar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            left: 14rem;
-            z-index: 999;
-        }
+        /*!* Đảm bảo topbar không bị che *!*/
+        /*.topbar {*/
+        /*    position: fixed;*/
+        /*    top: 0;*/
+        /*    right: 0;*/
+        /*    left: 14rem;*/
+        /*    z-index: 999;*/
+        /*}*/
 
+        /* Điều chỉnh padding cho main content */
         .container-fluid {
-            padding-top: 4.5rem;
+            padding-top: 4.5rem; /* Để không bị che bởi topbar */
         }
 
+        /* Responsive cho mobile */
         @media (max-width: 768px) {
             #accordionSidebar {
                 width: 100%;
                 height: auto;
                 position: relative;
             }
+
             #content-wrapper {
                 margin-left: 0;
                 width: 100%;
             }
+
             .topbar {
                 left: 0;
             }
@@ -71,26 +92,36 @@
 <div id="wrapper">
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/index">
-            <div class="sidebar-brand-icon"><i class="fas fa-baby"></i></div>
+            <div class="sidebar-brand-icon">
+                <i class="fas fa-baby"></i>
+            </div>
             <div class="sidebar-brand-text mx-3">ChildGrowth</div>
         </a>
 
+        <!-- Divider -->
         <hr class="sidebar-divider my-0">
 
+        <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
             <a class="nav-link" href="/index">
                 <i class="fas fa-fw fa-home"></i>
-                <span>Trang chủ</span>
-            </a>
+                <span>Trang chủ</span></a>
         </li>
 
+        <!-- Divider -->
         <hr class="sidebar-divider">
 
-        <div class="sidebar-heading">Quản lý trẻ em</div>
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Quản lý trẻ em
+        </div>
 
+        <!-- Nav Item - Quản lý trẻ em -->
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#childrenMenu">
+            <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#childrenMenu"
+               role="button" aria-expanded="false" aria-controls="childrenMenu">
                 <i class="fas fa-fw fa-child me-2"></i>
                 <span>Quản lý trẻ em</span>
             </a>
@@ -104,19 +135,25 @@
             </div>
         </li>
 
+        <!-- Divider -->
         <hr class="sidebar-divider">
 
-        <div class="sidebar-heading">Tư vấn</div>
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Tư vấn
+        </div>
 
+        <!-- Nav Item - Tư vấn bác sĩ -->
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#helpMenu">
+            <a class="nav-link d-flex align-items-center" data-bs-toggle="collapse" href="#helpMenu"
+               role="button" aria-expanded="false" aria-controls="helpMenu">
                 <i class="fas fa-fw fa-stethoscope me-2"></i>
                 <span>Tư vấn</span>
             </a>
             <div id="helpMenu" class="collapse">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" href="/consultation">Tư vấn bác sĩ</a>
-                    <a class="collapse-item" href="/support-request">Yêu cầu hổ trợ</a>
+                    <a class="collapse-item" href="/support-request">Yêu cầu hỗ trợ</a>
                 </div>
             </div>
         </li>
@@ -124,276 +161,269 @@
         <li class="nav-item">
             <a class="nav-link" href="/blog">
                 <i class="fas fa-edit"></i>
-                <span>Blog</span>
-            </a>
+                <span>Blog</span></a>
         </li>
 
+        <!-- Divider -->
         <hr class="sidebar-divider">
 
-        <div class="sidebar-heading">Tài khoản</div>
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Tài khoản
+        </div>
 
+        <!-- Nav Item - Tài khoản -->
         <li class="nav-item">
             <a class="nav-link" href="/users/profile/update">
                 <i class="fas fa-fw fa-user"></i>
-                <span>Thông tin tài khoản</span>
-            </a>
+                <span>Thông tin tài khoản</span></a>
         </li>
 
+        <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
 
+        <!-- Sidebar Toggler (Sidebar) -->
         <div class="text-center d-none d-md-inline">
             <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>
     </ul>
+    <!-- End of Sidebar -->
 
     <div id="content-wrapper" class="d-flex flex-column">
-
+        <div id="content">
+            <h1 class="display-4 font-weight-bold text-dark" style="margin-top: 25px; margin-left: 380px;">BIỂU ĐỒ PHÁT TRIỂN</h1>
 
             <div class="container-fluid">
-                <h1 class="display-5 fw-bold text-dark mb-4">Biểu đồ phát triển</h1>
-
-
-                <div class="container-fluid mt-4">
-                    <div class="row">
-                        <!-- DANH SÁCH TRẺ -->
-                        <div class="col-md-3">
-                            <div class="card shadow">
-                                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                                    <span>Danh sách trẻ</span>
-                                    <button class="btn btn-sm btn-light" data-bs-toggle="collapse" data-bs-target="#childListPanel">
-                                        <i class="fas fa-chevron-down"></i>
-                                    </button>
-                                </div>
-                                <div class="card-body collapse show" id="childListPanel">
-                                    <div class="list-group">
-                                        <a th:each="child : ${children}"
-                                           th:href="@{/growth-charts(childId=${child.child_id})}"
-                                           class="list-group-item list-group-item-action"
-                                           th:classappend="${selectedChild?.child_id == child.child_id} ? 'active' : ''">
-                                            <span th:text="${child.fullName}">Tên trẻ</span>
-                                            <small th:if="${child.nickname}" class="text-muted">(<span th:text="${child.nickname}"></span>)</small>
-                                        </a>
-                                    </div>
-                                </div>
+                <div class="row">
+                    <!-- DANH SÁCH TRẺ -->
+                    <div class="col-md-3">
+                        <div class="card shadow">
+                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                <span>Danh sách trẻ</span>
+                                <button class="btn btn-sm btn-light" data-bs-toggle="collapse" data-bs-target="#childListPanel">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
                             </div>
-                        </div>
-
-                        <!-- BIỂU ĐỒ VÀ THÔNG TIN -->
-                        <div class="col-md-9">
-                            <!-- THÔNG TIN CẢNH BÁO BMI -->
-                            <div class="card shadow" th:if="${selectedChild}">
-                                <div class="card-header bg-success text-white">
-                                    <i class="fas fa-info-circle me-2"></i> Thông tin trẻ
-                                </div>
-
-                                <div class="card-body">
-                                    <p>
-                                        <strong>Họ tên:</strong> <span th:text="${selectedChild.fullName}"></span><br>
-                                        <strong>Biệt danh:</strong> <span th:text="${selectedChild.nickname} ?: 'Không có'"></span><br>
-                                        <strong>Ngày sinh:</strong> <span th:text="${selectedChild.birthday}"></span><br>
-                                        <strong>Tuổi:</strong> <span th:text="${age}"></span> tuổi<br>
-                                        <strong>Giới tính:</strong> <span id="genderDisplay" th:text="${selectedChild.gender}"></span><br>
-                                        <strong>Cân nặng gần nhất:</strong>
-                                        <span th:if="${weights != null and !weights.isEmpty()}"
-                                              th:text="${#numbers.formatDecimal(weights[weights.size() - 1], 1, 2)} + ' kg'">N/A</span>
-                                        <span th:unless="${weights != null and !weights.isEmpty()}">Chưa có dữ liệu</span><br>
-                                        <strong>Chiều cao gần nhất:</strong>
-                                        <span th:if="${heights != null and !heights.isEmpty()}"
-                                              th:text="${#numbers.formatDecimal(heights[heights.size() - 1], 1, 2)} + ' cm'">N/A</span>
-                                        <span th:unless="${heights != null and !heights.isEmpty()}">Chưa có dữ liệu</span><br>
-                                        <strong>Thời gian cập nhật:</strong>
-                                        <span th:if="${dates != null and !dates.isEmpty()}"
-                                              th:text="${dates[dates.size() - 1]}">Chưa có dữ liệu</span><br>
-                                        <strong>Tiền sử y khoa:</strong> <span th:text="${selectedChild.medicalHistory} ?: 'Không có'"></span><br>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- BIỂU ĐỒ BMI -->
-                            <div class="card shadow" th:if="${selectedChild}">
-                                <div class="card-header bg-info text-white">
-                                    <i class="fas fa-chart-line me-2"></i> Biểu đồ BMI theo thời gian
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="bmiChart" height="100"></canvas>
-                                    <div class="mt-3" style="margin-left: 100px;">
-                                        <small class="text-muted">
-                                            <strong>Giải thích BMI:</strong><br>
-                                            - Dưới 18.5: Thiếu cân<br>
-                                            - 18.5 - 24.9: Bình thường<br>
-                                            - 25 - 29.9: Thừa cân<br>
-                                            - Trên 30: Béo phì
-                                        </small>
-                                    </div>
-                                </div>
-                                <div class="bmi-warning" style="margin-left: 100px;">
-                                    <h4>Chi tiết :</h4>
-                                </div>
-                                <div th:switch="${bmis[bmis.size() - 1]}" class="bmi-warning" style="margin-left: 100px;">
-                                    <div th:case="${bmis[bmis.size() - 1] < 16.0}" class="bmi-warning gay-do-iii">
-                                        <h5>Phân loại: Gầy độ III (Rất gầy)</h5>
-                                        <p><strong>Tác động đến sức khỏe:</strong></p>
-                                        <ul>
-                                            <li>Suy dinh dưỡng nghiêm trọng</li>
-                                            <li>Nguy cơ cao bị thiếu vitamin, khoáng chất</li>
-                                            <li>Suy giảm miễn dịch nghiêm trọng</li>
-                                        </ul>
-                                        <p><strong>Lời khuyên chi tiết:</strong></p>
-                                        <ul>
-                                            <li>Cần được tư vấn y tế ngay</li>
-                                            <li>Ăn nhiều thực phẩm giàu calo (bơ, sữa, đạm, trứng, thịt)</li>
-                                            <li>Theo dõi sức khỏe thường xuyên</li>
-                                        </ul>
-                                    </div>
-                                    <div th:case="${bmis[bmis.size() - 1] >= 16.0 and bmis[bmis.size() - 1] <= 16.9}" class="bmi-warning gay-do-ii">
-                                        <h5>Phân loại: Gầy độ II</h5>
-                                        <p><strong>Tác động đến sức khỏe:</strong></p>
-                                        <ul>
-                                            <li>Mệt mỏi, kém tập trung</li>
-                                            <li>Nguy cơ rối loạn kinh nguyệt</li>
-                                            <li>Dễ bị cảm cúm, thiếu máu</li>
-                                        </ul>
-                                        <p><strong>Lời khuyên chi tiết:</strong></p>
-                                        <ul>
-                                            <li>Tăng khẩu phần ăn</li>
-                                            <li>Chia nhỏ bữa ăn (5–6 bữa/ngày)</li>
-                                            <li>Bổ sung sữa, sinh tố, ngũ cốc nguyên hạt</li>
-                                            <li>Tập thể dục nhẹ nhàng như yoga, đi bộ</li>
-                                        </ul>
-                                    </div>
-                                    <div th:case="${bmis[bmis.size() - 1] >= 17.0 and bmis[bmis.size() - 1] <= 18.4}" class="bmi-warning gay-do-i">
-                                        <h5>Phân loại: Gầy độ I</h5>
-                                        <p><strong>Tác động đến sức khỏe:</strong></p>
-                                        <ul>
-                                            <li>Khó tăng cơ, giảm sức đề kháng</li>
-                                            <li>Rủi ro khi mang thai</li>
-                                        </ul>
-                                        <p><strong>Lời khuyên chi tiết:</strong></p>
-                                        <ul>
-                                            <li>Ăn đa dạng, bổ sung thêm protein và chất béo tốt</li>
-                                            <li>Không bỏ bữa</li>
-                                            <li>Tăng cường nghỉ ngơi và ngủ đủ 7–8 tiếng/ngày</li>
-                                        </ul>
-                                    </div>
-                                    <div th:case="${bmis[bmis.size() - 1] >= 18.5 and bmis[bmis.size() - 1] <= 22.9}" class="bmi-warning binh-thuong">
-                                        <h5>Phân loại: Bình thường (chuẩn châu Á)</h5>
-                                        <p><strong>Tác động đến sức khỏe:</strong></p>
-                                        <ul>
-                                            <li>Cân nặng hợp lý, ít nguy cơ bệnh tật</li>
-                                        </ul>
-                                        <p><strong>Lời khuyên chi tiết:</strong></p>
-                                        <ul>
-                                            <li>Tiếp tục duy trì chế độ ăn uống lành mạnh</li>
-                                            <li>Tập thể dục đều đặn 150 phút/tuần</li>
-                                            <li>Kiểm tra sức khỏe định kỳ</li>
-                                        </ul>
-                                    </div>
-                                    <div th:case="${bmis[bmis.size() - 1] >= 23.0 and bmis[bmis.size() - 1] <= 24.9}" class="bmi-warning hoi-thua-can">
-                                        <h5>Phân loại: Hơi thừa cân (chuẩn châu Á)</h5>
-                                        <p><strong>Tác động đến sức khỏe:</strong></p>
-                                        <ul>
-                                            <li>Nguy cơ bắt đầu tăng với bệnh tim, mỡ máu</li>
-                                        </ul>
-                                        <p><strong>Lời khuyên chi tiết:</strong></p>
-                                        <ul>
-                                            <li>Giảm thực phẩm giàu tinh bột, đường</li>
-                                            <li>Ưu tiên thực phẩm tươi, ít dầu mỡ</li>
-                                            <li>Tăng cường vận động: bơi, đi bộ nhanh, đạp xe</li>
-                                        </ul>
-                                    </div>
-                                    <div th:case="${bmis[bmis.size() - 1] >= 25.0 and bmis[bmis.size() - 1] <= 29.9}" class="bmi-warning thua-can">
-                                        <h5>Phân loại: Thừa cân (béo phì độ I)</h5>
-                                        <p><strong>Tác động đến sức khỏe:</strong></p>
-                                        <ul>
-                                            <li>Tăng huyết áp, cholesterol, tiểu đường loại 2</li>
-                                            <li>Tăng nguy cơ gan nhiễm mỡ, xơ vữa động mạch</li>
-                                        </ul>
-                                        <p><strong>Lời khuyên chi tiết:</strong></p>
-                                        <ul>
-                                            <li>Cắt giảm khẩu phần ăn, đặc biệt là đồ chiên rán</li>
-                                            <li>Kiểm tra lượng calo nạp vào mỗi ngày</li>
-                                            <li>Tập thể dục tối thiểu 30 phút/ngày</li>
-                                        </ul>
-                                    </div>
-                                    <div th:case="${bmis[bmis.size() - 1] >= 30.0 and bmis[bmis.size() - 1] <= 34.9}" class="bmi-warning beo-phi-do-ii">
-                                        <h5>Phân loại: Béo phì độ II</h5>
-                                        <p><strong>Tác động đến sức khỏe:</strong></p>
-                                        <ul>
-                                            <li>Nguy cơ cao mắc bệnh tim mạch, đột quỵ</li>
-                                            <li>Gây khó thở khi ngủ (ngưng thở khi ngủ)</li>
-                                        </ul>
-                                        <p><strong>Lời khuyên chi tiết:</strong></p>
-                                        <ul>
-                                            <li>Nên được hỗ trợ bởi chuyên gia dinh dưỡng</li>
-                                            <li>Ăn nhiều rau xanh, trái cây tươi</li>
-                                            <li>Hạn chế rượu bia, nước ngọt</li>
-                                            <li>Tập thể dục có giám sát</li>
-                                        </ul>
-                                    </div>
-                                    <div th:case="${bmis[bmis.size() - 1] >= 35.0 and bmis[bmis.size() - 1] <= 39.9}" class="bmi-warning beo-phi-do-iii">
-                                        <h5>Phân loại: Béo phì độ III</h5>
-                                        <p><strong>Tác động đến sức khỏe:</strong></p>
-                                        <ul>
-                                            <li>Nguy cơ rất cao: đái tháo đường, ung thư, đau khớp, vô sinh</li>
-                                        </ul>
-                                        <p><strong>Lời khuyên chi tiết:</strong></p>
-                                        <ul>
-                                            <li>Có thể cần can thiệp y tế chuyên sâu</li>
-                                            <li>Điều chỉnh lối sống toàn diện</li>
-                                            <li>Xem xét điều trị bằng thuốc hoặc phẫu thuật theo chỉ định bác sĩ</li>
-                                        </ul>
-                                    </div>
-                                    <div th:case="*" class="bmi-warning beo-phi-do-iv">
-                                        <h5>Phân loại: Béo phì độ IV (rất nặng)</h5>
-                                        <p><strong>Tác động đến sức khỏe:</strong></p>
-                                        <ul>
-                                            <li>Nguy hiểm tính mạng: suy tim, hô hấp, tắc nghẽn mạch máu, tử vong sớm</li>
-                                        </ul>
-                                        <p><strong>Lời khuyên chi tiết:</strong></p>
-                                        <ul>
-                                            <li>Cần được theo dõi y tế liên tục</li>
-                                            <li>Có thể cần phẫu thuật giảm cân (bariatric)</li>
-                                            <li>Kiểm soát tâm lý (nhiều người béo phì mắc trầm cảm, lo âu)</li>
-                                        </ul>
-                                    </div>
-                                    <br>
-                                </div>
-                            </div>
-
-                            <!-- BIỂU ĐỒ CHI TIẾT -->
-                            <div class="card shadow">
-                                <div class="card-header bg-info text-white">
-                                    <i class="fas fa-chart-area me-2"></i> Biểu đồ phát triển của
-                                    <span th:text="${selectedChild?.fullName} ?: 'Vui lòng chọn trẻ'"></span>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="growthChart" height="100"></canvas>
-                                    <p class="mt-3">Biểu đồ hiển thị chiều cao, cân nặng và BMI của trẻ theo thời gian.</p>
-                                    <a th:if="${selectedChild}" th:href="@{/child/details/{id}(id=${selectedChild.child_id})}" class="btn btn-secondary btn-sm">
-                                        <a class="collapse-item" href="/users/child/children-list">Xem chi tiết</a>
+                            <div class="card-body collapse show" id="childListPanel">
+                                <div class="list-group">
+                                    <a th:each="child : ${children}"
+                                       th:href="@{/growth-charts(childId=${child.child_id})}"
+                                       class="list-group-item list-group-item-action"
+                                       th:classappend="${selectedChild?.child_id == child.child_id} ? 'active' : ''">
+                                        <span th:text="${child.fullName}">Tên trẻ</span>
+                                        <small th:if="${child.nickname}" class="text-muted">(<span th:text="${child.nickname}"></span>)</small>
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <footer class="sticky-footer bg-white">
-                    <div class="container my-auto">
-                        <div class="copyright text-center my-auto">
-                            <span>Copyright © ChildGrowth 2025 - Hệ thống theo dõi sự phát triển của trẻ</span>
+                    <!-- BIỂU ĐỒ VÀ THÔNG TIN -->
+                    <div class="col-md-9">
+                        <!-- THÔNG TIN CẢNH BÁO BMI -->
+                        <div class="card shadow" th:if="${selectedChild}">
+                            <div class="card-header bg-warning text-dark">
+                                <i class="fas fa-exclamation-triangle me-2"></i> Tình trạng BMI hiện tại
+                            </div>
+                            <div class="card-body">
+                                <p>
+                                    <strong>Họ tên:</strong> <span th:text="${selectedChild.fullName}"></span><br>
+                                    <strong>Biệt danh:</strong> <span th:text="${selectedChild.nickname} ?: 'Không có'"></span><br>
+                                    <strong>Ngày sinh:</strong> <span th:text="${selectedChild.birthday}"></span><br>
+                                    <strong>Tuổi:</strong> <span th:text="${age}"></span> tuổi<br>
+                                    <strong>Giới tính:</strong> <span id="genderDisplay" th:text="${selectedChild.gender}"></span><br>
+                                    <strong>Cân nặng gần nhất:</strong>
+                                    <span th:if="${weights != null and !weights.isEmpty()}"
+                                          th:text="${#numbers.formatDecimal(weights[weights.size() - 1], 1, 2)} + ' kg'">N/A</span>
+                                    <span th:unless="${weights != null and !weights.isEmpty()}">Chưa có dữ liệu</span><br>
+                                    <strong>Chiều cao gần nhất:</strong>
+                                    <span th:if="${heights != null and !heights.isEmpty()}"
+                                          th:text="${#numbers.formatDecimal(heights[heights.size() - 1], 1, 2)} + ' cm'">N/A</span>
+                                    <span th:unless="${heights != null and !heights.isEmpty()}">Chưa có dữ liệu</span><br>
+                                    <strong>Thời gian cập nhật:</strong>
+                                    <span th:if="${dates != null and !dates.isEmpty()}"
+                                          th:text="${dates[dates.size() - 1]}">Chưa có dữ liệu</span><br>
+                                    <strong>Tiền sử y khoa:</strong> <span th:text="${selectedChild.medicalHistory} ?: 'Không có'"></span><br>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- BIỂU ĐỒ BMI -->
+                        <div class="card shadow" th:if="${selectedChild}">
+                            <div class="card-header bg-info text-white">
+                                <i class="fas fa-chart-line me-2"></i> Biểu đồ BMI theo thời gian
+                            </div>
+                            <div class="card-body">
+                                <canvas id="bmiChart" height="100"></canvas>
+                                <div class="mt-3" style="margin-left: 100px;">
+                                    <small class="text-muted" >
+                                        <strong>Giải thích BMI (theo chuẩn cho trẻ em):</strong><br>
+                                        BMI 12.5 → Rất gầy / Suy dinh dưỡng nặng<br>
+                                        BMI 13.2 → Gầy / Suy dinh dưỡng<br>
+                                        BMI 14.3 → Hơi gầy<br>
+                                        BMI 15.5 → Bình thường<br>
+                                        BMI 16.6 → Hơi thừa cân<br>
+                                        BMI 17.8 → Thừa cân<br>
+                                        BMI 19.0 → Béo phì
+                                    </small>
+                                </div>
+                            </div>
+                            <!-- Cảnh báo mức BMI -->
+                            <div class="bmi-warning" style="margin-left: 100px;">
+                                <h4>Chi tiết (BMI trẻ em):</h4>
+                            </div>
+                            <div th:switch="${bmis[bmis.size() - 1]}" class="bmi-warning" style="margin-left: 100px;">
+                                <!-- Rất thấp (Severely Low) -->
+                                <div th:if="${bmis[bmis.size() - 1] <= 12.5}" class="bmi-warning severely-low">
+                                    <h5>Phân loại: Rất thấp (BMI_SEVERELY_LOW | Z-score ≈ -3.1)</h5>
+                                    <p><strong>Tác động đến sức khỏe:</strong></p>
+                                    <ul>
+                                        <li>Suy dinh dưỡng nghiêm trọng, thiếu năng lượng trầm trọng</li>
+                                        <li>Chậm phát triển thể chất và trí tuệ</li>
+                                        <li>Hệ miễn dịch suy yếu nghiêm trọng</li>
+                                    </ul>
+                                    <p><strong>Lời khuyên:</strong></p>
+                                    <ul>
+                                        <li>Cần can thiệp y tế NGAY LẬP TỨC</li>
+                                        <li>Bổ sung dinh dưỡng đặc biệt theo chỉ định bác sĩ</li>
+                                        <li>Theo dõi tăng trưởng hàng tuần</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Thấp (Moderately Low) -->
+                                <div th:if="${bmis[bmis.size() - 1] > 12.5 and bmis[bmis.size() - 1] <= 13.2}" class="bmi-warning moderately-low">
+                                    <h5>Phân loại: Thấp (BMI_MODERATELY_LOW | Z-score ≈ -2.3)</h5>
+                                    <p><strong>Tác động đến sức khỏe:</strong></p>
+                                    <ul>
+                                        <li>Thiếu hụt dinh dưỡng đáng kể</li>
+                                        <li>Dễ mắc bệnh nhiễm trùng</li>
+                                        <li>Chậm phát triển chiều cao</li>
+                                    </ul>
+                                    <p><strong>Lời khuyên:</strong></p>
+                                    <ul>
+                                        <li>Tư vấn dinh dưỡng chuyên sâu</li>
+                                        <li>Tăng bữa ăn phụ giàu năng lượng (5-6 bữa/ngày)</li>
+                                        <li>Bổ sung vitamin và khoáng chất thiết yếu</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Hơi thấp (Mildly Low) -->
+                                <div th:if="${bmis[bmis.size() - 1] > 13.2 and bmis[bmis.size() - 1] <= 14.3}" class="bmi-warning mildly-low">
+                                    <h5>Phân loại: Hơi thấp (BMI_MILDLY_LOW | Z-score ≈ -1.5)</h5>
+                                    <p><strong>Tác động đến sức khỏe:</strong></p>
+                                    <ul>
+                                        <li>Thiếu năng lượng nhẹ</li>
+                                        <li>Dễ mệt mỏi khi vận động</li>
+                                        <li>Tăng trưởng chậm hơn chuẩn</li>
+                                    </ul>
+                                    <p><strong>Lời khuyên:</strong></p>
+                                    <ul>
+                                        <li>Điều chỉnh chế độ ăn giàu dinh dưỡng</li>
+                                        <li>Bổ sung sữa cao năng lượng (nếu cần)</li>
+                                        <li>Theo dõi BMI hàng tháng</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Bình thường (Normal) -->
+                                <div th:if="${bmis[bmis.size() - 1] > 14.3 and bmis[bmis.size() - 1] <= 15.5}" class="bmi-warning normal">
+                                    <h5>Phân loại: Bình thường (BMI_NORMAL | Z-score ≈ 0)</h5>
+                                    <p><strong>Tình trạng:</strong></p>
+                                    <ul>
+                                        <li>Phát triển thể chất tối ưu</li>
+                                        <li>Nguy cơ bệnh tật thấp</li>
+                                    </ul>
+                                    <p><strong>Duy trì:</strong></p>
+                                    <ul>
+                                        <li>Tiếp tục chế độ ăn cân bằng</li>
+                                        <li>Khuyến khích vận động thể chất phù hợp lứa tuổi</li>
+                                        <li>Kiểm tra sức khỏe định kỳ 6 tháng/lần</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Hơi cao (Mildly High) -->
+                                <div th:if="${bmis[bmis.size() - 1] > 15.5 and bmis[bmis.size() - 1] <= 16.6}" class="bmi-warning mildly-high">
+                                    <h5>Phân loại: Hơi cao (BMI_MILDLY_HIGH | Z-score ≈ +1.3)</h5>
+                                    <p><strong>Tác động đến sức khỏe:</strong></p>
+                                    <ul>
+                                        <li>Nguy cơ bắt đầu tăng cân quá mức</li>
+                                        <li>Vận động thể lực giảm hiệu quả</li>
+                                    </ul>
+                                    <p><strong>Lời khuyên:</strong></p>
+                                    <ul>
+                                        <li>Điều chỉnh khẩu phần ăn hợp lý</li>
+                                        <li>Tăng cường rau củ, giảm đồ ngọt</li>
+                                        <li>Hoạt động thể chất 60 phút/ngày</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Cao (Moderately High) -->
+                                <div th:if="${bmis[bmis.size() - 1] > 16.6 and bmis[bmis.size() - 1] <= 17.8}" class="bmi-warning moderately-high">
+                                    <h5>Phân loại: Cao (BMI_MODERATELY_HIGH | Z-score ≈ +2.3)</h5>
+                                    <p><strong>Tác động đến sức khỏe:</strong></p>
+                                    <ul>
+                                        <li>Nguy cơ tiền béo phì</li>
+                                        <li>Ảnh hưởng đến hệ xương khớp</li>
+                                        <li>Dễ mắc bệnh chuyển hóa</li>
+                                    </ul>
+                                    <p><strong>Lời khuyên:</strong></p>
+                                    <ul>
+                                        <li>Tư vấn dinh dưỡng chuyên biệt</li>
+                                        <li>Kiểm soát nghiêm ngặt đồ ăn nhanh, nước ngọt</li>
+                                        <li>Tham gia các môn thể thao tích cực</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Rất cao (Severely High) -->
+                                <div th:if="${bmis[bmis.size() - 1] > 17.8}" class="bmi-warning severely-high">
+                                    <h5>Phân loại: Rất cao (BMI_SEVERELY_HIGH | Z-score ≈ +3.2)</h5>
+                                    <p><strong>Tác động đến sức khỏe:</strong></p>
+                                    <ul>
+                                        <li>Béo phì trẻ em nghiêm trọng</li>
+                                        <li>Nguy cơ cao: tiểu đường type 2, tăng huyết áp sớm</li>
+                                        <li>Ảnh hưởng tâm lý (tự ti, trầm cảm)</li>
+                                    </ul>
+                                    <p><strong>Lời khuyên:</strong></p>
+                                    <ul>
+                                        <li>Can thiệp y tế toàn diện</li>
+                                        <li>Chương trình quản lý cân nặng đa chuyên khoa</li>
+                                        <li>Hoạt động thể chất có giám sát</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <br>
+
                         </div>
                     </div>
-                </footer>
+
+                    <!-- BIỂU ĐỒ CHI TIẾT -->
+                    <div class="card shadow">
+                        <div class="card-header bg-info text-white">
+                            <i class="fas fa-chart-area me-2"></i> Biểu đồ phát triển của
+                            <span th:text="${selectedChild?.fullName} ?: 'Vui lòng chọn trẻ'"></span>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="growthChart" height="100"></canvas>
+                            <p class="mt-3">Biểu đồ hiển thị chiều cao, cân nặng và BMI của trẻ theo thời gian.</p>
+                            <a th:if="${selectedChild}" th:href="@{/users/child/children-list}" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-info-circle me-1"></i> Xem chi tiết trẻ
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/js/toast.js"></script>
+    <!-- Footer -->
+<!--    <footer class="sticky-footer bg-white">-->
+<!--        <div class="container my-auto">-->
+<!--            <div class="copyright text-center my-auto">-->
+<!--                <span>Copyright © ChildGrowth - VP</span>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </footer>-->
+</div>
+</div>
 
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
@@ -408,148 +438,192 @@
                 genderElement.textContent = 'Không xác định';
             }
         }
+    });
+</script>
 
-        // Dữ liệu cho biểu đồ
-        const labels = /*[[${dates}]]*/ [];
-        const weights = /*[[${weights}]]*/ [];
-        const heights = /*[[${heights}]]*/ [];
-        const bmis = /*[[${bmis}]]*/ [];
+<!-- SCRIPT CHART -->
+<script th:inline="javascript">
+    // Dữ liệu cho biểu đồ chính
+    const labels = /*[[${dates}]]*/ [];
+    const weights = /*[[${weights}]]*/ [];
+    const heights = /*[[${heights}]]*/ [];
+    const bmis = /*[[${bmis}]]*/ [];
 
-        // Màu sắc cho các trạng thái BMI
-        const bmiColors = bmis.map(bmi => {
-            if (bmi < 18.5) return '#ffc107';
-            if (bmi >= 18.5 && bmi < 25) return '#4caf50';
-            if (bmi >= 25 && bmi < 30) return '#ff9800';
-            return '#f44336';
-        });
+    // Màu sắc cho các trạng thái BMI
+    const bmiColors = bmis.map(bmi => {
+        if (bmi < 18.5) return '#ffc107'; // Thiếu cân - vàng
+        if (bmi >= 18.5 && bmi < 25) return '#4caf50'; // Bình thường - xanh lá
+        if (bmi >= 25 && bmi < 30) return '#ff9800'; // Thừa cân - cam
+        return '#f44336'; // Béo phì - đỏ
+    });
 
-        // Biểu đồ chính
-        if (document.getElementById('growthChart')) {
-            const ctx = document.getElementById('growthChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Cân nặng (kg)',
-                            data: weights,
-                            borderColor: 'rgb(75, 192, 192)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                            fill: true,
-                            tension: 0.2
-                        },
-                        {
-                            label: 'Chiều cao (cm)',
-                            data: heights,
-                            borderColor: 'rgb(255, 99, 132)',
-                            backgroundColor: 'rgba(255, 99, 132, 0.1)',
-                            fill: true,
-                            tension: 0.2
-                        },
-                        {
-                            label: 'BMI',
-                            data: bmis,
-                            borderColor: 'rgb(153, 102, 255)',
-                            backgroundColor: 'rgba(153, 102, 255, 0.1)',
-                            fill: true,
-                            tension: 0.2
-                        }
-                    ]
+    // Biểu đồ chính
+    const ctx = document.getElementById('growthChart').getContext('2d');
+    const growthChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Cân nặng (kg)',
+                    data: weights,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                    fill: true,
+                    tension: 0.2
                 },
-                options: {
-                    responsive: true,
-                    scales: { y: { beginAtZero: false } },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) label += ': ';
-                                    if (context.datasetIndex === 2) {
-                                        label += context.raw.toFixed(1);
-                                        const bmiValue = context.raw;
-                                        if (bmiValue < 18.5) label += ' (Thiếu cân)';
-                                        else if (bmiValue < 25) label += ' (Bình thường)';
-                                        else if (bmiValue < 30) label += ' (Thừa cân)';
-                                        else label += ' (Béo phì)';
-                                    } else {
-                                        label += context.raw.toFixed(2);
-                                    }
-                                    return label;
-                                }
+                {
+                    label: 'Chiều cao (cm)',
+                    data: heights,
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    fill: true,
+                    tension: 0.2
+                },
+                {
+                    label: 'BMI',
+                    data: bmis,
+                    borderColor: 'rgb(153, 102, 255)',
+                    backgroundColor: 'rgba(153, 102, 255, 0.1)',
+                    fill: true,
+                    tension: 0.2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
                             }
+                            if (context.datasetIndex === 2) { // BMI dataset
+                                label += context.raw.toFixed(1);
+                                // Thêm phân loại BMI vào tooltip
+                                const bmiValue = context.raw;
+                                if (bmiValue < 18.5) label += ' (Thiếu cân)';
+                                else if (bmiValue >= 18.5 && bmiValue < 25) label += ' (Bình thường)';
+                                else if (bmiValue >= 25 && bmiValue < 30) label += ' (Thừa cân)';
+                                else label += ' (Béo phì)';
+                            } else {
+                                label += context.raw.toFixed(2);
+                            }
+                            return label;
                         }
                     }
                 }
-            });
+            }
         }
+    });
 
-        // Biểu đồ BMI
-        if (document.getElementById('bmiChart')) {
-            const bmiCtx = document.getElementById('bmiChart').getContext('2d');
-            new Chart(bmiCtx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Chỉ số BMI',
-                        data: bmis,
-                        backgroundColor: bmiColors,
-                        borderColor: bmiColors.map(color => color.replace('0.6', '1')),
-                        borderWidth: 1
-                    }]
+    // Biểu đồ BMI riêng
+    const bmiCtx = document.getElementById('bmiChart').getContext('2d');
+    const bmiChart = new Chart(bmiCtx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Chỉ số BMI',
+                data: bmis,
+                backgroundColor: bmiColors,
+                borderColor: bmiColors.map(color => color.replace('0.6', '1')),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Chỉ số BMI'
+                    }
                 },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: { beginAtZero: false, title: { display: true, text: 'Chỉ số BMI' } },
-                        x: { title: { display: true, text: 'Thời gian' } }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = 'BMI: ' + context.raw.toFixed(1);
-                                    const bmiValue = context.raw;
-                                    if (bmiValue < 18.5) label += ' (Thiếu cân)';
-                                    else if (bmiValue < 25) label += ' (Bình thường)';
-                                    else if (bmiValue < 30) label += ' (Thừa cân)';
-                                    else label += ' (Béo phì)';
-                                    return label;
-                                }
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Thời gian'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = 'BMI: ' + context.raw.toFixed(1);
+                            const bmiValue = context.raw;
+                            if (bmiValue < 18.5) label += ' (Thiếu cân)';
+                            else if (bmiValue >= 18.5 && bmiValue < 25) label += ' (Bình thường)';
+                            else if (bmiValue >= 25 && bmiValue < 30) label += ' (Thừa cân)';
+                            else label += ' (Béo phì)';
+                            return label;
+                        }
+                    }
+                },
+                annotation: {
+                    annotations: {
+                        line1: {
+                            type: 'line',
+                            yMin: 18.5,
+                            yMax: 18.5,
+                            borderColor: 'rgb(75, 192, 192)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                content: 'Thiếu cân',
+                                enabled: true,
+                                position: 'left'
+                            }
+                        },
+                        line2: {
+                            type: 'line',
+                            yMin: 25,
+                            yMax: 25,
+                            borderColor: 'rgb(255, 159, 64)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                content: 'Thừa cân',
+                                enabled: true,
+                                position: 'left'
+                            }
+                        },
+                        line3: {
+                            type: 'line',
+                            yMin: 30,
+                            yMax: 30,
+                            borderColor: 'rgb(255, 99, 132)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                content: 'Béo phì',
+                                enabled: true,
+                                position: 'left'
                             }
                         }
                     }
                 }
-            });
+            }
         }
     });
 </script>
 
-<!-- Scroll to Top Button -->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal -->
-<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Bạn chắc chắn muốn đăng xuất?</h5>
-                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Chọn "Đăng xuất" bên dưới nếu bạn muốn kết thúc phiên làm việc hiện tại.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Hủy</button>
-                <a class="btn btn-primary" href="/logout">Đăng xuất</a>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- BOOTSTRAP JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core JavaScript -->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/js/sb-admin-2.min.js"></script>
 </body>
 </html>
