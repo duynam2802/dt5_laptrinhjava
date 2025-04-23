@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ut.edu.childgrowth.jwt.JwtUtil;
 import ut.edu.childgrowth.models.Child;
 import ut.edu.childgrowth.models.GrowthRecord;
@@ -40,12 +41,18 @@ public class GrowthChartController {
     }
 
     @GetMapping("/growth-charts")
-    public String showGrowthCharts(
+    public String showGrowthCharts(RedirectAttributes redirectAttributes,
                                    HttpSession session,
-                                   @RequestParam(required = false) Long childId, Model model) {
-        // Get all children for the list
-//        List<Child> children = childService.getAllChildren();
+                                   @RequestParam(required = false) Long childId,
+                                   Model model) {
+
         String token = (String) session.getAttribute("token");
+
+        if (token == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập lại");
+            return "redirect:/login";
+        }
+
 //        String token = authHeader.substring(7);
         String username = jwtUtil.extractUsername(token);
         User user = userService.findByUsername(username);

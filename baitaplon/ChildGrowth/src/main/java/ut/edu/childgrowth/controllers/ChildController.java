@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ut.edu.childgrowth.models.Alert;
 import ut.edu.childgrowth.models.Child;
 import ut.edu.childgrowth.services.AlertService;
@@ -26,12 +27,16 @@ public class ChildController {
     private ChildService childService;
     @Autowired
     private AlertService alertService;
+//    @Autowired
+
+
 
     @GetMapping("/children-list")
-    public String showChildrenListPage(HttpSession session, Model model) {
+    public String showChildrenListPage(HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         String token = (String) session.getAttribute("token");
         if (token == null) {
-            model.addAttribute("error", "Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.");
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập lại");
+//            model.addAttribute("error", "Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.");
             return "redirect:/login";
         }
         return "children-list";
@@ -67,10 +72,12 @@ public class ChildController {
 
     @PostMapping("/add-child")
     public String registerChild(
+            RedirectAttributes redirectAttributes,
             @Valid @ModelAttribute("child") Child child,
             BindingResult result,
             HttpSession session,
             Model model) {
+
         if (result.hasErrors()) {
             return "add-child";
         }
@@ -78,7 +85,8 @@ public class ChildController {
             String token = (String) session.getAttribute("token");
             if (token == null) {
                 model.addAttribute("error", "Lỗi: Bạn cần đăng nhập để thêm trẻ.");
-                return "add-child";
+                redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập lại");
+                return "redirect:/login";
             }
             Child savedChild = childService.registerChild("Bearer " + token, child);
             savedChild.setUser(null);
