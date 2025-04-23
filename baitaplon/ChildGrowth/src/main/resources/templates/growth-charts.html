@@ -223,7 +223,7 @@
                         <!-- THÔNG TIN CẢNH BÁO BMI -->
                         <div class="card shadow" th:if="${selectedChild}">
                             <div class="card-header bg-warning text-dark">
-                                <i class="fas fa-exclamation-triangle me-2"></i> Tình trạng BMI hiện tại
+                                <i class="fas fa-info-circle me-2"></i> Thông tin
                             </div>
                             <div class="card-body">
                                 <p>
@@ -415,13 +415,13 @@
     </div>
 
     <!-- Footer -->
-<!--    <footer class="sticky-footer bg-white">-->
-<!--        <div class="container my-auto">-->
-<!--            <div class="copyright text-center my-auto">-->
-<!--                <span>Copyright © ChildGrowth - VP</span>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </footer>-->
+    <!--    <footer class="sticky-footer bg-white">-->
+    <!--        <div class="container my-auto">-->
+    <!--            <div class="copyright text-center my-auto">-->
+    <!--                <span>Copyright © ChildGrowth - VP</span>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </footer>-->
 </div>
 </div>
 
@@ -509,9 +509,12 @@
                                 label += context.raw.toFixed(1);
                                 // Thêm phân loại BMI vào tooltip
                                 const bmiValue = context.raw;
-                                if (bmiValue < 18.5) label += ' (Thiếu cân)';
-                                else if (bmiValue >= 18.5 && bmiValue < 25) label += ' (Bình thường)';
-                                else if (bmiValue >= 25 && bmiValue < 30) label += ' (Thừa cân)';
+                                if (bmiValue < 12.9) label += ' (Rất gầy / Suy dinh dưỡng nặng)';
+                                else if (bmiValue < 13.9) label += ' (Gầy / Suy dinh dưỡng)';
+                                else if (bmiValue < 15.0) label += ' (Hơi gầy)';
+                                else if (bmiValue < 16.1) label += ' (Bình thường)';
+                                else if (bmiValue < 17.2) label += ' (Hơi thừa cân)';
+                                else if (bmiValue < 18.5) label += ' (Thừa cân)';
                                 else label += ' (Béo phì)';
                             } else {
                                 label += context.raw.toFixed(2);
@@ -562,12 +565,17 @@
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            let label = 'BMI: ' + context.raw.toFixed(1);
-                            const bmiValue = context.raw;
-                            if (bmiValue < 18.5) label += ' (Thiếu cân)';
-                            else if (bmiValue >= 18.5 && bmiValue < 25) label += ' (Bình thường)';
-                            else if (bmiValue >= 25 && bmiValue < 30) label += ' (Thừa cân)';
+                            let bmiValue = context.raw;
+                            let label = 'BMI: ' + bmiValue.toFixed(1);
+
+                            if (bmiValue < 12.9) label += ' (Rất gầy / Suy dinh dưỡng nặng)';
+                            else if (bmiValue < 13.9) label += ' (Gầy / Suy dinh dưỡng)';
+                            else if (bmiValue < 15.0) label += ' (Hơi gầy)';
+                            else if (bmiValue < 16.1) label += ' (Bình thường)';
+                            else if (bmiValue < 17.2) label += ' (Hơi thừa cân)';
+                            else if (bmiValue < 18.5) label += ' (Thừa cân)';
                             else label += ' (Béo phì)';
+
                             return label;
                         }
                     }
@@ -576,22 +584,74 @@
                     annotations: {
                         line1: {
                             type: 'line',
-                            yMin: 18.5,
-                            yMax: 18.5,
-                            borderColor: 'rgb(75, 192, 192)',
+                            yMin: 12.9,
+                            yMax: 12.9,
+                            borderColor: 'rgb(153, 102, 255)',
                             borderWidth: 2,
                             borderDash: [6, 6],
                             label: {
-                                content: 'Thiếu cân',
+                                content: 'Suy dinh dưỡng nặng',
                                 enabled: true,
                                 position: 'left'
                             }
                         },
                         line2: {
                             type: 'line',
-                            yMin: 25,
-                            yMax: 25,
+                            yMin: 13.9,
+                            yMax: 13.9,
+                            borderColor: 'rgb(54, 162, 235)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                content: 'Suy dinh dưỡng',
+                                enabled: true,
+                                position: 'left'
+                            }
+                        },
+                        line3: {
+                            type: 'line',
+                            yMin: 15.0,
+                            yMax: 15.0,
+                            borderColor: 'rgb(75, 192, 192)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                content: 'Hơi gầy',
+                                enabled: true,
+                                position: 'left'
+                            }
+                        },
+                        line4: {
+                            type: 'line',
+                            yMin: 16.1,
+                            yMax: 16.1,
+                            borderColor: 'rgb(255, 205, 86)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                content: 'Bình thường',
+                                enabled: true,
+                                position: 'left'
+                            }
+                        },
+                        line5: {
+                            type: 'line',
+                            yMin: 17.2,
+                            yMax: 17.2,
                             borderColor: 'rgb(255, 159, 64)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                content: 'Hơi thừa cân',
+                                enabled: true,
+                                position: 'left'
+                            }
+                        },
+                        line6: {
+                            type: 'line',
+                            yMin: 18.5,
+                            yMax: 18.5,
+                            borderColor: 'rgb(255, 99, 132)',
                             borderWidth: 2,
                             borderDash: [6, 6],
                             label: {
@@ -600,11 +660,11 @@
                                 position: 'left'
                             }
                         },
-                        line3: {
+                        line7: {
                             type: 'line',
-                            yMin: 30,
-                            yMax: 30,
-                            borderColor: 'rgb(255, 99, 132)',
+                            yMin: 19.1,
+                            yMax: 19.1,
+                            borderColor: 'rgb(201, 0, 0)',
                             borderWidth: 2,
                             borderDash: [6, 6],
                             label: {
