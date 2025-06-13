@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hà Phạm Anh Huy - Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button class="theme-toggle" id="theme-toggle"><i class="fas fa-music"></i></button>
+    <button class="edit-toggle" id="edit-toggle"><i class="fas fa-edit"></i></button>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-star"></i>
+                <span data-field="name">Hà Phạm Anh Huy</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active" data-section="home"><i class="fas fa-home"></i> Trang chủ</a></li>
+                <li><a href="#about" class="nav-link" data-section="about"><i class="fas fa-star"></i> Giới thiệu</a></li>
+                <li><a href="#career" class="nav-link" data-section="career"><i class="fas fa-rocket"></i> Nghề nghiệp</a></li>
+                <li><a href="#skills" class="nav-link" data-section="skills"><i class="fas fa-music"></i> Kỹ năng</a></li>
+                <li><a href="#projects" class="nav-link" data-section="projects"><i class="fas fa-video"></i> Dự án</a></li>
+                <li><a href="#contact" class="nav-link" data-section="contact"><i class="fas fa-envelope"></i> Liên hệ</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="floating-particles"></div>
+        <div class="hero-content">
+            <div class="profile-container">
+                <div class="profile-image">
+                    <img src="/imgs/ảnh.jpg" alt="Profile" id="profile-img">
+                    <div class="profile-ring"></div>
+                    <div class="profile-glow"></div>
+                </div>
+            </div>
+            <div class="hero-text">
+                <h1 class="hero-title" data-field="name">Hà Phạm Anh Huy</h1>
+                <h2 class="hero-subtitle" data-field="title">Front-End Developer</h2>
+                <div class="hero-buttons">
+                    <button class="btn-primary"><i class="fas fa-download"></i> Tải CV</button>
+                    <a href="#projects" class="btn-secondary"><i class="fas fa-eye"></i> Xem Portfolio</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section about" id="about">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-star"></i> Thông tin cá nhân</h2>
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="card-icon"><i class="fas fa-info-circle"></i></div>
+                    <h3>Thông tin cơ bản</h3>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="info-label">Họ tên:</span>
+                            <span class="info-value" data-field="name">Hà Phạm Anh Huy</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Tuổi:</span>
+                            <span class="info-value" data-field="age">20</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Địa chỉ:</span>
+                            <span class="info-value" data-field="address">Trà Vinh, Việt Nam</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">SĐT:</span>
+                            <span class="info-value" data-field="phone">0385190557</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email:</span>
+                            <span class="info-value" data-field="email">haphamanhhuy123@gmail.com</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-card">
+                    <div class="card-icon"><i class="fas fa-user-tie"></i></div>
+                    <h3>Giới thiệu bản thân</h3>
+                    <p data-field="bio1">Tôi là sinh viên năm 2 ngành Công nghệ Thông tin tại Trường Đại học Giao thông Vận tải, với niềm đam mê phát triển phần mềm và xây dựng các ứng dụng web hiện đại. Ngoài lập trình, tôi còn yêu thích chơi game, nghe nhạc và đọc sách.</p>
+                    <p data-field="bio2">Với niềm đam mê lập trình web và mong muốn trở thành Full Stack Developer, tôi không ngừng tìm kiếm cơ hội để phát triển thêm về bản thân.</p>
+                </div>
+                <div class="about-card">
+                    <div class="card-icon"><i class="fas fa-heart"></i></div>
+                    <h3>Sở thích</h3>
+                    <div class="hobbies-grid">
+                        <div class="hobby-item"><i class="fas fa-code"></i> <span data-field="hobby1">Lập trình</span></div>
+                        <div class="hobby-item"><i class="fas fa-gamepad"></i> <span data-field="hobby2">Chơi game</span></div>
+                        <div class="hobby-item"><i class="fas fa-music"></i> <span data-field="hobby3">Nghe nhạc</span></div>
+                        <div class="hobby-item"><i class="fas fa-book"></i> <span data-field="hobby4">Đọc sách</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section career" id="career">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-rocket"></i> Mục tiêu nghề nghiệp</h2>
+            <div class="career-card">
+                <div class="career-image"><i class="fas fa-rocket"></i></div>
+                <div class="career-content">
+                    <h3>Mục tiêu ngắn hạn</h3>
+                    <p data-field="short-term-goal">Trở thành một Full Stack Developer chuyên nghiệp, có khả năng phát triển các ứng dụng web hiện đại và đáp ứng nhu cầu thực tế của doanh nghiệp.</p>
+                    <h3>Mục tiêu dài hạn</h3>
+                    <p data-field="long-term-goal">Phát triển thành một Tech Lead, có khả năng dẫn dắt team và tham gia vào việc ra quyết định kỹ thuật quan trọng trong các dự án lớn.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section skills" id="skills">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-music"></i> Kỹ năng & Ngôn ngữ</h2>
+            <div class="skills-grid">
+                <div class="skills-card">
+                    <h3><i class="fas fa-code"></i> Kỹ năng lập trình</h3>
+                    <div class="skills-list">
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span data-field="skill-javascript-name">JavaScript</span>
+                                <span class="skill-percentage" data-field="skill-javascript-value">50%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="javascript" style="width: 50%"></div>
+                            </div>
+                            <div class="edit-controls" style="display: none;">
+                                <input type="range" min="0" max="100" value="50" class="skill-slider" data-skill="javascript">
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span data-field="skill-nodejs-name">Node.js</span>
+                                <span class="skill-percentage" data-field="skill-nodejs-value">50%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="nodejs" style="width: 50%"></div>
+                            </div>
+                            <div class="edit-controls" style="display: none;">
+                                <input type="range" min="0" max="100" value="50" class="skill-slider" data-skill="nodejs">
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span data-field="skill-python-name">Python</span>
+                                <span class="skill-percentage" data-field="skill-python-value">70%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="python" style="width: 70%"></div>
+                            </div>
+                            <div class="edit-controls" style="display: none;">
+                                <input type="range" min="0" max="100" value="70" class="skill-slider" data-skill="python">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skills-card">
+                    <h3><i class="fas fa-language"></i> Ngôn ngữ</h3>
+                    <div class="skills-list">
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span data-field="lang-vietnamese-name">Tiếng Việt</span>
+                                <span class="skill-percentage" data-field="lang-vietnamese-value">100%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="vietnamese" style="width: 100%"></div>
+                            </div>
+                            <div class="edit-controls" style="display: none;">
+                                <input type="range" min="0" max="100" value="100" class="skill-slider" data-skill="vietnamese">
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span data-field="lang-english-name">Tiếng Anh</span>
+                                <span class="skill-percentage" data-field="lang-english-value">60%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="english" style="width: 60%"></div>
+                            </div>
+                            <div class="edit-controls" style="display: none;">
+                                <input type="range" min="0" max="100" value="60" class="skill-slider" data-skill="english">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="certificates-section">
+                <h3><i class="fas fa-certificate"></i> Chứng chỉ - Giải thưởng</h3>
+                <div class="certificates-grid">
+                    <div class="certificate-item">
+                        <div class="certificate-icon"><i class="fas fa-trophy"></i></div>
+                        <div class="certificate-content">
+                            <h4 data-field="certificate1-title">Chứng chỉ</h4>
+                            <p data-field="certificate1-desc">Không Có.</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section projects" id="projects">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-video"></i> Dự án</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://crm.nubest.vn/public/upload/bieu-do-tang-truong-cua-tre-1-5-tuoi.jpg" alt="Project 1">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="https://github.com/duynam2802/dt5_laptrinhjava" class="project-link"><i class="fas fa-link"></i></a>
+                                <a href="https://github.com/duynam2802/dt5_laptrinhjava" class="project-link"><i class="fas fa-code"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 data-field="project1-title">Website: Child Growth Tracking System</h3>
+                        <p data-field="project1-desc">Phần mềm theo dõi sự tăng trưởng của trẻ em.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag" data-field="project1-tech1">JAVA</span>
+                            <span class="tech-tag" data-field="project1-tech2">HTML/CSS</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://faceworks.vn/wp-content/uploads/2016/07/qlyks.png" alt="Project 2">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fas fa-link"></i></a>
+                                <a href="#" class="project-link"><i class="fas fa-code"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 data-field="project2-title">Thiết kế hệ thống quản lý khách sạn</h3>
+                        <p data-field="project2-desc">Hệ thống quản lý khách sạn sử dụng cơ sở dữ liệu.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag" data-field="project2-tech1">SQL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section contact" id="contact">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-envelope"></i> Liên hệ</h2>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Thông tin liên hệ</h3>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span data-field="phone">0385190557</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span data-field="email">haphamanhhuy123@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span data-field="address">Trà Vinh, Việt Nam</span>
+                    </div>
+                </div>
+                <div class="social-links">
+                    <h3>Mạng xã hội</h3>
+                    <div class="social-grid">
+                        <a href="#" class="social-link facebook"><i class="fab fa-facebook-f"></i> <span data-field="social-facebook">Facebook</span></a>
+                        <a href="#" class="social-link github"><i class="fab fa-github"></i> <span data-field="social-github">GitHub</span></a>
+                        <a href="#" class="social-link instagram"><i class="fab fa-instagram"></i> <span data-field="social-instagram">Instagram</span></a>
+                        <a href="#" class="social-link tiktok"><i class="fab fa-tiktok"></i> <span data-field="social-tiktok">TikTok</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>Designed & Built by <span data-field="name">Hà Phạm Anh Huy</span> © 2025</p>
+        </div>
+    </footer>
+
+    <script src="index.js"></script>
+</body>
+</html>
